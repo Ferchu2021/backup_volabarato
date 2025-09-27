@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { IUserPayload } from '../models/User';
+import { IUserPayload } from '../models/user.models';
 declare global {
     namespace Express {
         interface Request {

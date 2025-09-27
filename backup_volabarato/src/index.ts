@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 
 // Importa rutas
 import paqueteRoutes from './routes/paquete';
-import userRoutes from './routes/user';
+import userRoutes from './routes/user.routes';
 
 // Carga variables de entorno
 dotenv.config();

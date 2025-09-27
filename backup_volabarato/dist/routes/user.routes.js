@@ -6,11 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const User_1 = require("../models/User");
+const user_models_1 = require("../models/user.models");
 const router = (0, express_1.Router)();
 router.post('/register', async (req, res) => {
     try {
-        const { error } = User_1.userJoiSchema.validate(req.body);
+        const { error } = user_models_1.userJoiSchema.validate(req.body);
         if (error) {
             res.status(400).json({
                 error: 'Datos de validación incorrectos',
@@ -18,7 +18,7 @@ router.post('/register', async (req, res) => {
             });
             return;
         }
-        const user = new User_1.User(req.body);
+        const user = new user_models_1.User(req.body);
         await user.save();
         res.status(201).json({
             message: 'Usuario creado exitosamente',
@@ -44,7 +44,7 @@ router.post('/login', async (req, res) => {
             res.status(400).json({ error: 'Usuario y contraseña son requeridos' });
             return;
         }
-        const user = await User_1.User.findOne({ usuario });
+        const user = await user_models_1.User.findOne({ usuario });
         if (!user) {
             res.status(401).json({ error: 'Credenciales inválidas' });
             return;
@@ -68,4 +68,4 @@ router.post('/login', async (req, res) => {
     }
 });
 exports.default = router;
-//# sourceMappingURL=user.js.map
+//# sourceMappingURL=user.routes.js.map

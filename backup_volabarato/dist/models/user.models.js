@@ -55,4 +55,4 @@ exports.userJoiSchema = joi_1.default.object({
     password: joi_1.default.string().min(6).required()
 });
 exports.User = mongoose_1.default.model('User', userSchema);
-//# sourceMappingURL=User.js.map
+//# sourceMappingURL=user.models.js.map

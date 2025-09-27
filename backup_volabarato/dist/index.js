@@ -10,7 +10,7 @@ const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const paquete_1 = __importDefault(require("./routes/paquete"));
-const user_1 = __importDefault(require("./routes/user"));
+const user_routes_1 = __importDefault(require("./routes/user.routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use((0, helmet_1.default)());
@@ -31,7 +31,7 @@ const connectDB = async () => {
     }
 };
 app.use('/api/paquete', paquete_1.default);
-app.use('/api/user', user_1.default);
+app.use('/api/user', user_routes_1.default);
 app.get('/', (req, res) => {
     res.json({
         message: '🚀 Backend VolaBarato API',
