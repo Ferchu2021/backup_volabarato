@@ -1,50 +1,40 @@
-import mongoose = require("mongoose");
-export const joiSchema: Joi.ObjectSchema<any>;
-import Joi = require("joi");
-export declare let Paquete: mongoose.Model<{
-    activo: boolean;
-    nombre?: string;
-    destino?: string;
-    fecha?: Date;
-    precio?: number;
+import mongoose, { Document } from 'mongoose';
+import Joi from 'joi';
+export interface IPaquete extends Document {
+    nombre: string;
+    destino: string;
+    fecha: Date;
+    precio: number;
     descripcion?: string;
-}, {}, {}, {}, mongoose.Document<unknown, {}, {
     activo: boolean;
-    nombre?: string;
-    destino?: string;
-    fecha?: Date;
-    precio?: number;
-    descripcion?: string;
-}> & {
-    activo: boolean;
-    nombre?: string;
-    destino?: string;
-    fecha?: Date;
-    precio?: number;
-    descripcion?: string;
-} & {
     _id: mongoose.Types.ObjectId;
-}, mongoose.Schema<any, mongoose.Model<any, any, any, any, any, any>, {}, {}, {}, {}, mongoose.DefaultSchemaOptions, {
-    activo: boolean;
+}
+export declare const paqueteJoiSchema: Joi.ObjectSchema<any>;
+export interface ICreatePaqueteRequest {
+    nombre: string;
+    destino: string;
+    fecha: Date;
+    precio: number;
+    descripcion?: string;
+    activo?: boolean;
+}
+export interface IUpdatePaqueteRequest {
     nombre?: string;
     destino?: string;
     fecha?: Date;
     precio?: number;
     descripcion?: string;
-}, mongoose.Document<unknown, {}, mongoose.FlatRecord<{
-    activo: boolean;
-    nombre?: string;
-    destino?: string;
-    fecha?: Date;
-    precio?: number;
+    activo?: boolean;
+}
+export interface IPaqueteResponse {
+    _id: string;
+    nombre: string;
+    destino: string;
+    fecha: string;
+    precio: number;
     descripcion?: string;
-}>> & mongoose.FlatRecord<{
     activo: boolean;
-    nombre?: string;
-    destino?: string;
-    fecha?: Date;
-    precio?: number;
-    descripcion?: string;
-}> & {
+}
+export declare const Paquete: mongoose.Model<IPaquete, {}, {}, {}, mongoose.Document<unknown, {}, IPaquete> & IPaquete & Required<{
     _id: mongoose.Types.ObjectId;
-}>>;
+}>, any>;

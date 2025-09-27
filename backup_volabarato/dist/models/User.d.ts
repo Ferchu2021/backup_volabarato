@@ -1,26 +1,26 @@
-import mongoose = require("mongoose");
-export const joiSchema: Joi.ObjectSchema<any>;
-import Joi = require("joi");
-export declare let User: mongoose.Model<{
+import mongoose, { Document } from 'mongoose';
+import Joi from 'joi';
+export interface IUser extends Document {
     usuario: string;
     password: string;
-}, {}, {}, {}, mongoose.Document<unknown, {}, {
-    usuario: string;
-    password: string;
-}> & {
-    usuario: string;
-    password: string;
-} & {
     _id: mongoose.Types.ObjectId;
-}, mongoose.Schema<any, mongoose.Model<any, any, any, any, any, any>, {}, {}, {}, {}, mongoose.DefaultSchemaOptions, {
+}
+export interface IUserPayload {
+    _id: string;
+    usuario: string;
+}
+export declare const userJoiSchema: Joi.ObjectSchema<any>;
+export interface ILoginRequest {
     usuario: string;
     password: string;
-}, mongoose.Document<unknown, {}, mongoose.FlatRecord<{
+}
+export interface IRegisterRequest {
     usuario: string;
     password: string;
-}>> & mongoose.FlatRecord<{
-    usuario: string;
-    password: string;
-}> & {
+}
+export interface ILoginResponse {
+    token: string;
+}
+export declare const User: mongoose.Model<IUser, {}, {}, {}, mongoose.Document<unknown, {}, IUser> & IUser & Required<{
     _id: mongoose.Types.ObjectId;
-}>>;
+}>, any>;
