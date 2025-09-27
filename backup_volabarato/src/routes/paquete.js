@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', auth, async (req, res) => {
   const { error } = joiSchema.validate(req.body);
-  if (error) return res.status(400).send(error.details.message);
+  if (error) return res.status(400).json({ error: error.details[0].message });
   const paquete = new Paquete(req.body);
   await paquete.save();
   res.status(201).json(paquete);
@@ -18,7 +18,7 @@ router.post('/', auth, async (req, res) => {
 
 router.put('/:id', auth, async (req, res) => {
   const { error } = joiSchema.validate(req.body);
-  if (error) return res.status(400).send(error.details.message);
+  if (error) return res.status(400).json({ error: error.details[0].message });
   const paquete = await Paquete.findByIdAndUpdate(req.params.id, req.body, { new: true });
   res.json(paquete);
 });
