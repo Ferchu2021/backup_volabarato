@@ -7,7 +7,7 @@ export interface IPaquete extends Document {
   destino: string;
   fecha: Date;
   precio: number;
-  descripcion?: string;
+  descripcion: string;
   activo: boolean;
   _id: mongoose.Types.ObjectId;
 }
