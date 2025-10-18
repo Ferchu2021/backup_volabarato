@@ -92,6 +92,55 @@ export const getReservaById = async (req: Request<{ id: string }>, res: Response
   }
 };
 
+// Controller para obtener reservas del usuario autenticado
+export const getMisReservas = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { estado, limit = 10, page = 1 } = req.query;
+    
+    // Obtener el ID del usuario desde el token JWT
+    const usuarioId = req.user?._id;
+    
+    if (!usuarioId) {
+      const errorResponse: IErrorResponse = {
+        error: 'Usuario no autenticado'
+      };
+      res.status(401).json(errorResponse);
+      return;
+    }
+
+    // Construir filtros
+    const filters: any = { usuario: usuarioId };
+    if (estado) filters.estado = estado;
+    
+    // Paginación
+    const skip = (Number(page) - 1) * Number(limit);
+    
+    const reservas = await Reserva.find(filters)
+      .populate('paquete', 'nombre destino precio')
+      .sort({ fechaReserva: -1 })
+      .skip(skip)
+      .limit(Number(limit));
+    
+    const total = await Reserva.countDocuments(filters);
+    
+    res.json({
+      reservas,
+      pagination: {
+        page: Number(page),
+        limit: Number(limit),
+        total,
+        pages: Math.ceil(total / Number(limit))
+      }
+    });
+  } catch (error) {
+    console.error('Error obteniendo mis reservas:', error);
+    const errorResponse: IErrorResponse = {
+      error: 'Error interno del servidor'
+    };
+    res.status(500).json(errorResponse);
+  }
+};
+
 // Controller para obtener reservas de un usuario específico
 export const getReservasByUsuario = async (req: Request<{ usuarioId: string }>, res: Response): Promise<void> => {
   try {
@@ -447,6 +496,7 @@ export default {
   getAllReservas,
   getReservaById,
   getReservasByUsuario,
+  getMisReservas,
   createReserva,
   updateReserva,
   cancelarReserva,

@@ -3,6 +3,7 @@ import {
   getAllReservas, 
   getReservaById, 
   getReservasByUsuario,
+  getMisReservas,
   createReserva, 
   updateReserva, 
   cancelarReserva,
@@ -19,6 +20,9 @@ router.get('/', getAllReservas);
 
 // GET /api/reserva/stats - Obtener estadísticas de reservas
 router.get('/stats', getReservasStats);
+
+// GET /api/reserva/mis-reservas - Obtener reservas del usuario autenticado
+router.get('/mis-reservas', auth, getMisReservas);
 
 // GET /api/reserva/usuario/:usuarioId - Obtener reservas de un usuario específico
 router.get('/usuario/:usuarioId', getReservasByUsuario);
