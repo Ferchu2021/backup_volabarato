@@ -10,6 +10,7 @@ import paqueteRoutes from './routes/paquete';
 import userRoutes from './routes/user.routes';
 import productoRoutes from './routes/producto.routes';
 import destinoRoutes from './routes/destino.routes';
+import reservaRoutes from './routes/reserva.routes';
 
 // Carga variables de entorno
 dotenv.config();
@@ -43,6 +44,7 @@ app.use('/api/paquete', paqueteRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/producto', productoRoutes);
 app.use('/api/destino', destinoRoutes);
+app.use('/api/reserva', reservaRoutes);
 
 // Ruta de prueba
 app.get('/', (req: Request, res: Response) => {
