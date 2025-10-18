@@ -8,6 +8,8 @@ import mongoose from 'mongoose';
 // Importa rutas
 import paqueteRoutes from './routes/paquete';
 import userRoutes from './routes/user.routes';
+import productoRoutes from './routes/producto.routes';
+import destinoRoutes from './routes/destino.routes';
 
 // Carga variables de entorno
 dotenv.config();
@@ -39,6 +41,8 @@ const connectDB = async (): Promise<void> => {
 // Rutas REST
 app.use('/api/paquete', paqueteRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/producto', productoRoutes);
+app.use('/api/destino', destinoRoutes);
 
 // Ruta de prueba
 app.get('/', (req: Request, res: Response) => {
