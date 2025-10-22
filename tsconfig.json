@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "rootDir": "src",
+    "rootDir": "backup_volabarato/src",
     "outDir": "dist",
     "module": "commonjs",
     "target": "ES2020",
@@ -13,6 +13,9 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
   },
+  "include": [
+    "backup_volabarato/src/**/*"
+  ],
   "exclude": [
     "node_modules",
     "**/*.spec.ts"
