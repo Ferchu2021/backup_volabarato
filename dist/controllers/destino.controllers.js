@@ -2,17 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getDestinosByClima = exports.getDestinosByPais = exports.searchDestinos = exports.deleteDestino = exports.updateDestino = exports.createDestino = exports.getDestinoById = exports.getAllDestinos = void 0;
 const Destino_1 = require("../models/Destino");
-// Controller para obtener todos los destinos
 const getAllDestinos = async (req, res) => {
     try {
         const { pais, activo, limit = 10, page = 1 } = req.query;
-        // Construir filtros
         const filters = {};
         if (pais)
             filters.pais = pais;
         if (activo !== undefined)
             filters.activo = activo === 'true';
-        // Paginación
         const skip = (Number(page) - 1) * Number(limit);
         const destinos = await Destino_1.Destino.find(filters)
             .sort({ fechaCreacion: -1 })
@@ -38,7 +35,6 @@ const getAllDestinos = async (req, res) => {
     }
 };
 exports.getAllDestinos = getAllDestinos;
-// Controller para obtener un destino por ID
 const getDestinoById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -68,7 +64,6 @@ const getDestinoById = async (req, res) => {
     }
 };
 exports.getDestinoById = getDestinoById;
-// Controller para crear un nuevo destino
 const createDestino = async (req, res) => {
     try {
         const { error } = Destino_1.destinoJoiSchema.validate(req.body);
@@ -104,7 +99,6 @@ const createDestino = async (req, res) => {
     }
 };
 exports.createDestino = createDestino;
-// Controller para actualizar un destino
 const updateDestino = async (req, res) => {
     try {
         const { id } = req.params;
@@ -146,7 +140,6 @@ const updateDestino = async (req, res) => {
     }
 };
 exports.updateDestino = updateDestino;
-// Controller para eliminar un destino (baja lógica)
 const deleteDestino = async (req, res) => {
     try {
         const { id } = req.params;
@@ -179,7 +172,6 @@ const deleteDestino = async (req, res) => {
     }
 };
 exports.deleteDestino = deleteDestino;
-// Controller para buscar destinos
 const searchDestinos = async (req, res) => {
     try {
         const { q, pais, clima } = req.query;
@@ -220,7 +212,6 @@ const searchDestinos = async (req, res) => {
     }
 };
 exports.searchDestinos = searchDestinos;
-// Controller para obtener destinos por país
 const getDestinosByPais = async (req, res) => {
     try {
         const { pais } = req.params;
@@ -250,7 +241,6 @@ const getDestinosByPais = async (req, res) => {
     }
 };
 exports.getDestinosByPais = getDestinosByPais;
-// Controller para obtener destinos por clima
 const getDestinosByClima = async (req, res) => {
     try {
         const { clima } = req.params;
@@ -280,7 +270,6 @@ const getDestinosByClima = async (req, res) => {
     }
 };
 exports.getDestinosByClima = getDestinosByClima;
-// Exportar todos los controllers
 exports.default = {
     getAllDestinos: exports.getAllDestinos,
     getDestinoById: exports.getDestinoById,

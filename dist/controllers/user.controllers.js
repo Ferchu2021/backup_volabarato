@@ -7,7 +7,6 @@ exports.deleteUser = exports.updateUser = exports.getCurrentUser = exports.login
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const user_models_1 = require("../models/user.models");
-// Controller para registrar un nuevo usuario
 const registerUser = async (req, res) => {
     try {
         const { error } = user_models_1.userJoiSchema.validate(req.body);
@@ -47,7 +46,6 @@ const registerUser = async (req, res) => {
     }
 };
 exports.registerUser = registerUser;
-// Controller para iniciar sesión
 const loginUser = async (req, res) => {
     try {
         const { usuario, password } = req.body;
@@ -96,7 +94,6 @@ const loginUser = async (req, res) => {
     }
 };
 exports.loginUser = loginUser;
-// Controller para obtener información del usuario actual
 const getCurrentUser = async (req, res) => {
     try {
         if (!req.user) {
@@ -128,7 +125,6 @@ const getCurrentUser = async (req, res) => {
     }
 };
 exports.getCurrentUser = getCurrentUser;
-// Controller para actualizar información del usuario
 const updateUser = async (req, res) => {
     try {
         if (!req.user) {
@@ -139,7 +135,6 @@ const updateUser = async (req, res) => {
             return;
         }
         const { usuario } = req.body;
-        // Validar que el nuevo usuario no esté en uso por otro usuario
         if (usuario) {
             const existingUser = await user_models_1.User.findOne({
                 usuario,
@@ -178,7 +173,6 @@ const updateUser = async (req, res) => {
     }
 };
 exports.updateUser = updateUser;
-// Controller para eliminar usuario (baja lógica)
 const deleteUser = async (req, res) => {
     try {
         if (!req.user) {
@@ -188,9 +182,6 @@ const deleteUser = async (req, res) => {
             res.status(401).json(errorResponse);
             return;
         }
-        // En lugar de eliminar físicamente, podrías marcar como inactivo
-        // await User.findByIdAndUpdate(req.user._id, { activo: false });
-        // Por ahora, eliminamos físicamente
         await user_models_1.User.findByIdAndDelete(req.user._id);
         res.json({
             message: 'Usuario eliminado exitosamente'
@@ -205,7 +196,6 @@ const deleteUser = async (req, res) => {
     }
 };
 exports.deleteUser = deleteUser;
-// Exportar todos los controllers
 exports.default = {
     registerUser: exports.registerUser,
     loginUser: exports.loginUser,

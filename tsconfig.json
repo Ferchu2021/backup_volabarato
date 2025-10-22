@@ -1,23 +1,62 @@
 {
   "compilerOptions": {
+    // Configuración del proyecto
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": ["ES2020"],
+    
+    // Configuración de archivos
     "rootDir": "backup_volabarato/src",
     "outDir": "dist",
-    "module": "commonjs",
-    "target": "ES2020",
-    "types": ["node"],
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
-    "strict": true,
-    "skipLibCheck": true,
+    "removeComments": true,
+    
+    // Configuración de módulos
+    "moduleResolution": "node",
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    
+    // Configuración estricta
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    
+    // Configuración adicional
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "allowJs": true,
+    "checkJs": false,
+    
+    // Configuración para Node.js
+    "types": ["node"],
+    "baseUrl": "backup_volabarato/src",
+    "paths": {
+      "@/*": ["*"],
+      "@/models/*": ["models/*"],
+      "@/routes/*": ["routes/*"],
+      "@/middlewares/*": ["middlewares/*"],
+      "@/controllers/*": ["controllers/*"]
+    }
   },
   "include": [
     "backup_volabarato/src/**/*"
   ],
   "exclude": [
     "node_modules",
+    "dist",
+    "**/*.test.ts",
     "**/*.spec.ts"
-  ]
+  ],
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  }
 }

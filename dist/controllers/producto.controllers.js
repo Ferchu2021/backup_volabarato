@@ -2,17 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.searchProductos = exports.deleteProducto = exports.updateProducto = exports.createProducto = exports.getProductoById = exports.getAllProductos = void 0;
 const Producto_1 = require("../models/Producto");
-// Controller para obtener todos los productos
 const getAllProductos = async (req, res) => {
     try {
         const { categoria, activo, limit = 10, page = 1 } = req.query;
-        // Construir filtros
         const filters = {};
         if (categoria)
             filters.categoria = categoria;
         if (activo !== undefined)
             filters.activo = activo === 'true';
-        // Paginación
         const skip = (Number(page) - 1) * Number(limit);
         const productos = await Producto_1.Producto.find(filters)
             .sort({ fechaCreacion: -1 })
@@ -38,7 +35,6 @@ const getAllProductos = async (req, res) => {
     }
 };
 exports.getAllProductos = getAllProductos;
-// Controller para obtener un producto por ID
 const getProductoById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -68,7 +64,6 @@ const getProductoById = async (req, res) => {
     }
 };
 exports.getProductoById = getProductoById;
-// Controller para crear un nuevo producto
 const createProducto = async (req, res) => {
     try {
         const { error } = Producto_1.productoJoiSchema.validate(req.body);
@@ -104,7 +99,6 @@ const createProducto = async (req, res) => {
     }
 };
 exports.createProducto = createProducto;
-// Controller para actualizar un producto
 const updateProducto = async (req, res) => {
     try {
         const { id } = req.params;
@@ -146,7 +140,6 @@ const updateProducto = async (req, res) => {
     }
 };
 exports.updateProducto = updateProducto;
-// Controller para eliminar un producto (baja lógica)
 const deleteProducto = async (req, res) => {
     try {
         const { id } = req.params;
@@ -179,7 +172,6 @@ const deleteProducto = async (req, res) => {
     }
 };
 exports.deleteProducto = deleteProducto;
-// Controller para buscar productos
 const searchProductos = async (req, res) => {
     try {
         const { q, categoria, precioMin, precioMax } = req.query;
@@ -223,7 +215,6 @@ const searchProductos = async (req, res) => {
     }
 };
 exports.searchProductos = searchProductos;
-// Exportar todos los controllers
 exports.default = {
     getAllProductos: exports.getAllProductos,
     getProductoById: exports.getProductoById,

@@ -9,22 +9,17 @@ const helmet_1 = __importDefault(require("helmet"));
 const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
 const mongoose_1 = __importDefault(require("mongoose"));
-// Importa rutas
 const paquete_1 = __importDefault(require("./routes/paquete"));
 const user_routes_1 = __importDefault(require("./routes/user.routes"));
 const producto_routes_1 = __importDefault(require("./routes/producto.routes"));
 const destino_routes_1 = __importDefault(require("./routes/destino.routes"));
 const reserva_routes_1 = __importDefault(require("./routes/reserva.routes"));
-// Carga variables de entorno
 dotenv_1.default.config();
-// Inicializa app
 const app = (0, express_1.default)();
-// Middlewares básicos
 app.use((0, helmet_1.default)());
 app.use((0, cors_1.default)());
 app.use((0, morgan_1.default)('dev'));
 app.use(express_1.default.json());
-// Conexión a MongoDB Atlas
 const connectDB = async () => {
     try {
         if (!process.env.MONGO_URI) {
@@ -38,13 +33,11 @@ const connectDB = async () => {
         process.exit(1);
     }
 };
-// Rutas REST
 app.use('/api/paquete', paquete_1.default);
 app.use('/api/user', user_routes_1.default);
 app.use('/api/producto', producto_routes_1.default);
 app.use('/api/destino', destino_routes_1.default);
 app.use('/api/reserva', reserva_routes_1.default);
-// Ruta de prueba
 app.get('/', (req, res) => {
     res.json({
         message: '🚀 Backend VolaBarato API',
@@ -52,14 +45,12 @@ app.get('/', (req, res) => {
         status: 'running'
     });
 });
-// Manejo de rutas no encontradas
 app.use('*', (req, res) => {
     res.status(404).json({
         error: 'Ruta no encontrada',
         path: req.originalUrl
     });
 });
-// Inicia server
 const startServer = async () => {
     try {
         await connectDB();
@@ -74,7 +65,6 @@ const startServer = async () => {
         process.exit(1);
     }
 };
-// Ejecuta el servidor
 startServer();
 exports.default = app;
 //# sourceMappingURL=index.js.map

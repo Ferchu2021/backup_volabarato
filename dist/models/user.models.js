@@ -40,23 +40,19 @@ exports.User = exports.userJoiSchema = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const joi_1 = __importDefault(require("joi"));
-// Schema de Mongoose
 const userSchema = new mongoose_1.Schema({
     usuario: { type: String, required: true, unique: true },
     password: { type: String, required: true }
 });
-// Middleware pre-save para hashear password
 userSchema.pre('save', function (next) {
     if (!this.isModified('password'))
         return next();
     this.password = bcrypt_1.default.hashSync(this.password, 10);
     next();
 });
-// Schema de validación Joi
 exports.userJoiSchema = joi_1.default.object({
     usuario: joi_1.default.string().min(4).max(30).required(),
     password: joi_1.default.string().min(6).required()
 });
-// Modelo exportado
 exports.User = mongoose_1.default.model('User', userSchema);
 //# sourceMappingURL=user.models.js.map

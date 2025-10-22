@@ -39,7 +39,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Reserva = exports.reservaJoiSchema = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const joi_1 = __importDefault(require("joi"));
-// Schema de Mongoose
 const reservaSchema = new mongoose_1.Schema({
     usuario: {
         type: mongoose_1.Schema.Types.ObjectId,
@@ -94,18 +93,15 @@ const reservaSchema = new mongoose_1.Schema({
     fechaCreacion: { type: Date, default: Date.now },
     fechaActualizacion: { type: Date, default: Date.now }
 });
-// Middleware pre-save para actualizar fechaActualizacion
 reservaSchema.pre('save', function (next) {
     this.fechaActualizacion = new Date();
     next();
 });
-// Índices para mejorar consultas
 reservaSchema.index({ usuario: 1 });
 reservaSchema.index({ paquete: 1 });
 reservaSchema.index({ estado: 1 });
 reservaSchema.index({ fechaViaje: 1 });
 reservaSchema.index({ fechaReserva: -1 });
-// Schema de validación Joi
 exports.reservaJoiSchema = joi_1.default.object({
     usuario: joi_1.default.string().hex().length(24).required(),
     paquete: joi_1.default.string().hex().length(24).required(),
@@ -121,6 +117,5 @@ exports.reservaJoiSchema = joi_1.default.object({
         telefono: joi_1.default.string().min(8).max(20).required()
     }).required()
 });
-// Modelo exportado
 exports.Reserva = mongoose_1.default.model('Reserva', reservaSchema);
 //# sourceMappingURL=Reserva.js.map

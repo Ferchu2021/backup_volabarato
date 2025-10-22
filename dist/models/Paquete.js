@@ -39,7 +39,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Paquete = exports.paqueteJoiSchema = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const joi_1 = __importDefault(require("joi"));
-// Schema de Mongoose
 const paqueteSchema = new mongoose_1.Schema({
     nombre: { type: String, required: true },
     destino: { type: String, required: true },
@@ -48,7 +47,6 @@ const paqueteSchema = new mongoose_1.Schema({
     descripcion: { type: String },
     activo: { type: Boolean, default: true }
 });
-// Schema de validación Joi
 exports.paqueteJoiSchema = joi_1.default.object({
     nombre: joi_1.default.string().required(),
     destino: joi_1.default.string().required(),
@@ -57,6 +55,5 @@ exports.paqueteJoiSchema = joi_1.default.object({
     descripcion: joi_1.default.string().optional(),
     activo: joi_1.default.boolean()
 });
-// Modelo exportado
 exports.Paquete = mongoose_1.default.model('Paquete', paqueteSchema);
 //# sourceMappingURL=Paquete.js.map

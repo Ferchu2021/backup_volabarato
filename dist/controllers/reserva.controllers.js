@@ -3,11 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getReservasStats = exports.deleteReserva = exports.confirmarReserva = exports.cancelarReserva = exports.updateReserva = exports.createReserva = exports.getReservasByUsuario = exports.getMisReservas = exports.getReservaById = exports.getAllReservas = void 0;
 const Reserva_1 = require("../models/Reserva");
 const Paquete_1 = require("../models/Paquete");
-// Controller para obtener todas las reservas
 const getAllReservas = async (req, res) => {
     try {
         const { estado, usuario, paquete, limit = 10, page = 1 } = req.query;
-        // Construir filtros
         const filters = {};
         if (estado)
             filters.estado = estado;
@@ -15,7 +13,6 @@ const getAllReservas = async (req, res) => {
             filters.usuario = usuario;
         if (paquete)
             filters.paquete = paquete;
-        // Paginación
         const skip = (Number(page) - 1) * Number(limit);
         const reservas = await Reserva_1.Reserva.find(filters)
             .populate('usuario', 'nombre email')
@@ -43,7 +40,6 @@ const getAllReservas = async (req, res) => {
     }
 };
 exports.getAllReservas = getAllReservas;
-// Controller para obtener una reserva por ID
 const getReservaById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -75,11 +71,9 @@ const getReservaById = async (req, res) => {
     }
 };
 exports.getReservaById = getReservaById;
-// Controller para obtener reservas del usuario autenticado
 const getMisReservas = async (req, res) => {
     try {
         const { estado, limit = 10, page = 1 } = req.query;
-        // Obtener el ID del usuario desde el token JWT
         const usuarioId = req.user?._id;
         if (!usuarioId) {
             const errorResponse = {
@@ -88,11 +82,9 @@ const getMisReservas = async (req, res) => {
             res.status(401).json(errorResponse);
             return;
         }
-        // Construir filtros
         const filters = { usuario: usuarioId };
         if (estado)
             filters.estado = estado;
-        // Paginación
         const skip = (Number(page) - 1) * Number(limit);
         const reservas = await Reserva_1.Reserva.find(filters)
             .populate('paquete', 'nombre destino precio')
@@ -119,7 +111,6 @@ const getMisReservas = async (req, res) => {
     }
 };
 exports.getMisReservas = getMisReservas;
-// Controller para obtener reservas de un usuario específico
 const getReservasByUsuario = async (req, res) => {
     try {
         const { usuarioId } = req.params;
@@ -131,11 +122,9 @@ const getReservasByUsuario = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        // Construir filtros
         const filters = { usuario: usuarioId };
         if (estado)
             filters.estado = estado;
-        // Paginación
         const skip = (Number(page) - 1) * Number(limit);
         const reservas = await Reserva_1.Reserva.find(filters)
             .populate('paquete', 'nombre destino precio')
@@ -162,7 +151,6 @@ const getReservasByUsuario = async (req, res) => {
     }
 };
 exports.getReservasByUsuario = getReservasByUsuario;
-// Controller para crear una nueva reserva
 const createReserva = async (req, res) => {
     try {
         const { error } = Reserva_1.reservaJoiSchema.validate(req.body);
@@ -174,7 +162,6 @@ const createReserva = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        // Verificar que el paquete existe
         const paquete = await Paquete_1.Paquete.findById(req.body.paquete);
         if (!paquete) {
             const errorResponse = {
@@ -183,7 +170,6 @@ const createReserva = async (req, res) => {
             res.status(404).json(errorResponse);
             return;
         }
-        // Verificar que el paquete está activo
         if (!paquete.activo) {
             const errorResponse = {
                 error: 'El paquete no está disponible para reservas'
@@ -191,7 +177,6 @@ const createReserva = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        // Verificar que la fecha de viaje es futura
         const fechaViaje = new Date(req.body.fechaViaje);
         if (fechaViaje <= new Date()) {
             const errorResponse = {
@@ -202,7 +187,6 @@ const createReserva = async (req, res) => {
         }
         const reserva = new Reserva_1.Reserva(req.body);
         await reserva.save();
-        // Poblar datos para la respuesta
         const reservaPopulada = await Reserva_1.Reserva.findById(reserva._id)
             .populate('usuario', 'nombre email')
             .populate('paquete', 'nombre destino precio');
@@ -228,7 +212,6 @@ const createReserva = async (req, res) => {
     }
 };
 exports.createReserva = createReserva;
-// Controller para actualizar una reserva
 const updateReserva = async (req, res) => {
     try {
         const { id } = req.params;
@@ -239,7 +222,6 @@ const updateReserva = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        // Validar datos de actualización
         const updateSchema = Reserva_1.reservaJoiSchema.fork(Object.keys(Reserva_1.reservaJoiSchema.describe().keys), (schema) => schema.optional());
         const { error } = updateSchema.validate(req.body);
         if (error) {
@@ -250,7 +232,6 @@ const updateReserva = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        // Verificar que la fecha de viaje es futura si se está actualizando
         if (req.body.fechaViaje) {
             const fechaViaje = new Date(req.body.fechaViaje);
             if (fechaViaje <= new Date()) {
@@ -285,7 +266,6 @@ const updateReserva = async (req, res) => {
     }
 };
 exports.updateReserva = updateReserva;
-// Controller para cancelar una reserva
 const cancelarReserva = async (req, res) => {
     try {
         const { id } = req.params;
@@ -320,7 +300,6 @@ const cancelarReserva = async (req, res) => {
     }
 };
 exports.cancelarReserva = cancelarReserva;
-// Controller para confirmar una reserva
 const confirmarReserva = async (req, res) => {
     try {
         const { id } = req.params;
@@ -355,7 +334,6 @@ const confirmarReserva = async (req, res) => {
     }
 };
 exports.confirmarReserva = confirmarReserva;
-// Controller para eliminar una reserva (baja lógica)
 const deleteReserva = async (req, res) => {
     try {
         const { id } = req.params;
@@ -388,7 +366,6 @@ const deleteReserva = async (req, res) => {
     }
 };
 exports.deleteReserva = deleteReserva;
-// Controller para obtener estadísticas de reservas
 const getReservasStats = async (req, res) => {
     try {
         const { fechaInicio, fechaFin } = req.query;
@@ -429,7 +406,6 @@ const getReservasStats = async (req, res) => {
     }
 };
 exports.getReservasStats = getReservasStats;
-// Exportar todos los controllers
 exports.default = {
     getAllReservas: exports.getAllReservas,
     getReservaById: exports.getReservaById,

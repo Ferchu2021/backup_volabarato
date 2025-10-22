@@ -39,7 +39,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Producto = exports.productoJoiSchema = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const joi_1 = __importDefault(require("joi"));
-// Schema de Mongoose
 const productoSchema = new mongoose_1.Schema({
     nombre: { type: String, required: true, trim: true },
     descripcion: { type: String, required: true, trim: true },
@@ -51,12 +50,10 @@ const productoSchema = new mongoose_1.Schema({
     fechaCreacion: { type: Date, default: Date.now },
     fechaActualizacion: { type: Date, default: Date.now }
 });
-// Middleware pre-save para actualizar fechaActualizacion
 productoSchema.pre('save', function (next) {
     this.fechaActualizacion = new Date();
     next();
 });
-// Schema de validación Joi
 exports.productoJoiSchema = joi_1.default.object({
     nombre: joi_1.default.string().min(2).max(100).required(),
     descripcion: joi_1.default.string().min(10).max(500).required(),
@@ -66,6 +63,5 @@ exports.productoJoiSchema = joi_1.default.object({
     imagen: joi_1.default.string().uri().optional(),
     activo: joi_1.default.boolean().optional()
 });
-// Modelo exportado
 exports.Producto = mongoose_1.default.model('Producto', productoSchema);
 //# sourceMappingURL=Producto.js.map

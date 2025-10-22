@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.basicRateLimit = exports.checkUserActive = exports.validateUsernameFormat = exports.validatePasswordFormat = exports.checkUserNotExists = exports.checkUserExists = void 0;
 const user_models_1 = require("../models/user.models");
-// Middleware para verificar si el usuario existe
 const checkUserExists = async (req, res, next) => {
     try {
         const { usuario } = req.body;
@@ -24,7 +23,6 @@ const checkUserExists = async (req, res, next) => {
     }
 };
 exports.checkUserExists = checkUserExists;
-// Middleware para verificar si el usuario NO existe (para login)
 const checkUserNotExists = async (req, res, next) => {
     try {
         const { usuario } = req.body;
@@ -38,7 +36,6 @@ const checkUserNotExists = async (req, res, next) => {
                 message: 'Verifica que el nombre de usuario sea correcto'
             });
         }
-        // Agregar el usuario encontrado al request para uso posterior
         req.user = {
             _id: existingUser._id.toString(),
             usuario: existingUser.usuario
@@ -51,7 +48,6 @@ const checkUserNotExists = async (req, res, next) => {
     }
 };
 exports.checkUserNotExists = checkUserNotExists;
-// Middleware para validar formato de contraseña
 const validatePasswordFormat = (req, res, next) => {
     const { password } = req.body;
     if (!password) {
@@ -69,7 +65,6 @@ const validatePasswordFormat = (req, res, next) => {
             error: 'La contraseña no puede exceder 128 caracteres'
         });
     }
-    // Verificar que no contenga espacios
     if (password.includes(' ')) {
         return res.status(400).json({
             error: 'La contraseña no puede contener espacios'
@@ -78,7 +73,6 @@ const validatePasswordFormat = (req, res, next) => {
     next();
 };
 exports.validatePasswordFormat = validatePasswordFormat;
-// Middleware para validar formato de nombre de usuario
 const validateUsernameFormat = (req, res, next) => {
     const { usuario } = req.body;
     if (!usuario) {
@@ -96,7 +90,6 @@ const validateUsernameFormat = (req, res, next) => {
             error: 'El nombre de usuario no puede exceder 30 caracteres'
         });
     }
-    // Verificar que solo contenga caracteres alfanuméricos y guiones bajos
     const usernameRegex = /^[a-zA-Z0-9_]+$/;
     if (!usernameRegex.test(usuario)) {
         return res.status(400).json({
@@ -106,7 +99,6 @@ const validateUsernameFormat = (req, res, next) => {
     next();
 };
 exports.validateUsernameFormat = validateUsernameFormat;
-// Middleware para verificar si el usuario está activo
 const checkUserActive = async (req, res, next) => {
     try {
         const { usuario } = req.body;
@@ -119,12 +111,6 @@ const checkUserActive = async (req, res, next) => {
                 error: 'Usuario no encontrado'
             });
         }
-        // Si en el futuro agregas un campo 'activo' al modelo User, puedes verificar aquí
-        // if (!user.activo) {
-        //   return res.status(403).json({ 
-        //     error: 'Usuario desactivado' 
-        //   });
-        // }
         next();
     }
     catch (error) {
@@ -133,26 +119,22 @@ const checkUserActive = async (req, res, next) => {
     }
 };
 exports.checkUserActive = checkUserActive;
-// Middleware para rate limiting básico (opcional)
 exports.basicRateLimit = (() => {
     const attempts = {};
     return (req, res, next) => {
         const ip = req.ip || req.connection.remoteAddress || 'unknown';
         const now = Date.now();
-        const windowMs = 15 * 60 * 1000; // 15 minutos
-        const maxAttempts = 5; // máximo 5 intentos por IP
-        // Limpiar intentos antiguos
+        const windowMs = 15 * 60 * 1000;
+        const maxAttempts = 5;
         if (attempts[ip] && now > attempts[ip].resetTime) {
             delete attempts[ip];
         }
-        // Inicializar o incrementar contador
         if (!attempts[ip]) {
             attempts[ip] = { count: 1, resetTime: now + windowMs };
         }
         else {
             attempts[ip].count++;
         }
-        // Verificar límite
         if (attempts[ip].count > maxAttempts) {
             return res.status(429).json({
                 error: 'Demasiados intentos de acceso',
