@@ -1,0 +1,294 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getDestinosByClima = exports.getDestinosByPais = exports.searchDestinos = exports.deleteDestino = exports.updateDestino = exports.createDestino = exports.getDestinoById = exports.getAllDestinos = void 0;
+const Destino_1 = require("../models/Destino");
+// Controller para obtener todos los destinos
+const getAllDestinos = async (req, res) => {
+    try {
+        const { pais, activo, limit = 10, page = 1 } = req.query;
+        // Construir filtros
+        const filters = {};
+        if (pais)
+            filters.pais = pais;
+        if (activo !== undefined)
+            filters.activo = activo === 'true';
+        // Paginación
+        const skip = (Number(page) - 1) * Number(limit);
+        const destinos = await Destino_1.Destino.find(filters)
+            .sort({ fechaCreacion: -1 })
+            .skip(skip)
+            .limit(Number(limit));
+        const total = await Destino_1.Destino.countDocuments(filters);
+        res.json({
+            destinos,
+            pagination: {
+                page: Number(page),
+                limit: Number(limit),
+                total,
+                pages: Math.ceil(total / Number(limit))
+            }
+        });
+    }
+    catch (error) {
+        console.error('Error obteniendo destinos:', error);
+        const errorResponse = {
+            error: 'Error interno del servidor'
+        };
+        res.status(500).json(errorResponse);
+    }
+};
+exports.getAllDestinos = getAllDestinos;
+// Controller para obtener un destino por ID
+const getDestinoById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id) {
+            const errorResponse = {
+                error: 'ID del destino es requerido'
+            };
+            res.status(400).json(errorResponse);
+            return;
+        }
+        const destino = await Destino_1.Destino.findById(id);
+        if (!destino) {
+            const errorResponse = {
+                error: 'Destino no encontrado'
+            };
+            res.status(404).json(errorResponse);
+            return;
+        }
+        res.json(destino);
+    }
+    catch (error) {
+        console.error('Error obteniendo destino:', error);
+        const errorResponse = {
+            error: 'Error interno del servidor'
+        };
+        res.status(500).json(errorResponse);
+    }
+};
+exports.getDestinoById = getDestinoById;
+// Controller para crear un nuevo destino
+const createDestino = async (req, res) => {
+    try {
+        const { error } = Destino_1.destinoJoiSchema.validate(req.body);
+        if (error) {
+            const errorResponse = {
+                error: 'Datos de validación incorrectos',
+                details: error.details[0]?.message || 'Error de validación'
+            };
+            res.status(400).json(errorResponse);
+            return;
+        }
+        const destino = new Destino_1.Destino(req.body);
+        await destino.save();
+        res.status(201).json({
+            message: 'Destino creado exitosamente',
+            destino
+        });
+    }
+    catch (error) {
+        console.error('Error creando destino:', error);
+        if (error.code === 11000) {
+            const errorResponse = {
+                error: 'El destino ya existe',
+                message: 'Intenta con un nombre diferente'
+            };
+            res.status(400).json(errorResponse);
+            return;
+        }
+        const errorResponse = {
+            error: 'Error interno del servidor'
+        };
+        res.status(500).json(errorResponse);
+    }
+};
+exports.createDestino = createDestino;
+// Controller para actualizar un destino
+const updateDestino = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id) {
+            const errorResponse = {
+                error: 'ID del destino es requerido'
+            };
+            res.status(400).json(errorResponse);
+            return;
+        }
+        const { error } = Destino_1.destinoJoiSchema.validate(req.body);
+        if (error) {
+            const errorResponse = {
+                error: 'Datos de validación incorrectos',
+                details: error.details[0]?.message || 'Error de validación'
+            };
+            res.status(400).json(errorResponse);
+            return;
+        }
+        const destino = await Destino_1.Destino.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
+        if (!destino) {
+            const errorResponse = {
+                error: 'Destino no encontrado'
+            };
+            res.status(404).json(errorResponse);
+            return;
+        }
+        res.json({
+            message: 'Destino actualizado exitosamente',
+            destino
+        });
+    }
+    catch (error) {
+        console.error('Error actualizando destino:', error);
+        const errorResponse = {
+            error: 'Error interno del servidor'
+        };
+        res.status(500).json(errorResponse);
+    }
+};
+exports.updateDestino = updateDestino;
+// Controller para eliminar un destino (baja lógica)
+const deleteDestino = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id) {
+            const errorResponse = {
+                error: 'ID del destino es requerido'
+            };
+            res.status(400).json(errorResponse);
+            return;
+        }
+        const destino = await Destino_1.Destino.findByIdAndUpdate(id, { activo: false }, { new: true });
+        if (!destino) {
+            const errorResponse = {
+                error: 'Destino no encontrado'
+            };
+            res.status(404).json(errorResponse);
+            return;
+        }
+        res.json({
+            message: 'Destino eliminado exitosamente (baja lógica)',
+            destino
+        });
+    }
+    catch (error) {
+        console.error('Error eliminando destino:', error);
+        const errorResponse = {
+            error: 'Error interno del servidor'
+        };
+        res.status(500).json(errorResponse);
+    }
+};
+exports.deleteDestino = deleteDestino;
+// Controller para buscar destinos
+const searchDestinos = async (req, res) => {
+    try {
+        const { q, pais, clima } = req.query;
+        if (!q) {
+            const errorResponse = {
+                error: 'Término de búsqueda es requerido'
+            };
+            res.status(400).json(errorResponse);
+            return;
+        }
+        const filters = {
+            $or: [
+                { nombre: { $regex: q, $options: 'i' } },
+                { pais: { $regex: q, $options: 'i' } },
+                { ciudad: { $regex: q, $options: 'i' } },
+                { descripcion: { $regex: q, $options: 'i' } },
+                { actividades: { $in: [new RegExp(q, 'i')] } }
+            ],
+            activo: true
+        };
+        if (pais)
+            filters.pais = pais;
+        if (clima)
+            filters.clima = clima;
+        const destinos = await Destino_1.Destino.find(filters).sort({ fechaCreacion: -1 });
+        res.json({
+            destinos,
+            total: destinos.length,
+            query: q
+        });
+    }
+    catch (error) {
+        console.error('Error buscando destinos:', error);
+        const errorResponse = {
+            error: 'Error interno del servidor'
+        };
+        res.status(500).json(errorResponse);
+    }
+};
+exports.searchDestinos = searchDestinos;
+// Controller para obtener destinos por país
+const getDestinosByPais = async (req, res) => {
+    try {
+        const { pais } = req.params;
+        if (!pais) {
+            const errorResponse = {
+                error: 'País es requerido'
+            };
+            res.status(400).json(errorResponse);
+            return;
+        }
+        const destinos = await Destino_1.Destino.find({
+            pais: { $regex: pais, $options: 'i' },
+            activo: true
+        }).sort({ ciudad: 1 });
+        res.json({
+            destinos,
+            total: destinos.length,
+            pais
+        });
+    }
+    catch (error) {
+        console.error('Error obteniendo destinos por país:', error);
+        const errorResponse = {
+            error: 'Error interno del servidor'
+        };
+        res.status(500).json(errorResponse);
+    }
+};
+exports.getDestinosByPais = getDestinosByPais;
+// Controller para obtener destinos por clima
+const getDestinosByClima = async (req, res) => {
+    try {
+        const { clima } = req.params;
+        if (!clima) {
+            const errorResponse = {
+                error: 'Clima es requerido'
+            };
+            res.status(400).json(errorResponse);
+            return;
+        }
+        const destinos = await Destino_1.Destino.find({
+            clima: { $regex: clima, $options: 'i' },
+            activo: true
+        }).sort({ nombre: 1 });
+        res.json({
+            destinos,
+            total: destinos.length,
+            clima
+        });
+    }
+    catch (error) {
+        console.error('Error obteniendo destinos por clima:', error);
+        const errorResponse = {
+            error: 'Error interno del servidor'
+        };
+        res.status(500).json(errorResponse);
+    }
+};
+exports.getDestinosByClima = getDestinosByClima;
+// Exportar todos los controllers
+exports.default = {
+    getAllDestinos: exports.getAllDestinos,
+    getDestinoById: exports.getDestinoById,
+    createDestino: exports.createDestino,
+    updateDestino: exports.updateDestino,
+    deleteDestino: exports.deleteDestino,
+    searchDestinos: exports.searchDestinos,
+    getDestinosByPais: exports.getDestinosByPais,
+    getDestinosByClima: exports.getDestinosByClima
+};
+//# sourceMappingURL=destino.controllers.js.map

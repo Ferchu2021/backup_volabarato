@@ -1,24 +1,31 @@
 {
   "compilerOptions": {
-    // Configuración del proyecto
-    "target": "ES2020",
-    "module": "commonjs",
-    "lib": ["ES2020"],
-    
-    // Configuración de archivos
-    "rootDir": "src",
-    "outDir": "dist",
+    // File Layout
+    // "rootDir": "./src",
+    // "outDir": "./dist",
+
+    // Environment Settings
+    // See also https://aka.ms/tsconfig/module
+    "module": "nodenext",
+    "target": "esnext",
+    "types": [],
+    // For nodejs:
+    // "lib": ["esnext"],
+    // "types": ["node"],
+    // and npm install -D @types/node
+
+    // Other Outputs
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
     "removeComments": true,
     
     // Configuración de módulos
-    "moduleResolution": "node",
+    // "moduleResolution": "NodeNext", // Automatically inferred when module is "nodenext"
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    
+
     // Configuración estricta
     "strict": true,
     "noImplicitAny": true,
@@ -33,30 +40,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "allowJs": true,
-    "checkJs": false,
-    
-    // Configuración para Node.js
-    "types": ["node"],
-    "baseUrl": "src",
-    "paths": {
-      "@/*": ["*"],
-      "@/models/*": ["models/*"],
-      "@/routes/*": ["routes/*"],
-      "@/middlewares/*": ["middlewares/*"],
-      "@/controllers/*": ["controllers/*"]
-    }
-  },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.test.ts",
-    "**/*.spec.ts"
-  ],
-  "ts-node": {
-    "require": ["tsconfig-paths/register"]
+    "noUncheckedSideEffectImports": true,
+    "moduleDetection": "force",
   }
 }
