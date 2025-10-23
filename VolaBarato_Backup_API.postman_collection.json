@@ -1,0 +1,387 @@
+{
+	"info": {
+		"_postman_id": "volabarato-backup-api",
+		"name": "VolaBarato Backup API",
+		"description": "Colección de pruebas para la API de VolaBarato Backup con MongoDB",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						""
+					]
+				},
+				"description": "Verificar que el servidor esté funcionando"
+			},
+			"response": []
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"usuario\": \"testuser\",\n  \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/user/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"register"
+							]
+						},
+						"description": "Registrar un nuevo usuario"
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"usuario\": \"testuser\",\n  \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/user/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"login"
+							]
+						},
+						"description": "Iniciar sesión y obtener token JWT"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Destinos",
+			"item": [
+				{
+					"name": "Get All Destinos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/destino",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"destino"
+							]
+						},
+						"description": "Obtener todos los destinos"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Destino",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"París\",\n  \"pais\": \"Francia\",\n  \"descripcion\": \"La ciudad del amor\",\n  \"imagen\": \"https://example.com/paris.jpg\",\n  \"actividades\": [\"Visitar Torre Eiffel\", \"Recorrer el Louvre\", \"Pasear por Montmartre\"],\n  \"clima\": \"Templado\",\n  \"mejor_epoca\": \"Primavera\",\n  \"requisitos\": [\"Pasaporte\", \"Visa Schengen\"],\n  \"costo_promedio\": 1500,\n  \"moneda\": \"EUR\",\n  \"idioma\": \"Francés\",\n  \"zona_horaria\": \"CET\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/destino",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"destino"
+							]
+						},
+						"description": "Crear un nuevo destino"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Destino by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/destino/{{destino_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"destino",
+								"{{destino_id}}"
+							]
+						},
+						"description": "Obtener un destino específico por ID"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Productos",
+			"item": [
+				{
+					"name": "Get All Productos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/producto",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"producto"
+							]
+						},
+						"description": "Obtener todos los productos"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Producto",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Vuelo a París\",\n  \"descripcion\": \"Vuelo directo a París desde Madrid\",\n  \"precio\": 299.99,\n  \"categoria\": \"Vuelos\",\n  \"disponibilidad\": true,\n  \"imagen\": \"https://example.com/vuelo-paris.jpg\",\n  \"destino\": \"{{destino_id}}\",\n  \"fecha_salida\": \"2024-06-15\",\n  \"fecha_regreso\": \"2024-06-22\",\n  \"aerolinea\": \"Air France\",\n  \"duracion\": \"2h 30min\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/producto",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"producto"
+							]
+						},
+						"description": "Crear un nuevo producto"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Paquetes",
+			"item": [
+				{
+					"name": "Get All Paquetes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/paquete",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"paquete"
+							]
+						},
+						"description": "Obtener todos los paquetes"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Paquete",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Paquete París Completo\",\n  \"descripcion\": \"7 días en París con vuelo, hotel y actividades\",\n  \"precio\": 1299.99,\n  \"duracion\": 7,\n  \"destino\": \"{{destino_id}}\",\n  \"productos\": [\"{{producto_id}}\"],\n  \"incluye\": [\"Vuelo\", \"Hotel 4 estrellas\", \"Desayunos\", \"Tour guiado\"],\n  \"no_incluye\": [\"Almuerzos\", \"Cenas\", \"Seguro de viaje\"],\n  \"fecha_inicio\": \"2024-06-15\",\n  \"fecha_fin\": \"2024-06-22\",\n  \"max_personas\": 2,\n  \"min_personas\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/paquete",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"paquete"
+							]
+						},
+						"description": "Crear un nuevo paquete"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reservas",
+			"item": [
+				{
+					"name": "Get All Reservas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/reserva",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"reserva"
+							]
+						},
+						"description": "Obtener todas las reservas del usuario autenticado"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Reserva",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"paquete\": \"{{paquete_id}}\",\n  \"fecha_salida\": \"2024-06-15\",\n  \"fecha_regreso\": \"2024-06-22\",\n  \"numero_personas\": 2,\n  \"precio_total\": 1299.99,\n  \"estado\": \"confirmada\",\n  \"metodo_pago\": \"tarjeta\",\n  \"notas\": \"Habitación con vista a la Torre Eiffel\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/reserva",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"reserva"
+							]
+						},
+						"description": "Crear una nueva reserva"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:4000",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "destino_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "producto_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "paquete_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
