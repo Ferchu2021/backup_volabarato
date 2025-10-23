@@ -30,7 +30,10 @@ const connectDB = async () => {
         if (!process.env.MONGO_URI) {
             throw new Error('MONGO_URI no está definida en las variables de entorno');
         }
-        await mongoose_1.default.connect(process.env.MONGO_URI);
+        await mongoose_1.default.connect(process.env.MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
         console.log('✅ Conectado a MongoDB Atlas');
     }
     catch (error) {
@@ -62,7 +65,7 @@ app.use('*', (req, res) => {
 // Inicia server
 const startServer = async () => {
     try {
-        await connectDB();
+        await connectDB(); // Espera a que la conexión a MongoDB esté lista antes de iniciar el servidor
         const port = parseInt(process.env.PORT || '4000', 10);
         app.listen(port, () => {
             console.log(`🚀 Backend ready en puerto ${port}`);
