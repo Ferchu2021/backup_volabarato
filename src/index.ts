@@ -55,11 +55,18 @@ app.get('/', (req: Request, res: Response) => {
   });
 });
 
-// Manejo de rutas no encontradas (debe estar al final de todas las rutas)
+// Middleware catch-all para rutas no definidas
 app.use((req: Request, res: Response) => {
   res.status(404).json({
-    error: 'Ruta no encontrada',
-    path: req.originalUrl
+    success: false,
+    message: `Ruta no encontrada: ${req.method} ${req.path}`,
+    availableEndpoints: {
+      paquete: '/api/paquete',
+      user: '/api/user',
+      producto: '/api/producto',
+      destino: '/api/destino',
+      reserva: '/api/reserva'
+    }
   });
 });
 
