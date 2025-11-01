@@ -1,10 +1,9 @@
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { User } from '../src/models/user.models';
-import path from 'path';
 
 // Cargar variables de entorno
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
+dotenv.config({ path: '.env' });
 
 const seedAdminUser = async () => {
   try {
