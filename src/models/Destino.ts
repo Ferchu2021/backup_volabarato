@@ -46,7 +46,7 @@ destinoSchema.pre<IDestino>('save', function(next) {
   next();
 });
 
-// Schema de validación Joi
+// Schema de validación Joi para crear
 export const destinoJoiSchema = Joi.object({
   nombre: Joi.string().min(2).max(100).required(),
   pais: Joi.string().min(2).max(50).required(),
@@ -62,6 +62,23 @@ export const destinoJoiSchema = Joi.object({
   }).required(),
   activo: Joi.boolean().optional()
 });
+
+// Schema de validación Joi para actualizar (permite campos opcionales)
+export const destinoUpdateJoiSchema = Joi.object({
+  nombre: Joi.string().min(2).max(100).optional(),
+  pais: Joi.string().min(2).max(50).optional(),
+  ciudad: Joi.string().min(2).max(50).optional(),
+  descripcion: Joi.string().min(10).max(1000).optional(),
+  clima: Joi.string().min(2).max(100).optional(),
+  mejorEpoca: Joi.string().min(2).max(100).optional(),
+  actividades: Joi.array().items(Joi.string().trim()).min(1).optional(),
+  imagen: Joi.string().uri().allow(null, '').optional(),
+  coordenadas: Joi.object({
+    latitud: Joi.number().min(-90).max(90).required(),
+    longitud: Joi.number().min(-180).max(180).required()
+  }).optional(),
+  activo: Joi.boolean().optional()
+}).min(1).unknown(false); // Requiere al menos un campo para actualizar
 
 // Interface para crear destino
 export interface ICreateDestinoRequest {

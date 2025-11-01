@@ -34,7 +34,7 @@ productoSchema.pre<IProducto>('save', function(next) {
   next();
 });
 
-// Schema de validación Joi
+// Schema de validación Joi para crear
 export const productoJoiSchema = Joi.object({
   nombre: Joi.string().min(2).max(100).required(),
   descripcion: Joi.string().min(10).max(500).required(),
@@ -44,6 +44,17 @@ export const productoJoiSchema = Joi.object({
   imagen: Joi.string().uri().optional(),
   activo: Joi.boolean().optional()
 });
+
+// Schema de validación Joi para actualizar (permite campos opcionales)
+export const productoUpdateJoiSchema = Joi.object({
+  nombre: Joi.string().min(2).max(100).optional(),
+  descripcion: Joi.string().min(10).max(500).optional(),
+  precio: Joi.number().positive().optional(),
+  categoria: Joi.string().min(2).max(50).optional(),
+  stock: Joi.number().min(0).optional(),
+  imagen: Joi.string().uri().allow(null, '').optional(),
+  activo: Joi.boolean().optional()
+}).min(1).unknown(false); // Requiere al menos un campo para actualizar
 
 // Interface para crear producto
 export interface ICreateProductoRequest {

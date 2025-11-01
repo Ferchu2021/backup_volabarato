@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { Paquete, paqueteJoiSchema, ICreatePaqueteRequest, IUpdatePaqueteRequest } from '../models/Paquete';
+import { Paquete, paqueteJoiSchema, paqueteUpdateJoiSchema, ICreatePaqueteRequest, IUpdatePaqueteRequest } from '../models/Paquete';
 import { auth } from '../middlewares/auth';
 
 const router = Router();
@@ -18,11 +18,20 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
 // POST /api/paquete - Crear nuevo paquete (requiere autenticación)
 router.post('/', auth, async (req: Request<{}, {}, ICreatePaqueteRequest>, res: Response): Promise<void> => {
   try {
-    const { error } = paqueteJoiSchema.validate(req.body);
+    const { error } = paqueteJoiSchema.validate(req.body, { abortEarly: false });
     if (error) {
+      const errorDetails = error.details.map(detail => ({
+        campo: detail.path.join('.'),
+        mensaje: detail.message,
+        valor: detail.context?.value
+      }));
+      
       res.status(400).json({ 
         error: 'Datos de validación incorrectos',
-        details: error.details[0]?.message || 'Error de validación' 
+        message: 'Uno o más campos requeridos no cumplen con los requisitos',
+        detalles: errorDetails,
+        cantidad_errores: errorDetails.length,
+        campos_requeridos: ['nombre', 'destino', 'fecha', 'precio']
       });
       return;
     }
@@ -36,7 +45,10 @@ router.post('/', auth, async (req: Request<{}, {}, ICreatePaqueteRequest>, res: 
     });
   } catch (error) {
     console.error('Error al crear paquete:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({ 
+      error: 'Error interno del servidor',
+      message: 'Ocurrió un error al procesar la solicitud'
+    });
   }
 });
 
@@ -46,15 +58,36 @@ router.put('/:id', auth, async (req: Request<{ id: string }, {}, IUpdatePaqueteR
     const { id } = req.params;
     
     if (!id) {
-      res.status(400).json({ error: 'ID del paquete es requerido' });
+      res.status(400).json({ 
+        error: 'ID del paquete es requerido',
+        message: 'Proporciona un ID válido en la URL'
+      });
       return;
     }
 
-    const { error } = paqueteJoiSchema.validate(req.body);
+    // Validar que al menos un campo sea enviado
+    if (Object.keys(req.body).length === 0) {
+      res.status(400).json({ 
+        error: 'No se proporcionaron campos para actualizar',
+        message: 'Debes enviar al menos un campo a actualizar',
+        campos_disponibles: ['nombre', 'destino', 'fecha', 'precio', 'descripcion', 'activo']
+      });
+      return;
+    }
+
+    const { error } = paqueteUpdateJoiSchema.validate(req.body, { abortEarly: false });
     if (error) {
+      const errorDetails = error.details.map(detail => ({
+        campo: detail.path.join('.'),
+        mensaje: detail.message,
+        valor: detail.context?.value
+      }));
+      
       res.status(400).json({ 
         error: 'Datos de validación incorrectos',
-        details: error.details[0]?.message || 'Error de validación' 
+        message: 'Uno o más campos no cumplen con los requisitos',
+        detalles: errorDetails,
+        cantidad_errores: errorDetails.length
       });
       return;
     }
@@ -66,7 +99,10 @@ router.put('/:id', auth, async (req: Request<{ id: string }, {}, IUpdatePaqueteR
     );
 
     if (!paquete) {
-      res.status(404).json({ error: 'Paquete no encontrado' });
+      res.status(404).json({ 
+        error: 'Paquete no encontrado',
+        message: `No se encontró un paquete con el ID: ${id}`
+      });
       return;
     }
 
@@ -76,7 +112,10 @@ router.put('/:id', auth, async (req: Request<{ id: string }, {}, IUpdatePaqueteR
     });
   } catch (error) {
     console.error('Error al actualizar paquete:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({ 
+      error: 'Error interno del servidor',
+      message: 'Ocurrió un error al procesar la solicitud'
+    });
   }
 });
 

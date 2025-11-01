@@ -22,7 +22,7 @@ const paqueteSchema = new Schema<IPaquete>({
   activo: { type: Boolean, default: true }
 });
 
-// Schema de validación Joi
+// Schema de validación Joi para crear
 export const paqueteJoiSchema = Joi.object({
   nombre: Joi.string().required(),
   destino: Joi.string().required(),
@@ -31,6 +31,16 @@ export const paqueteJoiSchema = Joi.object({
   descripcion: Joi.string().optional(),
   activo: Joi.boolean()
 });
+
+// Schema de validación Joi para actualizar (permite campos opcionales)
+export const paqueteUpdateJoiSchema = Joi.object({
+  nombre: Joi.string().optional(),
+  destino: Joi.string().optional(),
+  fecha: Joi.date().optional(),
+  precio: Joi.number().positive().optional(),
+  descripcion: Joi.string().allow(null, '').optional(),
+  activo: Joi.boolean().optional()
+}).min(1).unknown(false); // Requiere al menos un campo para actualizar
 
 // Interface para crear paquete
 export interface ICreatePaqueteRequest {

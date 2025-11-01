@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Destino, destinoJoiSchema, ICreateDestinoRequest, IUpdateDestinoRequest, IDestinoResponse } from '../models/Destino';
+import { Destino, destinoJoiSchema, destinoUpdateJoiSchema, ICreateDestinoRequest, IUpdateDestinoRequest, IDestinoResponse } from '../models/Destino';
 
 // Interface para respuesta de error
 export interface IErrorResponse {
@@ -82,13 +82,25 @@ export const getDestinoById = async (req: Request<{ id: string }>, res: Response
 // Controller para crear un nuevo destino
 export const createDestino = async (req: Request<{}, {}, ICreateDestinoRequest>, res: Response): Promise<void> => {
   try {
-    const { error } = destinoJoiSchema.validate(req.body);
+    const { error } = destinoJoiSchema.validate(req.body, { abortEarly: false });
     if (error) {
+      const errorDetails = error.details.map(detail => ({
+        campo: detail.path.join('.'),
+        mensaje: detail.message,
+        valor: detail.context?.value
+      }));
+      
       const errorResponse: IErrorResponse = {
         error: 'Datos de validación incorrectos',
-        details: error.details[0]?.message || 'Error de validación'
+        message: 'Uno o más campos requeridos no cumplen con los requisitos',
+        details: JSON.stringify(errorDetails)
       };
-      res.status(400).json(errorResponse);
+      res.status(400).json({
+        ...errorResponse,
+        detalles: errorDetails,
+        cantidad_errores: errorDetails.length,
+        campos_requeridos: ['nombre', 'pais', 'ciudad', 'descripcion', 'clima', 'mejorEpoca', 'actividades', 'coordenadas']
+      });
       return;
     }
 
@@ -125,19 +137,42 @@ export const updateDestino = async (req: Request<{ id: string }, {}, IUpdateDest
     
     if (!id) {
       const errorResponse: IErrorResponse = {
-        error: 'ID del destino es requerido'
+        error: 'ID del destino es requerido',
+        message: 'Proporciona un ID válido en la URL'
       };
       res.status(400).json(errorResponse);
       return;
     }
 
-    const { error } = destinoJoiSchema.validate(req.body);
-    if (error) {
+    // Validar que al menos un campo sea enviado
+    if (Object.keys(req.body).length === 0) {
       const errorResponse: IErrorResponse = {
-        error: 'Datos de validación incorrectos',
-        details: error.details[0]?.message || 'Error de validación'
+        error: 'No se proporcionaron campos para actualizar',
+        message: 'Debes enviar al menos un campo a actualizar',
+        details: 'Campos disponibles: nombre, pais, ciudad, descripcion, clima, mejorEpoca, actividades, imagen, coordenadas, activo'
       };
       res.status(400).json(errorResponse);
+      return;
+    }
+
+    const { error } = destinoUpdateJoiSchema.validate(req.body, { abortEarly: false });
+    if (error) {
+      const errorDetails = error.details.map(detail => ({
+        campo: detail.path.join('.'),
+        mensaje: detail.message,
+        valor: detail.context?.value
+      }));
+      
+      const errorResponse: IErrorResponse = {
+        error: 'Datos de validación incorrectos',
+        message: `Se encontraron ${errorDetails.length} error(es) de validación`,
+        details: JSON.stringify(errorDetails)
+      };
+      res.status(400).json({
+        ...errorResponse,
+        errores: errorDetails,
+        cantidad_errores: errorDetails.length
+      });
       return;
     }
 
@@ -149,7 +184,8 @@ export const updateDestino = async (req: Request<{ id: string }, {}, IUpdateDest
 
     if (!destino) {
       const errorResponse: IErrorResponse = {
-        error: 'Destino no encontrado'
+        error: 'Destino no encontrado',
+        message: `No se encontró un destino con el ID: ${id}`
       };
       res.status(404).json(errorResponse);
       return;
@@ -162,7 +198,8 @@ export const updateDestino = async (req: Request<{ id: string }, {}, IUpdateDest
   } catch (error) {
     console.error('Error actualizando destino:', error);
     const errorResponse: IErrorResponse = {
-      error: 'Error interno del servidor'
+      error: 'Error interno del servidor',
+      message: 'Ocurrió un error al procesar la solicitud'
     };
     res.status(500).json(errorResponse);
   }
