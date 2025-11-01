@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import mongoose from 'mongoose';
 import { User, userJoiSchema, ILoginRequest, IRegisterRequest, ILoginResponse } from '../models/user.models';
 
 // Interface para respuesta de registro
@@ -242,11 +243,78 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
+// Controller para obtener todos los usuarios (solo admin)
+export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
+  try {
+    if (!req.user) {
+      const errorResponse: IErrorResponse = {
+        error: 'Usuario no autenticado'
+      };
+      res.status(401).json(errorResponse);
+      return;
+    }
+
+    const users = await User.find({}).select('-password');
+    
+    res.json(users);
+  } catch (error) {
+    console.error('Error obteniendo usuarios:', error);
+    const errorResponse: IErrorResponse = {
+      error: 'Error interno del servidor'
+    };
+    res.status(500).json(errorResponse);
+  }
+};
+
+// Controller para obtener un usuario por ID
+export const getUserById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    if (!req.user) {
+      const errorResponse: IErrorResponse = {
+        error: 'Usuario no autenticado'
+      };
+      res.status(401).json(errorResponse);
+      return;
+    }
+
+    const { id } = req.params;
+    
+    // Verificar que el usuario existe
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      const errorResponse: IErrorResponse = {
+        error: 'ID de usuario inválido'
+      };
+      res.status(400).json(errorResponse);
+      return;
+    }
+
+    const user = await User.findById(id).select('-password');
+    
+    if (!user) {
+      const errorResponse: IErrorResponse = {
+        error: 'Usuario no encontrado'
+      };
+      res.status(404).json(errorResponse);
+      return;
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error('Error obteniendo usuario:', error);
+    const errorResponse: IErrorResponse = {
+      error: 'Error interno del servidor'
+    };
+    res.status(500).json(errorResponse);
+  }
+};
+
 // Exportar todos los controllers
 export default {
   registerUser,
   loginUser,
   getCurrentUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  getAllUsers,
+  getUserById
 };
