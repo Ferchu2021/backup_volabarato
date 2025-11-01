@@ -1,8 +1,8 @@
 {
-  "watch": ["backup_volabarato/src"],
+  "watch": ["src"],
   "ext": "ts,js,json",
-  "ignore": ["backup_volabarato/src/**/*.test.ts", "backup_volabarato/src/**/*.spec.ts"],
-  "exec": "ts-node -r tsconfig-paths/register backup_volabarato/src/index.ts",
+  "ignore": ["src/**/*.test.ts", "src/**/*.spec.ts"],
+  "exec": "ts-node src/index.ts",
   "env": {
     "NODE_ENV": "development"
   }

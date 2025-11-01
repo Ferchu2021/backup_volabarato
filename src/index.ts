@@ -55,8 +55,8 @@ app.get('/', (req: Request, res: Response) => {
   });
 });
 
-// Manejo de rutas no encontradas
-app.use('*', (req: Request, res: Response) => {
+// Manejo de rutas no encontradas (debe estar al final de todas las rutas)
+app.use((req: Request, res: Response) => {
   res.status(404).json({
     error: 'Ruta no encontrada',
     path: req.originalUrl
