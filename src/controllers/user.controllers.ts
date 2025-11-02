@@ -67,7 +67,9 @@ export const registerUser = async (req: Request<{}, {}, IRegisterRequest>, res: 
 // Controller para iniciar sesión
 export const loginUser = async (req: Request<{}, {}, ILoginRequest>, res: Response): Promise<void> => {
   try {
-    const { usuario, password } = req.body;
+    // Limpiar espacios en blanco de los campos recibidos
+    const usuario = req.body.usuario?.trim();
+    const password = req.body.password?.trim();
 
     if (!usuario || !password) {
       const errorResponse: IErrorResponse = {
