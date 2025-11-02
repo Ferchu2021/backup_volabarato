@@ -191,12 +191,26 @@ export const getReservasByUsuario = async (req: Request<{ usuarioId: string }>, 
 // Controller para crear una nueva reserva
 export const createReserva = async (req: Request<{}, {}, ICreateReservaRequest>, res: Response): Promise<void> => {
   try {
-    const { error } = reservaJoiSchema.validate(req.body);
+    // Obtener el usuario del token JWT
+    const usuarioId = req.user?._id;
+    
+    if (!usuarioId) {
+      const errorResponse: IErrorResponse = {
+        error: 'Usuario no autenticado'
+      };
+      res.status(401).json(errorResponse);
+      return;
+    }
+
+    const { error } = reservaJoiSchema.validate(req.body, { abortEarly: false });
     if (error) {
       const errorResponse: IErrorResponse = {
         error: 'Datos de validación incorrectos',
-        details: error.details[0]?.message || 'Error de validación'
+        details: error.details.map(d => d.message).join('; ') || 'Error de validación',
+        message: `Errores de validación: ${error.details.map(d => `${d.path.join('.')}: ${d.message}`).join(', ')}`
       };
+      console.error('Error de validación Joi:', JSON.stringify(error.details, null, 2));
+      console.error('Body recibido:', JSON.stringify(req.body, null, 2));
       res.status(400).json(errorResponse);
       return;
     }
@@ -230,7 +244,11 @@ export const createReserva = async (req: Request<{}, {}, ICreateReservaRequest>,
       return;
     }
 
-    const reserva = new Reserva(req.body);
+    // Crear reserva con el usuario del token
+    const reserva = new Reserva({
+      ...req.body,
+      usuario: usuarioId
+    });
     await reserva.save();
     
     // Poblar datos para la respuesta
