@@ -3,7 +3,7 @@ import Joi from 'joi';
 
 // Interface para el documento Reserva
 export interface IReserva extends Document {
-  numeroReserva: string;
+  numeroReserva?: string;
   usuario: mongoose.Types.ObjectId;
   paquete: mongoose.Types.ObjectId;
   fechaReserva: Date;
@@ -27,7 +27,7 @@ export interface IReserva extends Document {
 const reservaSchema = new Schema<IReserva>({
   numeroReserva: { 
     type: String, 
-    required: true, 
+    required: false, 
     unique: true,
     index: true
   },
@@ -94,24 +94,17 @@ reservaSchema.pre<IReserva>('save', async function(next) {
     const fecha = new Date();
     const fechaStr = fecha.toISOString().slice(0, 10).replace(/-/g, '');
     
-    // Contar reservas del día para generar secuencia
-    const inicioDia = new Date(fecha);
-    inicioDia.setHours(0, 0, 0, 0);
-    const finDia = new Date(fecha);
-    finDia.setHours(23, 59, 59, 999);
-    
-    // Usar mongoose.model para obtener el modelo
-    const ReservaModel = mongoose.model<IReserva>('Reserva');
-    const count = await ReservaModel.countDocuments({
-      fechaReserva: { $gte: inicioDia, $lte: finDia }
-    });
-    
-    const secuencia = (count + 1).toString().padStart(4, '0');
-    this.numeroReserva = `RES-${fechaStr}-${secuencia}`;
+    // Generar número único con timestamp y random
+    const randomNum = Math.floor(Math.random() * 9999).toString().padStart(4, '0');
+    const timestamp = Date.now().toString().slice(-6);
+    this.numeroReserva = `RES-${fechaStr}-${timestamp}-${randomNum}`;
   }
   
   next();
 });
+
+// Modelo exportado
+export const Reserva = mongoose.model<IReserva>('Reserva', reservaSchema);
 
 // Índices para mejorar consultas
 reservaSchema.index({ numeroReserva: 1 });
@@ -223,6 +216,3 @@ export interface IReservaPopulatedResponse {
   fechaCreacion: string;
   fechaActualizacion: string;
 }
-
-// Modelo exportado
-export const Reserva = mongoose.model<IReserva>('Reserva', reservaSchema);

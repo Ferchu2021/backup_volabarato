@@ -4,8 +4,8 @@
 
 ### 1. ✅ Número de Reserva Automático
 - Campo `numeroReserva` agregado al modelo Reserva
-- Formato: `RES-YYYYMMDD-XXXX` (ej: `RES-20241215-0001`)
-- Generación automática en el pre-save hook
+- Formato: `RES-YYYYMMDD-TIMESTAMP-RANDOM` (ej: `RES-20241215-652023-5487`)
+- Generación automática en el pre-save hook usando timestamp y número aleatorio
 - Campo único e indexado
 
 ### 2. ✅ Usuario desde Token JWT
@@ -38,7 +38,7 @@
 3. **Verificar que se genera el número de reserva**:
    - Crear una reserva nueva
    - Verificar que el campo `numeroReserva` esté presente
-   - Verificar que tenga formato `RES-YYYYMMDD-XXXX`
+   - Verificar que tenga formato `RES-YYYYMMDD-TIMESTAMP-RANDOM`
 
 4. **Verificar que el usuario se asigna automáticamente**:
    - Crear reserva SIN incluir `usuario` en el body
