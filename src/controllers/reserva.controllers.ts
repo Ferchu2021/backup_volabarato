@@ -40,7 +40,7 @@ export const getAllReservas = async (req: Request, res: Response): Promise<void>
     const total = await Reserva.countDocuments(filters);
     
     res.json({
-      reservas,
+      data: reservas,
       pagination: {
         page: Number(page),
         limit: Number(limit),
@@ -124,7 +124,7 @@ export const getMisReservas = async (req: Request, res: Response): Promise<void>
     const total = await Reserva.countDocuments(filters);
     
     res.json({
-      reservas,
+      data: reservas,
       pagination: {
         page: Number(page),
         limit: Number(limit),
@@ -171,7 +171,7 @@ export const getReservasByUsuario = async (req: Request<{ usuarioId: string }>, 
     const total = await Reserva.countDocuments(filters);
     
     res.json({
-      reservas,
+      data: reservas,
       pagination: {
         page: Number(page),
         limit: Number(limit),
