@@ -29,7 +29,7 @@ const reservaSchema = new Schema<IReserva>({
     type: String, 
     required: false, 
     unique: true,
-    index: true
+    
   },
   usuario: { 
     type: Schema.Types.ObjectId, 
