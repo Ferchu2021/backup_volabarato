@@ -3,9 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.updateUser = exports.getCurrentUser = exports.loginUser = exports.registerUser = void 0;
+exports.getUserById = exports.getAllUsers = exports.deleteUser = exports.updateUser = exports.getCurrentUser = exports.loginUser = exports.registerUser = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const user_models_1 = require("../models/user.models");
 const registerUser = async (req, res) => {
     try {
@@ -48,7 +49,8 @@ const registerUser = async (req, res) => {
 exports.registerUser = registerUser;
 const loginUser = async (req, res) => {
     try {
-        const { usuario, password } = req.body;
+        const usuario = req.body.usuario?.trim();
+        const password = req.body.password?.trim();
         if (!usuario || !password) {
             const errorResponse = {
                 error: 'Usuario y contraseña son requeridos'
@@ -196,11 +198,70 @@ const deleteUser = async (req, res) => {
     }
 };
 exports.deleteUser = deleteUser;
+const getAllUsers = async (req, res) => {
+    try {
+        if (!req.user) {
+            const errorResponse = {
+                error: 'Usuario no autenticado'
+            };
+            res.status(401).json(errorResponse);
+            return;
+        }
+        const users = await user_models_1.User.find({}).select('-password');
+        res.json(users);
+    }
+    catch (error) {
+        console.error('Error obteniendo usuarios:', error);
+        const errorResponse = {
+            error: 'Error interno del servidor'
+        };
+        res.status(500).json(errorResponse);
+    }
+};
+exports.getAllUsers = getAllUsers;
+const getUserById = async (req, res) => {
+    try {
+        if (!req.user) {
+            const errorResponse = {
+                error: 'Usuario no autenticado'
+            };
+            res.status(401).json(errorResponse);
+            return;
+        }
+        const { id } = req.params;
+        if (!id || !mongoose_1.default.Types.ObjectId.isValid(id)) {
+            const errorResponse = {
+                error: 'ID de usuario inválido'
+            };
+            res.status(400).json(errorResponse);
+            return;
+        }
+        const user = await user_models_1.User.findById(id).select('-password');
+        if (!user) {
+            const errorResponse = {
+                error: 'Usuario no encontrado'
+            };
+            res.status(404).json(errorResponse);
+            return;
+        }
+        res.json(user);
+    }
+    catch (error) {
+        console.error('Error obteniendo usuario:', error);
+        const errorResponse = {
+            error: 'Error interno del servidor'
+        };
+        res.status(500).json(errorResponse);
+    }
+};
+exports.getUserById = getUserById;
 exports.default = {
     registerUser: exports.registerUser,
     loginUser: exports.loginUser,
     getCurrentUser: exports.getCurrentUser,
     updateUser: exports.updateUser,
-    deleteUser: exports.deleteUser
+    deleteUser: exports.deleteUser,
+    getAllUsers: exports.getAllUsers,
+    getUserById: exports.getUserById
 };
 //# sourceMappingURL=user.controllers.js.map

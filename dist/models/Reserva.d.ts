@@ -1,6 +1,7 @@
 import mongoose, { Document } from 'mongoose';
 import Joi from 'joi';
 export interface IReserva extends Document {
+    numeroReserva?: string;
     usuario: mongoose.Types.ObjectId;
     paquete: mongoose.Types.ObjectId;
     fechaReserva: Date;
@@ -19,9 +20,13 @@ export interface IReserva extends Document {
     fechaActualizacion: Date;
     _id: mongoose.Types.ObjectId;
 }
+export declare const Reserva: mongoose.Model<IReserva, {}, {}, {}, mongoose.Document<unknown, {}, IReserva, {}, {}> & IReserva & Required<{
+    _id: mongoose.Types.ObjectId;
+}> & {
+    __v: number;
+}, any>;
 export declare const reservaJoiSchema: Joi.ObjectSchema<any>;
 export interface ICreateReservaRequest {
-    usuario: string;
     paquete: string;
     fechaViaje: Date;
     cantidadPersonas: number;
@@ -50,6 +55,7 @@ export interface IUpdateReservaRequest {
 }
 export interface IReservaResponse {
     _id: string;
+    numeroReserva: string;
     usuario: string;
     paquete: string;
     fechaReserva: string;
@@ -69,6 +75,7 @@ export interface IReservaResponse {
 }
 export interface IReservaPopulatedResponse {
     _id: string;
+    numeroReserva: string;
     usuario: {
         _id: string;
         nombre: string;
@@ -95,7 +102,4 @@ export interface IReservaPopulatedResponse {
     fechaCreacion: string;
     fechaActualizacion: string;
 }
-export declare const Reserva: mongoose.Model<IReserva, {}, {}, {}, mongoose.Document<unknown, {}, IReserva> & IReserva & Required<{
-    _id: mongoose.Types.ObjectId;
-}>, any>;
 //# sourceMappingURL=Reserva.d.ts.map

@@ -36,7 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Destino = exports.destinoJoiSchema = void 0;
+exports.Destino = exports.destinoUpdateJoiSchema = exports.destinoJoiSchema = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const joi_1 = __importDefault(require("joi"));
 const destinoSchema = new mongoose_1.Schema({
@@ -75,5 +75,20 @@ exports.destinoJoiSchema = joi_1.default.object({
     }).required(),
     activo: joi_1.default.boolean().optional()
 });
+exports.destinoUpdateJoiSchema = joi_1.default.object({
+    nombre: joi_1.default.string().min(2).max(100).optional(),
+    pais: joi_1.default.string().min(2).max(50).optional(),
+    ciudad: joi_1.default.string().min(2).max(50).optional(),
+    descripcion: joi_1.default.string().min(10).max(1000).optional(),
+    clima: joi_1.default.string().min(2).max(100).optional(),
+    mejorEpoca: joi_1.default.string().min(2).max(100).optional(),
+    actividades: joi_1.default.array().items(joi_1.default.string().trim()).min(1).optional(),
+    imagen: joi_1.default.string().uri().allow(null, '').optional(),
+    coordenadas: joi_1.default.object({
+        latitud: joi_1.default.number().min(-90).max(90).required(),
+        longitud: joi_1.default.number().min(-180).max(180).required()
+    }).optional(),
+    activo: joi_1.default.boolean().optional()
+}).min(1).unknown(false);
 exports.Destino = mongoose_1.default.model('Destino', destinoSchema);
 //# sourceMappingURL=Destino.js.map

@@ -22,7 +22,7 @@ const getAllReservas = async (req, res) => {
             .limit(Number(limit));
         const total = await Reserva_1.Reserva.countDocuments(filters);
         res.json({
-            reservas,
+            data: reservas,
             pagination: {
                 page: Number(page),
                 limit: Number(limit),
@@ -93,7 +93,7 @@ const getMisReservas = async (req, res) => {
             .limit(Number(limit));
         const total = await Reserva_1.Reserva.countDocuments(filters);
         res.json({
-            reservas,
+            data: reservas,
             pagination: {
                 page: Number(page),
                 limit: Number(limit),
@@ -133,7 +133,7 @@ const getReservasByUsuario = async (req, res) => {
             .limit(Number(limit));
         const total = await Reserva_1.Reserva.countDocuments(filters);
         res.json({
-            reservas,
+            data: reservas,
             pagination: {
                 page: Number(page),
                 limit: Number(limit),
@@ -153,12 +153,23 @@ const getReservasByUsuario = async (req, res) => {
 exports.getReservasByUsuario = getReservasByUsuario;
 const createReserva = async (req, res) => {
     try {
-        const { error } = Reserva_1.reservaJoiSchema.validate(req.body);
+        const usuarioId = req.user?._id;
+        if (!usuarioId) {
+            const errorResponse = {
+                error: 'Usuario no autenticado'
+            };
+            res.status(401).json(errorResponse);
+            return;
+        }
+        const { error } = Reserva_1.reservaJoiSchema.validate(req.body, { abortEarly: false });
         if (error) {
             const errorResponse = {
                 error: 'Datos de validación incorrectos',
-                details: error.details[0]?.message || 'Error de validación'
+                details: error.details.map(d => d.message).join('; ') || 'Error de validación',
+                message: `Errores de validación: ${error.details.map(d => `${d.path.join('.')}: ${d.message}`).join(', ')}`
             };
+            console.error('Error de validación Joi:', JSON.stringify(error.details, null, 2));
+            console.error('Body recibido:', JSON.stringify(req.body, null, 2));
             res.status(400).json(errorResponse);
             return;
         }
@@ -185,7 +196,10 @@ const createReserva = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        const reserva = new Reserva_1.Reserva(req.body);
+        const reserva = new Reserva_1.Reserva({
+            ...req.body,
+            usuario: usuarioId
+        });
         await reserva.save();
         const reservaPopulada = await Reserva_1.Reserva.findById(reserva._id)
             .populate('usuario', 'nombre email')

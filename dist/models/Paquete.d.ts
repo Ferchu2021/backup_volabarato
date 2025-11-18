@@ -10,6 +10,7 @@ export interface IPaquete extends Document {
     _id: mongoose.Types.ObjectId;
 }
 export declare const paqueteJoiSchema: Joi.ObjectSchema<any>;
+export declare const paqueteUpdateJoiSchema: Joi.ObjectSchema<any>;
 export interface ICreatePaqueteRequest {
     nombre: string;
     destino: string;
@@ -35,7 +36,9 @@ export interface IPaqueteResponse {
     descripcion?: string;
     activo: boolean;
 }
-export declare const Paquete: mongoose.Model<IPaquete, {}, {}, {}, mongoose.Document<unknown, {}, IPaquete> & IPaquete & Required<{
+export declare const Paquete: mongoose.Model<IPaquete, {}, {}, {}, mongoose.Document<unknown, {}, IPaquete, {}, {}> & IPaquete & Required<{
     _id: mongoose.Types.ObjectId;
-}>, any>;
+}> & {
+    __v: number;
+}, any>;
 //# sourceMappingURL=Paquete.d.ts.map

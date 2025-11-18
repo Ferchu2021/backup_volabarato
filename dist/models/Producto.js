@@ -36,7 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Producto = exports.productoJoiSchema = void 0;
+exports.Producto = exports.productoUpdateJoiSchema = exports.productoJoiSchema = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const joi_1 = __importDefault(require("joi"));
 const productoSchema = new mongoose_1.Schema({
@@ -63,5 +63,14 @@ exports.productoJoiSchema = joi_1.default.object({
     imagen: joi_1.default.string().uri().optional(),
     activo: joi_1.default.boolean().optional()
 });
+exports.productoUpdateJoiSchema = joi_1.default.object({
+    nombre: joi_1.default.string().min(2).max(100).optional(),
+    descripcion: joi_1.default.string().min(10).max(500).optional(),
+    precio: joi_1.default.number().positive().optional(),
+    categoria: joi_1.default.string().min(2).max(50).optional(),
+    stock: joi_1.default.number().min(0).optional(),
+    imagen: joi_1.default.string().uri().allow(null, '').optional(),
+    activo: joi_1.default.boolean().optional()
+}).min(1).unknown(false);
 exports.Producto = mongoose_1.default.model('Producto', productoSchema);
 //# sourceMappingURL=Producto.js.map

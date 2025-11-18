@@ -66,13 +66,24 @@ const getDestinoById = async (req, res) => {
 exports.getDestinoById = getDestinoById;
 const createDestino = async (req, res) => {
     try {
-        const { error } = Destino_1.destinoJoiSchema.validate(req.body);
+        const { error } = Destino_1.destinoJoiSchema.validate(req.body, { abortEarly: false });
         if (error) {
+            const errorDetails = error.details.map(detail => ({
+                campo: detail.path.join('.'),
+                mensaje: detail.message,
+                valor: detail.context?.value
+            }));
             const errorResponse = {
                 error: 'Datos de validación incorrectos',
-                details: error.details[0]?.message || 'Error de validación'
+                message: 'Uno o más campos requeridos no cumplen con los requisitos',
+                details: JSON.stringify(errorDetails)
             };
-            res.status(400).json(errorResponse);
+            res.status(400).json({
+                ...errorResponse,
+                detalles: errorDetails,
+                cantidad_errores: errorDetails.length,
+                campos_requeridos: ['nombre', 'pais', 'ciudad', 'descripcion', 'clima', 'mejorEpoca', 'actividades', 'coordenadas']
+            });
             return;
         }
         const destino = new Destino_1.Destino(req.body);
@@ -104,24 +115,45 @@ const updateDestino = async (req, res) => {
         const { id } = req.params;
         if (!id) {
             const errorResponse = {
-                error: 'ID del destino es requerido'
+                error: 'ID del destino es requerido',
+                message: 'Proporciona un ID válido en la URL'
             };
             res.status(400).json(errorResponse);
             return;
         }
-        const { error } = Destino_1.destinoJoiSchema.validate(req.body);
-        if (error) {
+        if (Object.keys(req.body).length === 0) {
             const errorResponse = {
-                error: 'Datos de validación incorrectos',
-                details: error.details[0]?.message || 'Error de validación'
+                error: 'No se proporcionaron campos para actualizar',
+                message: 'Debes enviar al menos un campo a actualizar',
+                details: 'Campos disponibles: nombre, pais, ciudad, descripcion, clima, mejorEpoca, actividades, imagen, coordenadas, activo'
             };
             res.status(400).json(errorResponse);
+            return;
+        }
+        const { error } = Destino_1.destinoUpdateJoiSchema.validate(req.body, { abortEarly: false });
+        if (error) {
+            const errorDetails = error.details.map(detail => ({
+                campo: detail.path.join('.'),
+                mensaje: detail.message,
+                valor: detail.context?.value
+            }));
+            const errorResponse = {
+                error: 'Datos de validación incorrectos',
+                message: `Se encontraron ${errorDetails.length} error(es) de validación`,
+                details: JSON.stringify(errorDetails)
+            };
+            res.status(400).json({
+                ...errorResponse,
+                errores: errorDetails,
+                cantidad_errores: errorDetails.length
+            });
             return;
         }
         const destino = await Destino_1.Destino.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
         if (!destino) {
             const errorResponse = {
-                error: 'Destino no encontrado'
+                error: 'Destino no encontrado',
+                message: `No se encontró un destino con el ID: ${id}`
             };
             res.status(404).json(errorResponse);
             return;
@@ -134,7 +166,8 @@ const updateDestino = async (req, res) => {
     catch (error) {
         console.error('Error actualizando destino:', error);
         const errorResponse = {
-            error: 'Error interno del servidor'
+            error: 'Error interno del servidor',
+            message: 'Ocurrió un error al procesar la solicitud'
         };
         res.status(500).json(errorResponse);
     }

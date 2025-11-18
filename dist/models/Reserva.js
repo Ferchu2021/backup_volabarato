@@ -36,10 +36,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Reserva = exports.reservaJoiSchema = void 0;
+exports.reservaJoiSchema = exports.Reserva = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const joi_1 = __importDefault(require("joi"));
 const reservaSchema = new mongoose_1.Schema({
+    numeroReserva: {
+        type: String,
+        required: false,
+        unique: true,
+        index: true
+    },
     usuario: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: 'User',
@@ -93,29 +99,39 @@ const reservaSchema = new mongoose_1.Schema({
     fechaCreacion: { type: Date, default: Date.now },
     fechaActualizacion: { type: Date, default: Date.now }
 });
-reservaSchema.pre('save', function (next) {
+reservaSchema.pre('save', async function (next) {
     this.fechaActualizacion = new Date();
+    if (this.isNew && !this.numeroReserva) {
+        const fecha = new Date();
+        const fechaStr = fecha.toISOString().slice(0, 10).replace(/-/g, '');
+        const randomNum = Math.floor(Math.random() * 9999).toString().padStart(4, '0');
+        const timestamp = Date.now().toString().slice(-6);
+        this.numeroReserva = `RES-${fechaStr}-${timestamp}-${randomNum}`;
+    }
     next();
 });
+exports.Reserva = mongoose_1.default.model('Reserva', reservaSchema);
+reservaSchema.index({ numeroReserva: 1 });
 reservaSchema.index({ usuario: 1 });
 reservaSchema.index({ paquete: 1 });
 reservaSchema.index({ estado: 1 });
 reservaSchema.index({ fechaViaje: 1 });
 reservaSchema.index({ fechaReserva: -1 });
 exports.reservaJoiSchema = joi_1.default.object({
-    usuario: joi_1.default.string().hex().length(24).required(),
     paquete: joi_1.default.string().hex().length(24).required(),
-    fechaViaje: joi_1.default.date().min('now').required(),
-    cantidadPersonas: joi_1.default.number().min(1).max(20).required(),
+    fechaViaje: joi_1.default.date().greater('now').required().messages({
+        'date.greater': 'La fecha de viaje debe ser futura',
+        'date.base': 'La fecha de viaje debe ser una fecha válida'
+    }),
+    cantidadPersonas: joi_1.default.number().integer().min(1).max(20).required(),
     precioTotal: joi_1.default.number().positive().required(),
     estado: joi_1.default.string().valid('pendiente', 'confirmada', 'cancelada', 'completada').optional(),
     metodoPago: joi_1.default.string().valid('efectivo', 'tarjeta', 'transferencia').required(),
-    observaciones: joi_1.default.string().max(500).optional(),
+    observaciones: joi_1.default.string().max(500).allow('', null).optional(),
     datosContacto: joi_1.default.object({
         nombre: joi_1.default.string().min(2).max(100).required(),
         email: joi_1.default.string().email().required(),
         telefono: joi_1.default.string().min(8).max(20).required()
     }).required()
 });
-exports.Reserva = mongoose_1.default.model('Reserva', reservaSchema);
 //# sourceMappingURL=Reserva.js.map

@@ -7,8 +7,10 @@ const user_middlewares_1 = require("../middlewares/user.middlewares");
 const router = (0, express_1.Router)();
 router.post('/register', user_middlewares_1.validateUsernameFormat, user_middlewares_1.validatePasswordFormat, user_middlewares_1.checkUserExists, user_controllers_1.registerUser);
 router.post('/login', user_controllers_1.loginUser);
+router.get('/', auth_1.auth, user_controllers_1.getAllUsers);
 router.get('/me', auth_1.auth, user_controllers_1.getCurrentUser);
 router.put('/me', auth_1.auth, user_controllers_1.updateUser);
 router.delete('/me', auth_1.auth, user_controllers_1.deleteUser);
+router.get('/:id', auth_1.auth, user_controllers_1.getUserById);
 exports.default = router;
 //# sourceMappingURL=user.routes.js.map

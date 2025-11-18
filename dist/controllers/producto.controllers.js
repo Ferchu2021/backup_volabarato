@@ -66,13 +66,24 @@ const getProductoById = async (req, res) => {
 exports.getProductoById = getProductoById;
 const createProducto = async (req, res) => {
     try {
-        const { error } = Producto_1.productoJoiSchema.validate(req.body);
+        const { error } = Producto_1.productoJoiSchema.validate(req.body, { abortEarly: false });
         if (error) {
+            const errorDetails = error.details.map(detail => ({
+                campo: detail.path.join('.'),
+                mensaje: detail.message,
+                valor: detail.context?.value
+            }));
             const errorResponse = {
                 error: 'Datos de validación incorrectos',
-                details: error.details[0]?.message || 'Error de validación'
+                message: 'Uno o más campos requeridos no cumplen con los requisitos',
+                details: JSON.stringify(errorDetails)
             };
-            res.status(400).json(errorResponse);
+            res.status(400).json({
+                ...errorResponse,
+                detalles: errorDetails,
+                cantidad_errores: errorDetails.length,
+                campos_requeridos: ['nombre', 'descripcion', 'precio', 'categoria', 'stock']
+            });
             return;
         }
         const producto = new Producto_1.Producto(req.body);
@@ -104,24 +115,45 @@ const updateProducto = async (req, res) => {
         const { id } = req.params;
         if (!id) {
             const errorResponse = {
-                error: 'ID del producto es requerido'
+                error: 'ID del producto es requerido',
+                message: 'Proporciona un ID válido en la URL'
             };
             res.status(400).json(errorResponse);
             return;
         }
-        const { error } = Producto_1.productoJoiSchema.validate(req.body);
-        if (error) {
+        if (Object.keys(req.body).length === 0) {
             const errorResponse = {
-                error: 'Datos de validación incorrectos',
-                details: error.details[0]?.message || 'Error de validación'
+                error: 'No se proporcionaron campos para actualizar',
+                message: 'Debes enviar al menos un campo a actualizar',
+                details: 'Campos disponibles: nombre, descripcion, precio, categoria, stock, imagen, activo'
             };
             res.status(400).json(errorResponse);
+            return;
+        }
+        const { error } = Producto_1.productoUpdateJoiSchema.validate(req.body, { abortEarly: false });
+        if (error) {
+            const errorDetails = error.details.map(detail => ({
+                campo: detail.path.join('.'),
+                mensaje: detail.message,
+                valor: detail.context?.value
+            }));
+            const errorResponse = {
+                error: 'Datos de validación incorrectos',
+                message: `Se encontraron ${errorDetails.length} error(es) de validación`,
+                details: JSON.stringify(errorDetails)
+            };
+            res.status(400).json({
+                ...errorResponse,
+                errores: errorDetails,
+                cantidad_errores: errorDetails.length
+            });
             return;
         }
         const producto = await Producto_1.Producto.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
         if (!producto) {
             const errorResponse = {
-                error: 'Producto no encontrado'
+                error: 'Producto no encontrado',
+                message: `No se encontró un producto con el ID: ${id}`
             };
             res.status(404).json(errorResponse);
             return;
@@ -134,7 +166,8 @@ const updateProducto = async (req, res) => {
     catch (error) {
         console.error('Error actualizando producto:', error);
         const errorResponse = {
-            error: 'Error interno del servidor'
+            error: 'Error interno del servidor',
+            message: 'Ocurrió un error al procesar la solicitud'
         };
         res.status(500).json(errorResponse);
     }

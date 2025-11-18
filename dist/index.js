@@ -45,10 +45,17 @@ app.get('/', (req, res) => {
         status: 'running'
     });
 });
-app.use('*', (req, res) => {
+app.use((req, res) => {
     res.status(404).json({
-        error: 'Ruta no encontrada',
-        path: req.originalUrl
+        success: false,
+        message: `Ruta no encontrada: ${req.method} ${req.path}`,
+        availableEndpoints: {
+            paquete: '/api/paquete',
+            user: '/api/user',
+            producto: '/api/producto',
+            destino: '/api/destino',
+            reserva: '/api/reserva'
+        }
     });
 });
 const startServer = async () => {

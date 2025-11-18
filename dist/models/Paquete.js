@@ -36,7 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Paquete = exports.paqueteJoiSchema = void 0;
+exports.Paquete = exports.paqueteUpdateJoiSchema = exports.paqueteJoiSchema = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const joi_1 = __importDefault(require("joi"));
 const paqueteSchema = new mongoose_1.Schema({
@@ -55,5 +55,13 @@ exports.paqueteJoiSchema = joi_1.default.object({
     descripcion: joi_1.default.string().optional(),
     activo: joi_1.default.boolean()
 });
+exports.paqueteUpdateJoiSchema = joi_1.default.object({
+    nombre: joi_1.default.string().optional(),
+    destino: joi_1.default.string().optional(),
+    fecha: joi_1.default.date().optional(),
+    precio: joi_1.default.number().positive().optional(),
+    descripcion: joi_1.default.string().allow(null, '').optional(),
+    activo: joi_1.default.boolean().optional()
+}).min(1).unknown(false);
 exports.Paquete = mongoose_1.default.model('Paquete', paqueteSchema);
 //# sourceMappingURL=Paquete.js.map

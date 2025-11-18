@@ -13,6 +13,7 @@ export interface IProducto extends Document {
     _id: mongoose.Types.ObjectId;
 }
 export declare const productoJoiSchema: Joi.ObjectSchema<any>;
+export declare const productoUpdateJoiSchema: Joi.ObjectSchema<any>;
 export interface ICreateProductoRequest {
     nombre: string;
     descripcion: string;
@@ -43,7 +44,9 @@ export interface IProductoResponse {
     fechaCreacion: string;
     fechaActualizacion: string;
 }
-export declare const Producto: mongoose.Model<IProducto, {}, {}, {}, mongoose.Document<unknown, {}, IProducto> & IProducto & Required<{
+export declare const Producto: mongoose.Model<IProducto, {}, {}, {}, mongoose.Document<unknown, {}, IProducto, {}, {}> & IProducto & Required<{
     _id: mongoose.Types.ObjectId;
-}>, any>;
+}> & {
+    __v: number;
+}, any>;
 //# sourceMappingURL=Producto.d.ts.map

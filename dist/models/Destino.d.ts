@@ -19,6 +19,7 @@ export interface IDestino extends Document {
     _id: mongoose.Types.ObjectId;
 }
 export declare const destinoJoiSchema: Joi.ObjectSchema<any>;
+export declare const destinoUpdateJoiSchema: Joi.ObjectSchema<any>;
 export interface ICreateDestinoRequest {
     nombre: string;
     pais: string;
@@ -67,7 +68,9 @@ export interface IDestinoResponse {
     fechaCreacion: string;
     fechaActualizacion: string;
 }
-export declare const Destino: mongoose.Model<IDestino, {}, {}, {}, mongoose.Document<unknown, {}, IDestino> & IDestino & Required<{
+export declare const Destino: mongoose.Model<IDestino, {}, {}, {}, mongoose.Document<unknown, {}, IDestino, {}, {}> & IDestino & Required<{
     _id: mongoose.Types.ObjectId;
-}>, any>;
+}> & {
+    __v: number;
+}, any>;
 //# sourceMappingURL=Destino.d.ts.map
