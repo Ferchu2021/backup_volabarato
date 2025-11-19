@@ -10,7 +10,7 @@ import paqueteRoutes from './routes/paquete';
 import userRoutes from './routes/user.routes';
 import productoRoutes from './routes/producto.routes';
 import destinoRoutes from './routes/destino.routes';
-import reservaRoutes from './routes/reserva.routes';
+import reservaRoutes from './routes/reserva.routes';\nimport suscriptorRoutes from './routes/suscriptor.routes';
 
 // Carga variables de entorno
 dotenv.config();
@@ -44,7 +44,7 @@ app.use('/api/paquete', paqueteRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/producto', productoRoutes);
 app.use('/api/destino', destinoRoutes);
-app.use('/api/reserva', reservaRoutes);
+app.use('/api/reserva', reservaRoutes);\napp.use('/api/suscriptor', suscriptorRoutes);
 
 // Ruta de prueba
 app.get('/', (req: Request, res: Response) => {
@@ -65,7 +65,7 @@ app.use((req: Request, res: Response) => {
       user: '/api/user',
       producto: '/api/producto',
       destino: '/api/destino',
-      reserva: '/api/reserva'
+      reserva: '/api/reserva',\n      suscriptor: '/api/suscriptor'
     }
   });
 });
@@ -91,3 +91,6 @@ const startServer = async (): Promise<void> => {
 startServer();
 
 export default app;
+
+
+
