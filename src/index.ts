@@ -20,10 +20,19 @@ dotenv.config();
 const app: Application = express();
 
 // Middlewares bÃ¡sicos
-app.use(helmet());
-app.use(cors());
+app.use(helmet({
+  contentSecurityPolicy: false, // Permite cargar recursos desde cualquier origen
+  crossOriginEmbedderPolicy: false
+}));
+app.use(cors({
+  origin: '*', // Permite todas las solicitudes (cambiar en producciÃ³n)
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
+  credentials: false
+}));
 app.use(morgan('dev'));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // ConexiÃ³n a MongoDB Atlas
 const connectDB = async (): Promise<void> => {
@@ -50,10 +59,28 @@ app.use('/api/reserva', reservaRoutes);
 
 // Ruta de prueba
 app.get('/', (req: Request, res: Response) => {
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
   res.json({
-    message: 'ðŸš€ Backend VolaBarato API',
+    message: 'Backend VolaBarato API',
     version: '1.0.0',
     status: 'running'
+  });
+});
+
+// Ruta de información de la API
+app.get('/api', (req: Request, res: Response) => {
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.json({
+    message: 'VolaBarato API',
+    version: '1.0.0',
+    status: 'running',
+    endpoints: {
+      paquete: '/api/paquete',
+      user: '/api/user',
+      producto: '/api/producto',
+      destino: '/api/destino',
+      reserva: '/api/reserva'
+    }
   });
 });
 
