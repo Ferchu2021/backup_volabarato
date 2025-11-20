@@ -9,9 +9,19 @@
     "dev": "nodemon",
     "dev:ts": "ts-node src/index.ts",
     "seed:user": "ts-node scripts/seedUser.ts",
+    "convert:excel:clean": "node -e \"const fs = require('fs'); const files = ['scripts/convertExcelToJson.js', 'scripts/convertExcelToJson.d.ts']; files.forEach(f => { try { fs.unlinkSync(f); } catch(e) {} });\"",
+    "convert:excel:compile": "tsc scripts/convertExcelToJson.ts --outDir scripts --module commonjs --target es2020 --esModuleInterop --skipLibCheck --resolveJsonModule --moduleResolution node",
+    "convert:excel:fix": "node scripts/fixConvertExcel.js",
+    "convert:excel": "npm run convert:excel:clean && npm run convert:excel:compile && npm run convert:excel:fix && node scripts/convertExcelToJson.js",
+    "load:paquetes": "ts-node scripts/loadPaquetesFromFile.ts",
+    "remove:test": "node scripts/removeTestPaquetes.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["api", "backend", "volabarato"],
+  "keywords": [
+    "api",
+    "backend",
+    "volabarato"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -34,8 +44,11 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.10",
     "@types/node": "^24.5.2",
+    "@types/xlsx": "^0.0.35",
     "nodemon": "^3.1.10",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.9.2"
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.2",
+    "xlsx": "^0.18.5"
   }
 }
