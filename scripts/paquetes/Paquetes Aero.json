@@ -1,0 +1,413 @@
+[
+  {
+    "nombre": "PKG001 - Orlando + Miami",
+    "destino": "Orlando + Miami",
+    "fecha": "2025-01-14",
+    "precio": 5270000,
+    "descripcion": "Orlando + Miami - 13 noches en Disney's All Star Resorts + Universal's Endless Summer Resort + Miami. Incluye entradas parques, plan comidas Disney, tren Brightline, compras outlets, city tour Miami, asistencia viajero",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "14 dias / 13 noches",
+    "fechaSalida": "2025-01-14",
+    "incluye": [
+      "Plan Family Plan (2 adultos + 2 menores hasta 17 años)",
+      "Alojamiento en Disney's All Star Resorts + Universal's Endless Summer Resort + Miami",
+      "Salida desde Buenos Aires"
+    ]
+  },
+  {
+    "nombre": "PKG002 - Natal - Brasil",
+    "destino": "Natal - Brasil",
+    "fecha": "2025-02-10",
+    "precio": 11801566000,
+    "descripcion": "Natal - Brasil - 7 noches en Porto Suites / Hotel Marsol. Carnaval en Natal. Traslados incluidos. Porto Suites con desayuno / Hotel Marsol con Media Pensión (MAP)",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "8 dias / 7 noches",
+    "fechaSalida": "2025-02-10",
+    "incluye": [
+      "Plan Paquete completo",
+      "Alojamiento en Porto Suites / Hotel Marsol",
+      "Salida desde Rosario"
+    ]
+  },
+  {
+    "nombre": "PKG003 - Salvador de Bahía - Brasil",
+    "destino": "Salvador de Bahía - Brasil",
+    "fecha": "2025-02-24",
+    "precio": 9751110000,
+    "descripcion": "Salvador de Bahía - Brasil - 8 noches en Gran Hotel Stella Maris. Con desayuno / Con Media Pensión (MAP). Traslados incluidos",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "9 dias / 8 noches",
+    "fechaSalida": "2025-02-24",
+    "incluye": [
+      "Plan Paquete completo",
+      "Alojamiento en Gran Hotel Stella Maris",
+      "Salida desde Córdoba"
+    ]
+  },
+  {
+    "nombre": "PKG004 - Cataratas del Iguazú",
+    "destino": "Cataratas del Iguazú",
+    "fecha": "2024-12-30",
+    "precio": 545200000,
+    "descripcion": "Cataratas del Iguazú - 4 noches en Hotel Arami. Precios en ARS. Carry on + artículo personal. Traslados incluidos. Visita Cataratas Argentinas y Brasileñas (entradas NO incluidas). Asistencia médica",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "5 dias / 4 noches",
+    "fechaSalida": "2024-12-30",
+    "incluye": [
+      "Plan Año Nuevo",
+      "Alojamiento en Hotel Arami",
+      "Salida desde Rosario"
+    ]
+  },
+  {
+    "nombre": "PKG005 - Bariloche - Argentina",
+    "destino": "Bariloche - Argentina",
+    "fecha": "2025-04-27",
+    "precio": 590000000,
+    "descripcion": "Bariloche - Argentina - 5 noches en Hotel Kenton Palace. Precios en ARS. Carry on + artículo personal. Alojamiento con desayuno. Traslados incluidos",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "6 dias / 5 noches",
+    "fechaSalida": "2025-04-27",
+    "incluye": [
+      "Plan Paquete completo",
+      "Alojamiento en Hotel Kenton Palace",
+      "Salida desde Rosario"
+    ]
+  },
+  {
+    "nombre": "PKG006 - Natal - Brasil",
+    "destino": "Natal - Brasil",
+    "fecha": "2025-02-07",
+    "precio": 9001480000,
+    "descripcion": "Natal - Brasil - 8 noches en Porto Suites / Hotel Marsol. Traslados incluidos. Porto Suites con desayuno / Hotel Marsol con Media Pensión (MAP)",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "9 dias / 8 noches",
+    "fechaSalida": "2025-02-07",
+    "incluye": [
+      "Plan Paquete completo",
+      "Alojamiento en Porto Suites / Hotel Marsol",
+      "Salida desde Rosario"
+    ]
+  },
+  {
+    "nombre": "PKG007 - Playa del Carmen - México",
+    "destino": "Playa del Carmen - México",
+    "fecha": "2024-12-05",
+    "precio": 1470000,
+    "descripcion": "Playa del Carmen - México - 8 noches en Riu Lupita. Carry On + artículo personal. Traslados incluidos",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "9 dias / 8 noches",
+    "fechaSalida": "2024-12-05",
+    "incluye": [
+      "Plan All Inclusive",
+      "Alojamiento en Riu Lupita",
+      "Salida desde Córdoba"
+    ]
+  },
+  {
+    "nombre": "PKG008 - Cancún - México",
+    "destino": "Cancún - México",
+    "fecha": "2024-12-05",
+    "precio": 1440000,
+    "descripcion": "Cancún - México - 8 noches en Dos Playas Faranda. Carry On + artículo personal. Traslados incluidos",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "9 dias / 8 noches",
+    "fechaSalida": "2024-12-05",
+    "incluye": [
+      "Plan All Inclusive",
+      "Alojamiento en Dos Playas Faranda",
+      "Salida desde Córdoba"
+    ]
+  },
+  {
+    "nombre": "PKG009 - Punta Cana - República Dominicana",
+    "destino": "Punta Cana - República Dominicana",
+    "fecha": "2026-01-09",
+    "precio": 2260000,
+    "descripcion": "Punta Cana - República Dominicana - 8 noches en VIK Hotel Arena Blanca. Carry On + artículo personal. Traslados IN/OUT incluidos. Verano 2026",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "9 dias / 8 noches",
+    "fechaSalida": "2026-01-09",
+    "incluye": [
+      "Plan All Inclusive",
+      "Alojamiento en VIK Hotel Arena Blanca",
+      "Salida desde Rosario"
+    ]
+  },
+  {
+    "nombre": "PKG010 - Porto de Galinhas - Brasil",
+    "destino": "Porto de Galinhas - Brasil",
+    "fecha": "2025-01-11",
+    "precio": 1680000,
+    "descripcion": "Porto de Galinhas - Brasil - 9 noches en Pousada Recanto do Lobo. 10 días / 9 noches. Carry On + artículo personal. Traslados IN/OUT. Desayuno incluido",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "10 dias / 9 noches",
+    "fechaSalida": "2025-01-11",
+    "incluye": [
+      "Plan Con desayuno",
+      "Alojamiento en Pousada Recanto do Lobo",
+      "Salida desde Rosario"
+    ]
+  },
+  {
+    "nombre": "PKG011 - Natal + Pipa - Brasil",
+    "destino": "Natal + Pipa - Brasil",
+    "fecha": "2025-03-13",
+    "precio": 1366000,
+    "descripcion": "Natal + Pipa - Brasil - 8 noches en Porto Suites Natal + Pousada dos Girassóis Pipa. Traslados incluidos. Incluye combinación de 2 destinos",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "9 dias / 8 noches",
+    "fechaSalida": "2025-03-13",
+    "incluye": [
+      "Plan Paquete completo",
+      "Alojamiento en Porto Suites Natal + Pousada dos Girassóis Pipa",
+      "Salida desde Rosario"
+    ]
+  },
+  {
+    "nombre": "PKG012 - Mendoza - Caminos del Vino (Auberge du Vin)",
+    "destino": "Mendoza - Caminos del Vino (Auberge du Vin)",
+    "fecha": "2025-11-20",
+    "precio": 589000,
+    "descripcion": "Mendoza - Caminos del Vino (Auberge du Vin) - 4 noches en Auberge du Vin (Hras. Resort). 5 días / 4 noches. Incluye auto con kilometraje ilimitado. Alojamiento con desayuno. Precio por persona en base doble",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "5 dias / 4 noches",
+    "incluye": [
+      "Plan Con desayuno",
+      "Alojamiento en Auberge du Vin (Hras. Resort)",
+      "Salida desde Mendoza"
+    ]
+  },
+  {
+    "nombre": "PKG013 - Mendoza - Caminos del Vino (Posada El Encuentro)",
+    "destino": "Mendoza - Caminos del Vino (Posada El Encuentro)",
+    "fecha": "2025-11-20",
+    "precio": 375000,
+    "descripcion": "Mendoza - Caminos del Vino (Posada El Encuentro) - 4 noches en Posada El Encuentro (Suite). 5 días / 4 noches. Incluye auto. Precio por persona en base doble",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "5 dias / 4 noches",
+    "incluye": [
+      "Plan Con desayuno",
+      "Alojamiento en Posada El Encuentro (Suite)",
+      "Salida desde Mendoza"
+    ]
+  },
+  {
+    "nombre": "PKG014 - Mendoza - Caminos del Vino (Posada Salentein)",
+    "destino": "Mendoza - Caminos del Vino (Posada Salentein)",
+    "fecha": "2025-11-20",
+    "precio": 547000,
+    "descripcion": "Mendoza - Caminos del Vino (Posada Salentein) - 4 noches en Posada Salentein (Viamonte). 5 días / 4 noches. Incluye auto. Precio por persona en base doble",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "5 dias / 4 noches",
+    "incluye": [
+      "Plan Con desayuno",
+      "Alojamiento en Posada Salentein (Viamonte)",
+      "Salida desde Mendoza"
+    ]
+  },
+  {
+    "nombre": "PKG015 - Mendoza - Caminos del Vino (Viamonte Winery)",
+    "destino": "Mendoza - Caminos del Vino (Viamonte Winery)",
+    "fecha": "2025-11-20",
+    "precio": 861000,
+    "descripcion": "Mendoza - Caminos del Vino (Viamonte Winery) - 4 noches en Viamonte Winery Lodge (Suite Galería). 5 días / 4 noches. Incluye auto. Precio por persona en base doble",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "5 dias / 4 noches",
+    "incluye": [
+      "Plan Con desayuno",
+      "Alojamiento en Viamonte Winery Lodge (Suite Galería)",
+      "Salida desde Mendoza"
+    ]
+  },
+  {
+    "nombre": "PKG016 - Mendoza - Caminos del Vino (Casa de Uco)",
+    "destino": "Mendoza - Caminos del Vino (Casa de Uco)",
+    "fecha": "2025-11-20",
+    "precio": 1515000,
+    "descripcion": "Mendoza - Caminos del Vino (Casa de Uco) - 4 noches en Casa de Uco (Cordón del Plata). 5 días / 4 noches. Incluye auto. Precio por persona en base doble",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "5 dias / 4 noches",
+    "incluye": [
+      "Plan Con desayuno",
+      "Alojamiento en Casa de Uco (Cordón del Plata)",
+      "Salida desde Mendoza"
+    ]
+  },
+  {
+    "nombre": "PKG017 - Mendoza - Caminos del Vino (Entre Cielos)",
+    "destino": "Mendoza - Caminos del Vino (Entre Cielos)",
+    "fecha": "2025-11-20",
+    "precio": 1675000,
+    "descripcion": "Mendoza - Caminos del Vino (Entre Cielos) - 4 noches en Entre Cielos (Classic). 5 días / 4 noches. Incluye auto. Precio por persona en base doble",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "5 dias / 4 noches",
+    "incluye": [
+      "Plan Con desayuno",
+      "Alojamiento en Entre Cielos (Classic)",
+      "Salida desde Mendoza"
+    ]
+  },
+  {
+    "nombre": "PKG018 - Mendoza - Caminos del Vino (Auberge du Vin)",
+    "destino": "Mendoza - Caminos del Vino (Auberge du Vin)",
+    "fecha": "2025-11-20",
+    "precio": 648000,
+    "descripcion": "Mendoza - Caminos del Vino (Auberge du Vin) - 4 noches en Auberge du Vin (Hras. Resort). 5 días / 4 noches. Incluye auto. Precio temporada alta. Precio por persona en base doble",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "5 dias / 4 noches",
+    "incluye": [
+      "Plan Con desayuno",
+      "Alojamiento en Auberge du Vin (Hras. Resort)",
+      "Salida desde Mendoza"
+    ]
+  },
+  {
+    "nombre": "PKG019 - Mendoza - Caminos del Vino (Posada El Encuentro)",
+    "destino": "Mendoza - Caminos del Vino (Posada El Encuentro)",
+    "fecha": "2025-11-20",
+    "precio": 403000,
+    "descripcion": "Mendoza - Caminos del Vino (Posada El Encuentro) - 4 noches en Posada El Encuentro (Suite). 5 días / 4 noches. Incluye auto. Precio temporada alta. Precio por persona en base doble",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "5 dias / 4 noches",
+    "incluye": [
+      "Plan Con desayuno",
+      "Alojamiento en Posada El Encuentro (Suite)",
+      "Salida desde Mendoza"
+    ]
+  },
+  {
+    "nombre": "PKG020 - Mendoza - Caminos del Vino (Posada Salentein)",
+    "destino": "Mendoza - Caminos del Vino (Posada Salentein)",
+    "fecha": "2025-11-20",
+    "precio": 733000,
+    "descripcion": "Mendoza - Caminos del Vino (Posada Salentein) - 4 noches en Posada Salentein (Viamonte). 5 días / 4 noches. Incluye auto. Precio temporada alta. Precio por persona en base doble",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "5 dias / 4 noches",
+    "incluye": [
+      "Plan Con desayuno",
+      "Alojamiento en Posada Salentein (Viamonte)",
+      "Salida desde Mendoza"
+    ]
+  },
+  {
+    "nombre": "PKG021 - Mendoza - Caminos del Vino (Viamonte Winery)",
+    "destino": "Mendoza - Caminos del Vino (Viamonte Winery)",
+    "fecha": "2025-11-20",
+    "precio": 890000,
+    "descripcion": "Mendoza - Caminos del Vino (Viamonte Winery) - 4 noches en Viamonte Winery Lodge (Suite Galería). 5 días / 4 noches. Incluye auto. Precio temporada alta. Precio por persona en base doble",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "5 dias / 4 noches",
+    "incluye": [
+      "Plan Con desayuno",
+      "Alojamiento en Viamonte Winery Lodge (Suite Galería)",
+      "Salida desde Mendoza"
+    ]
+  },
+  {
+    "nombre": "PKG022 - Mendoza - Caminos del Vino (Casa de Uco)",
+    "destino": "Mendoza - Caminos del Vino (Casa de Uco)",
+    "fecha": "2025-11-20",
+    "precio": 1544000,
+    "descripcion": "Mendoza - Caminos del Vino (Casa de Uco) - 4 noches en Casa de Uco (Cordón del Plata). 5 días / 4 noches. Incluye auto. Precio temporada alta. Precio por persona en base doble",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "5 dias / 4 noches",
+    "incluye": [
+      "Plan Con desayuno",
+      "Alojamiento en Casa de Uco (Cordón del Plata)",
+      "Salida desde Mendoza"
+    ]
+  },
+  {
+    "nombre": "PKG023 - Mendoza - Caminos del Vino (Entre Cielos)",
+    "destino": "Mendoza - Caminos del Vino (Entre Cielos)",
+    "fecha": "2025-11-20",
+    "precio": 1795000,
+    "descripcion": "Mendoza - Caminos del Vino (Entre Cielos) - 4 noches en Entre Cielos (Classic). 5 días / 4 noches. Incluye auto. Precio temporada alta. Precio por persona en base doble",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "5 dias / 4 noches",
+    "incluye": [
+      "Plan Con desayuno",
+      "Alojamiento en Entre Cielos (Classic)",
+      "Salida desde Mendoza"
+    ]
+  },
+  {
+    "nombre": "PKG024 - Italia - Fantasía de Puglia",
+    "destino": "Italia - Fantasía de Puglia",
+    "fecha": "2025-11-20",
+    "precio": 2085000,
+    "descripcion": "Italia - Fantasía de Puglia - 7 noches en Hoteles con encanto. 8 días / 7 noches. Incluye traslados según itinerario, 4 comidas, visitas y entradas según itinerario, clase de cocina y almuerzo. Recorrido: Bari, Trani, Castel del Monte, Alberobello, Matera, Grottaglie, Otranto, Lecce, Martina Franca, Monopoli. Precio con 20% descuento aplicado. Base doble",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "8 dias / 7 noches",
+    "incluye": [
+      "Plan Con desayuno + traslados + 4 comidas",
+      "Alojamiento en Hoteles con encanto",
+      "Salida desde Salidas múltiples"
+    ]
+  },
+  {
+    "nombre": "PKG025 - Italia - Fantasía con Hotel Venecia Isla",
+    "destino": "Italia - Fantasía con Hotel Venecia Isla",
+    "fecha": "2025-11-20",
+    "precio": 1945000,
+    "descripcion": "Italia - Fantasía con Hotel Venecia Isla - 7 noches en Hoteles con encanto + Venecia isla. 8 días / 7 noches. Incluye traslados, 3 comidas, visitas Museos Vaticanos, Capilla Sixtina, Plaza San Pedro, almuerzo toscano tradicional. Recorrido: Roma, Asís, Siena, Florencia, Bolonia, Venecia, Toscana. Precio con 20% descuento aplicado. Base doble",
+    "categoria": "Otro",
+    "destacado": false,
+    "activo": true,
+    "duracion": "8 dias / 7 noches",
+    "incluye": [
+      "Plan Con desayuno + traslados + 3 comidas + visitas",
+      "Alojamiento en Hoteles con encanto + Venecia isla",
+      "Salida desde Salidas múltiples"
+    ]
+  }
+]
