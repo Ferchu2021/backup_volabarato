@@ -24,6 +24,7 @@ interface PaqueteFromFile {
   destacado?: boolean;
   cuposDisponibles?: number;
   activo?: boolean;
+  moneda?: string;
 }
 
 const loadPaquetesFromFile = async () => {

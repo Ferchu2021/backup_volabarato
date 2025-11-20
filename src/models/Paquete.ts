@@ -9,6 +9,7 @@ export interface IPaquete extends Document {
   precio: number;
   descripcion: string;
   activo: boolean;
+  moneda?: string; // "USD", "ARS", "BRL", "MXN", etc.
   _id: mongoose.Types.ObjectId;
 }
 
@@ -19,7 +20,13 @@ const paqueteSchema = new Schema<IPaquete>({
   fecha: { type: Date, required: true },
   precio: { type: Number, required: true, min: 0 },
   descripcion: { type: String },
-  activo: { type: Boolean, default: true }
+  activo: { type: Boolean, default: true },
+  moneda: { 
+    type: String, 
+    trim: true,
+    enum: ['USD', 'ARS', 'BRL', 'MXN', 'EUR', 'COP', 'CLP', 'PEN'],
+    default: 'USD'
+  }
 });
 
 // Schema de validación Joi para crear
@@ -29,7 +36,8 @@ export const paqueteJoiSchema = Joi.object({
   fecha: Joi.date().required(),
   precio: Joi.number().positive().required(),
   descripcion: Joi.string().optional(),
-  activo: Joi.boolean()
+  activo: Joi.boolean().optional(),
+  moneda: Joi.string().valid('USD', 'ARS', 'BRL', 'MXN', 'EUR', 'COP', 'CLP', 'PEN').optional()
 });
 
 // Schema de validación Joi para actualizar (permite campos opcionales)
@@ -39,7 +47,8 @@ export const paqueteUpdateJoiSchema = Joi.object({
   fecha: Joi.date().optional(),
   precio: Joi.number().positive().optional(),
   descripcion: Joi.string().allow(null, '').optional(),
-  activo: Joi.boolean().optional()
+  activo: Joi.boolean().optional(),
+  moneda: Joi.string().valid('USD', 'ARS', 'BRL', 'MXN', 'EUR', 'COP', 'CLP', 'PEN').optional()
 }).min(1).unknown(false); // Requiere al menos un campo para actualizar
 
 // Interface para crear paquete
@@ -50,6 +59,7 @@ export interface ICreatePaqueteRequest {
   precio: number;
   descripcion?: string;
   activo?: boolean;
+  moneda?: string;
 }
 
 // Interface para actualizar paquete
@@ -60,6 +70,7 @@ export interface IUpdatePaqueteRequest {
   precio?: number;
   descripcion?: string;
   activo?: boolean;
+  moneda?: string;
 }
 
 // Interface para respuesta de paquete
@@ -71,6 +82,7 @@ export interface IPaqueteResponse {
   precio: number;
   descripcion?: string;
   activo: boolean;
+  moneda?: string;
 }
 
 // Modelo exportado
