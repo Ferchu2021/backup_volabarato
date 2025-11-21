@@ -1,0 +1,214 @@
+[
+  {
+    "nombre": "Kenia - Kongoni Classic",
+    "destino": "Kenia",
+    "fecha": "2025-11-21",
+    "precio": 1575,
+    "moneda": "USD",
+    "descripcion": "Paquete turístico a Kenia: Kongoni Classic. Pensión completa, safaris en 4x4, guía hispana, traslados, entradas a parques. Recorriendo: Nairobi, Montes Aberdare, Lago Nakuru, Maasai Mara.",
+    "activo": true,
+    "destacado": false,
+    "categoria": "Aventura",
+    "duracion": "5 días / 4 noches",
+    "incluye": [
+      "Vuelos y traslados"
+    ]
+  },
+  {
+    "nombre": "Kenia - Extensión Amboselli",
+    "destino": "Kenia",
+    "fecha": "2025-11-21",
+    "precio": 790,
+    "moneda": "USD",
+    "descripcion": "Paquete turístico a Kenia: Extensión Amboselli. Visita a Parque Nacional Amboselli, pensión completa, traslados, safari en 4x4. Recorriendo: Amboselli vía Namanga/Emali.",
+    "activo": true,
+    "destacado": false,
+    "categoria": "Aventura",
+    "duracion": "3 días / 2 noches",
+    "incluye": [
+      "Traslados entre parques"
+    ]
+  },
+  {
+    "nombre": "Canadá - Auroras Boreales Vancouver + Yukón",
+    "destino": "Canadá",
+    "fecha": "2025-11-21",
+    "precio": 2190,
+    "moneda": "USD",
+    "descripcion": "Paquete turístico a Canadá: Auroras Boreales Vancouver + Yukón. 3 noches Vancouver + 3 noches Whitehorse, traslados, tours de auroras, snacks y guía hispana. Recorriendo: Vancouver, Whitehorse. Incluye tour de 3 días para ver auroras.",
+    "activo": true,
+    "destacado": false,
+    "categoria": "Aventura",
+    "duracion": "7 días / 6 noches",
+    "incluye": [
+      "Vuelos y actividades"
+    ]
+  },
+  {
+    "nombre": "China - Feria Cantón Primera Edición - Fase 1",
+    "destino": "China",
+    "fecha": "2026-01-01",
+    "precio": 755,
+    "moneda": "USD",
+    "descripcion": "Paquete turístico a China: Feria Cantón Primera Edición - Fase 1. 6 noches Ramada Pearl, desayunos, traslados IN/OUT, entradas a la feria. Recorriendo: Guangzhou. Electrodomésticos, maquinaria, vehículos, herramientas.",
+    "activo": true,
+    "destacado": false,
+    "categoria": "Cultural",
+    "duracion": "7 días / 6 noches",
+    "incluye": [
+      "Hotel + Entradas"
+    ]
+  },
+  {
+    "nombre": "China - Feria Cantón Primera Edición - Fase 2",
+    "destino": "China",
+    "fecha": "2026-01-01",
+    "precio": 755,
+    "moneda": "USD",
+    "descripcion": "Paquete turístico a China: Feria Cantón Primera Edición - Fase 2. 6 noches Ramada Pearl, desayunos, traslados IN/OUT, entradas a la feria. Recorriendo: Guangzhou. Regalería, cristalería, muebles, decoración.",
+    "activo": true,
+    "destacado": false,
+    "categoria": "Cultural",
+    "duracion": "7 días / 6 noches",
+    "incluye": [
+      "Hotel + Entradas"
+    ]
+  },
+  {
+    "nombre": "China - Feria Cantón Primera Edición - Fase 3",
+    "destino": "China",
+    "fecha": "2026-01-01",
+    "precio": 755,
+    "moneda": "USD",
+    "descripcion": "Paquete turístico a China: Feria Cantón Primera Edición - Fase 3. 6 noches Ramada Pearl, desayunos, traslados IN/OUT, entradas a la feria. Recorriendo: Guangzhou. Moda, bebé, turismo, deporte, gastronomía.",
+    "activo": true,
+    "destacado": false,
+    "categoria": "Cultural",
+    "duracion": "7 días / 6 noches",
+    "incluye": [
+      "Hotel + Entradas"
+    ]
+  },
+  {
+    "nombre": "Europa - Crucero Descubra los Fiordos y Helsinki",
+    "destino": "Europa",
+    "fecha": "2026-01-01",
+    "precio": 3146,
+    "moneda": "EUR",
+    "descripcion": "Paquete turístico a Europa: Crucero Descubra los Fiordos y Helsinki. Alojamiento con desayuno, traslados y entradas según itinerario. 1 noche a bordo con media pensión. Recorriendo: Copenhague, Oslo, Lofthus, Bergen, Gudvangen, Estocolmo, Helsinki. Incluye crucero NORDIC Silja.",
+    "activo": true,
+    "destacado": false,
+    "categoria": "Aventura",
+    "duracion": "12 días / 11 noches",
+    "incluye": [
+      "Visitas y traslado",
+      "Hotel"
+    ]
+  },
+  {
+    "nombre": "Europa - Crucero Perlas Balcánicas",
+    "destino": "Europa",
+    "fecha": "2026-01-01",
+    "precio": 2455,
+    "moneda": "EUR",
+    "descripcion": "Paquete turístico a Europa: Crucero Perlas Balcánicas. Alojamiento con desayuno, traslados y entradas según itinerario. Recorriendo: Ljubljana, Postojna, Bled, Split, Dubrovnik, Mostar, Sarajevo, Zagreb.",
+    "activo": true,
+    "destacado": false,
+    "categoria": "Aventura",
+    "duracion": "11 días / 10 noches",
+    "incluye": [
+      "Visitas y traslado",
+      "Hotel"
+    ]
+  },
+  {
+    "nombre": "Feria Cantón China - Fase 1",
+    "destino": "Cantón - China",
+    "fecha": "2025-04-15",
+    "precio": 755,
+    "moneda": "USD",
+    "descripcion": "Paquete para Feria Cantón China - Fase 1. Fechas: 15-19 Abril. Hotel: Ramada Pearl 4*. 6noches, desayunos, traslados IN/OUT, entradas. Categorías: Electrodomésticos, máquinas, vehículos, herramientas.",
+    "activo": true,
+    "destacado": false,
+    "categoria": "Cultural",
+    "duracion": "7 días / 6 noches",
+    "incluye": [
+      "Hotel",
+      "Desayunos",
+      "Traslados",
+      "Entradas"
+    ]
+  },
+  {
+    "nombre": "Feria Cantón China - Fase 2",
+    "destino": "Cantón - China",
+    "fecha": "2025-04-15",
+    "precio": 755,
+    "moneda": "USD",
+    "descripcion": "Paquete para Feria Cantón China - Fase 2. Fechas: 23-27 Abril. Hotel: Ramada Pearl 4*. 6noches, desayunos, traslados IN/OUT, entradas. Categorías: Regalería, cristalería, muebles, decoración.",
+    "activo": true,
+    "destacado": false,
+    "categoria": "Cultural",
+    "duracion": "7 días / 6 noches",
+    "incluye": [
+      "Hotel",
+      "Desayunos",
+      "Traslados",
+      "Entradas"
+    ]
+  },
+  {
+    "nombre": "Feria Cantón China - Fase 3",
+    "destino": "Cantón - China",
+    "fecha": "2025-05-01",
+    "precio": 755,
+    "moneda": "USD",
+    "descripcion": "Paquete para Feria Cantón China - Fase 3. Fechas: 01-05 Mayo. Hotel: Ramada Pearl 4*. 6noches, desayunos, traslados IN/OUT, entradas. Categorías: Moda, bebé, turismo, deporte, gastronomía.",
+    "activo": true,
+    "destacado": false,
+    "categoria": "Cultural",
+    "duracion": "7 días / 6 noches",
+    "incluye": [
+      "Hotel",
+      "Desayunos",
+      "Traslados",
+      "Entradas"
+    ]
+  },
+  {
+    "nombre": "Fiordos y Helsinki",
+    "destino": "Fiordos Noruegos - Europa",
+    "fecha": "2026-05-08",
+    "precio": 3.146,
+    "moneda": "EUR",
+    "descripcion": "Paquete turístico: Fiordos y Helsinki. Alojamiento con desayuno, traslados, visitas, noche a bordo pensión completa. Recorrido: Copenhague, Oslo, Lofthus, Bergen, Gudvangen, Estocolmo, Helsinki. Precio anterior: 3,495 EUR.",
+    "activo": true,
+    "destacado": false,
+    "categoria": "Cultural",
+    "duracion": "12 días / 11 noches",
+    "incluye": [
+      "Hotel",
+      "Desayuno",
+      "Traslados",
+      "Visitas guiadas"
+    ]
+  },
+  {
+    "nombre": "Perlas Balcánicas",
+    "destino": "Balcanes - Europa",
+    "fecha": "2026-04-14",
+    "precio": 2.455,
+    "moneda": "EUR",
+    "descripcion": "Paquete turístico: Perlas Balcánicas. Alojamiento con desayuno, traslados, visitas según itinerario. Recorrido: Ljubljana, Postojna, Bled, Split, Dubrovnik, Mostar, Sarajevo, Zagreb. Precio anterior: 2,725 EUR.",
+    "activo": true,
+    "destacado": false,
+    "categoria": "Cultural",
+    "duracion": "11 días / 10 noches",
+    "incluye": [
+      "Hotel",
+      "Desayuno",
+      "Traslados",
+      "Visitas guiadas"
+    ]
+  }
+]
