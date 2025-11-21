@@ -1,0 +1,138 @@
+[
+  {
+    "nombre": "Punta Cana - Hotel Maracas",
+    "destino": "Punta Cana - Caribe",
+    "fecha": "2025-12-22",
+    "precio": 1963.86,
+    "moneda": "USD",
+    "descripcion": "Paquete turístico a Punta Cana en Hotel Maracas. Duración: 6 días / 6 noches. Aerolínea: Sky Airline. Origen: Buenos Aires (EZE). Incluido. Recargo en ARS: 368.79.",
+    "activo": true,
+    "destacado": false,
+    "categoria": "Playa",
+    "duracion": "6 días / 6 noches",
+    "incluye": [
+      "Vuelos",
+      "Hotel",
+      "Equipaje de bodega"
+    ]
+  },
+  {
+    "nombre": "Punta Cana - Bavaro Green Aparthotel",
+    "destino": "Punta Cana - Caribe",
+    "fecha": "2026-03-03",
+    "precio": 2164.09,
+    "moneda": "USD",
+    "descripcion": "Paquete turístico a Punta Cana en Bavaro Green Aparthotel. Duración: 9 días / 9 noches. Aerolínea: LATAM. Origen: Buenos Aires (EZE). Incluido. Recargo en ARS: 433.74.",
+    "activo": true,
+    "destacado": false,
+    "categoria": "Playa",
+    "duracion": "9 días / 9 noches",
+    "incluye": [
+      "Vuelos",
+      "Hotel",
+      "Equipaje de bodega"
+    ]
+  },
+  {
+    "nombre": "Punta Cana - Bavaro Green Aparthotel",
+    "destino": "Punta Cana - Caribe",
+    "fecha": "2026-03-10",
+    "precio": 2310.26,
+    "moneda": "USD",
+    "descripcion": "Paquete turístico a Punta Cana en Bavaro Green Aparthotel. Duración: 6 días / 6 noches. Aerolínea: Sky Airline. Origen: Buenos Aires (AEP). Incluido. Recargo en ARS: 376.85.",
+    "activo": true,
+    "destacado": false,
+    "categoria": "Playa",
+    "duracion": "6 días / 6 noches",
+    "incluye": [
+      "Vuelos",
+      "Hotel",
+      "Equipaje de bodega"
+    ]
+  },
+  {
+    "nombre": "Aruba - Agua Clara Eco Suites",
+    "destino": "Aruba - Caribe",
+    "fecha": "2026-03-10",
+    "precio": 2427.44,
+    "moneda": "USD",
+    "descripcion": "Paquete turístico a Aruba en Agua Clara Eco Suites. Duración: 6 días / 6 noches. Aerolínea: Copa Airlines. Origen: Buenos Aires (EZE). No incluido. Recargo en ARS: 176.04.",
+    "activo": true,
+    "destacado": false,
+    "categoria": "Playa",
+    "duracion": "6 días / 6 noches",
+    "incluye": [
+      "Vuelos",
+      "Hotel",
+      "Equipaje de bodega"
+    ]
+  },
+  {
+    "nombre": "Aruba - Central Boutique Hotel",
+    "destino": "Aruba - Caribe",
+    "fecha": "2026-03-16",
+    "precio": 2348.04,
+    "moneda": "USD",
+    "descripcion": "Paquete turístico a Aruba en Central Boutique Hotel. Duración: 6 días / 6 noches. Aerolínea: Copa Airlines. Origen: Buenos Aires (EZE). No incluido. Recargo en ARS: 205.24.",
+    "activo": true,
+    "destacado": false,
+    "categoria": "Playa",
+    "duracion": "6 días / 6 noches",
+    "incluye": [
+      "Vuelos",
+      "Hotel",
+      "Equipaje de bodega"
+    ]
+  },
+  {
+    "nombre": "Aruba - Central Boutique Hotel",
+    "destino": "Aruba - Caribe",
+    "fecha": "2026-02-09",
+    "precio": 3922.25,
+    "moneda": "USD",
+    "descripcion": "Paquete turístico a Aruba en Central Boutique Hotel. Duración: 6 días / 6 noches. Aerolínea: Copa Airlines. Origen: Buenos Aires (EZE). No incluido. Recargo en ARS: 200.07.",
+    "activo": true,
+    "destacado": false,
+    "categoria": "Playa",
+    "duracion": "6 días / 6 noches",
+    "incluye": [
+      "Vuelos",
+      "Hotel",
+      "Equipaje de bodega"
+    ]
+  },
+  {
+    "nombre": "Aruba - Victoria City Hotel",
+    "destino": "Aruba - Caribe",
+    "fecha": "2026-02-15",
+    "precio": 3326.66,
+    "moneda": "USD",
+    "descripcion": "Paquete turístico a Aruba en Victoria City Hotel. Duración: 6 días / 6 noches. Aerolínea: LATAM. Origen: Buenos Aires (EZE). No incluido. Recargo en ARS: 202.14.",
+    "activo": true,
+    "destacado": false,
+    "categoria": "Playa",
+    "duracion": "6 días / 6 noches",
+    "incluye": [
+      "Vuelos",
+      "Hotel",
+      "Equipaje de bodega"
+    ]
+  },
+  {
+    "nombre": "Aruba - Agua Clara Eco Suites",
+    "destino": "Aruba - Caribe",
+    "fecha": "2026-02-23",
+    "precio": 4215.08,
+    "moneda": "USD",
+    "descripcion": "Paquete turístico a Aruba en Agua Clara Eco Suites. Duración: 6 días / 6 noches. Aerolínea: Copa Airlines. Origen: Buenos Aires (EZE). No incluido. Recargo en ARS: 185.33.",
+    "activo": true,
+    "destacado": false,
+    "categoria": "Playa",
+    "duracion": "6 días / 6 noches",
+    "incluye": [
+      "Vuelos",
+      "Hotel",
+      "Equipaje de bodega"
+    ]
+  }
+]
