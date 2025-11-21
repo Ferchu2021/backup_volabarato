@@ -58,7 +58,12 @@ export const paqueteUpdateJoiSchema = Joi.object({
   precio: Joi.number().positive().optional(),
   descripcion: Joi.string().allow(null, '').optional(),
   activo: Joi.boolean().optional(),
-  moneda: Joi.string().valid('USD', 'ARS', 'BRL', 'MXN', 'EUR', 'COP', 'CLP', 'PEN').optional()
+  moneda: Joi.string().valid('USD', 'ARS', 'BRL', 'MXN', 'EUR', 'COP', 'CLP', 'PEN').optional(),
+  destacado: Joi.boolean().optional(),
+  categoria: Joi.string().optional(),
+  duracion: Joi.string().optional(),
+  incluye: Joi.array().items(Joi.string()).optional(),
+  imagenes: Joi.array().items(Joi.string()).optional()
 }).min(1).unknown(false); // Requiere al menos un campo para actualizar
 
 // Interface para crear paquete
@@ -81,6 +86,11 @@ export interface IUpdatePaqueteRequest {
   descripcion?: string;
   activo?: boolean;
   moneda?: string;
+  destacado?: boolean;
+  categoria?: string;
+  duracion?: string;
+  incluye?: string[];
+  imagenes?: string[];
 }
 
 // Interface para respuesta de paquete
