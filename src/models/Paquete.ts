@@ -10,6 +10,11 @@ export interface IPaquete extends Document {
   descripcion: string;
   activo: boolean;
   moneda?: string; // "USD", "ARS", "BRL", "MXN", etc.
+  destacado?: boolean; // Para mostrar en home
+  categoria?: string; // "Aventura", "Playa", "Cultural", etc.
+  duracion?: string; // "7 días / 6 noches"
+  incluye?: string[]; // ["Vuelos", "Hotel", "Desayuno", "Traslados"]
+  imagenes?: string[]; // Array de URLs de imágenes
   _id: mongoose.Types.ObjectId;
 }
 
@@ -26,7 +31,12 @@ const paqueteSchema = new Schema<IPaquete>({
     trim: true,
     enum: ['USD', 'ARS', 'BRL', 'MXN', 'EUR', 'COP', 'CLP', 'PEN'],
     default: 'USD'
-  }
+  },
+  destacado: { type: Boolean, default: false },
+  categoria: { type: String, trim: true },
+  duracion: { type: String, trim: true },
+  incluye: { type: [String], default: [] },
+  imagenes: { type: [String], default: [] }
 });
 
 // Schema de validación Joi para crear
@@ -83,6 +93,11 @@ export interface IPaqueteResponse {
   descripcion?: string;
   activo: boolean;
   moneda?: string;
+  destacado?: boolean;
+  categoria?: string;
+  duracion?: string;
+  incluye?: string[];
+  imagenes?: string[];
 }
 
 // Modelo exportado

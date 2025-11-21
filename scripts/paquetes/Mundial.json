@@ -1,0 +1,164 @@
+[
+  {
+    "nombre": "Pack Campeón 1 Partido - 3 estrellas",
+    "destino": "Mundial de Fútbol",
+    "fecha": "2025-11-21",
+    "precio": 2390,
+    "moneda": "USD",
+    "descripcion": "Pack Campeón 1 Partido - 3 noches en hotel 3 estrellas. 1 partido incluidos",
+    "categoria": "Mundial",
+    "destacado": true,
+    "activo": true,
+    "duracion": "4 dias / 3 noches",
+    "incluye": [
+      "Hotel 3 estrellas",
+      "1 partido del Mundial",
+      "Pasajes aéreos no incluidos",
+      "Duración: 3 noches"
+    ]
+  },
+  {
+    "nombre": "Pack Campeón 1 Partido - 4 estrellas",
+    "destino": "Mundial de Fútbol",
+    "fecha": "2025-11-21",
+    "precio": 2890,
+    "moneda": "USD",
+    "descripcion": "Pack Campeón 1 Partido - 3 noches en hotel 4 estrellas. 1 partido incluidos",
+    "categoria": "Mundial",
+    "destacado": true,
+    "activo": true,
+    "duracion": "4 dias / 3 noches",
+    "incluye": [
+      "Hotel 4 estrellas",
+      "1 partido del Mundial",
+      "Pasajes aéreos no incluidos",
+      "Duración: 3 noches"
+    ]
+  },
+  {
+    "nombre": "Pack Campeón 1 Partido - 5 estrellas",
+    "destino": "Mundial de Fútbol",
+    "fecha": "2025-11-21",
+    "precio": 3590,
+    "moneda": "USD",
+    "descripcion": "Pack Campeón 1 Partido - 3 noches en hotel 5 estrellas. 1 partido incluidos",
+    "categoria": "Mundial",
+    "destacado": true,
+    "activo": true,
+    "duracion": "4 dias / 3 noches",
+    "incluye": [
+      "Hotel 5 estrellas",
+      "1 partido del Mundial",
+      "Pasajes aéreos no incluidos",
+      "Duración: 3 noches"
+    ]
+  },
+  {
+    "nombre": "Pack Campeón 3 Partidos - 3 estrellas",
+    "destino": "Mundial de Fútbol",
+    "fecha": "2025-11-21",
+    "precio": 8100,
+    "moneda": "USD",
+    "descripcion": "Pack Campeón 3 Partidos - 12 noches en hotel 3 estrellas. 3 partidos incluidos",
+    "categoria": "Mundial",
+    "destacado": true,
+    "activo": true,
+    "duracion": "13 dias / 12 noches",
+    "incluye": [
+      "Hotel 3 estrellas",
+      "3 partidos del Mundial",
+      "Pasajes aéreos no incluidos",
+      "Duración: 12 noches"
+    ]
+  },
+  {
+    "nombre": "Pack Campeón 3 Partidos - 4 estrellas",
+    "destino": "Mundial de Fútbol",
+    "fecha": "2025-11-21",
+    "precio": 9850,
+    "moneda": "USD",
+    "descripcion": "Pack Campeón 3 Partidos - 12 noches en hotel 4 estrellas. 3 partidos incluidos",
+    "categoria": "Mundial",
+    "destacado": true,
+    "activo": true,
+    "duracion": "13 dias / 12 noches",
+    "incluye": [
+      "Hotel 4 estrellas",
+      "3 partidos del Mundial",
+      "Pasajes aéreos no incluidos",
+      "Duración: 12 noches"
+    ]
+  },
+  {
+    "nombre": "Pack Campeón 3 Partidos - 5 estrellas",
+    "destino": "Mundial de Fútbol",
+    "fecha": "2025-11-21",
+    "precio": 12250,
+    "moneda": "USD",
+    "descripcion": "Pack Campeón 3 Partidos - 12 noches en hotel 5 estrellas. 3 partidos incluidos",
+    "categoria": "Mundial",
+    "destacado": true,
+    "activo": true,
+    "duracion": "13 dias / 12 noches",
+    "incluye": [
+      "Hotel 5 estrellas",
+      "3 partidos del Mundial",
+      "Pasajes aéreos no incluidos",
+      "Duración: 12 noches"
+    ]
+  },
+  {
+    "nombre": "Pack Completo con Aéreo - 3 estrellas",
+    "destino": "Mundial de Fútbol",
+    "fecha": "2025-11-21",
+    "precio": 12990,
+    "moneda": "USD",
+    "descripcion": "Pack Completo con Aéreo - 12 noches en hotel 3 estrellas. 3 partidos incluidos. Incluye pasajes aéreos",
+    "categoria": "Mundial",
+    "destacado": true,
+    "activo": true,
+    "duracion": "13 dias / 12 noches",
+    "incluye": [
+      "Hotel 3 estrellas",
+      "3 partidos del Mundial",
+      "Pasajes aéreos incluidos",
+      "Duración: 12 noches"
+    ]
+  },
+  {
+    "nombre": "Pack Completo con Aéreo - 4 estrellas",
+    "destino": "Mundial de Fútbol",
+    "fecha": "2025-11-21",
+    "precio": 14740,
+    "moneda": "USD",
+    "descripcion": "Pack Completo con Aéreo - 12 noches en hotel 4 estrellas. 3 partidos incluidos. Incluye pasajes aéreos",
+    "categoria": "Mundial",
+    "destacado": true,
+    "activo": true,
+    "duracion": "13 dias / 12 noches",
+    "incluye": [
+      "Hotel 4 estrellas",
+      "3 partidos del Mundial",
+      "Pasajes aéreos incluidos",
+      "Duración: 12 noches"
+    ]
+  },
+  {
+    "nombre": "Pack Completo con Aéreo - 5 estrellas",
+    "destino": "Mundial de Fútbol",
+    "fecha": "2025-11-21",
+    "precio": 17140,
+    "moneda": "USD",
+    "descripcion": "Pack Completo con Aéreo - 12 noches en hotel 5 estrellas. 3 partidos incluidos. Incluye pasajes aéreos",
+    "categoria": "Mundial",
+    "destacado": true,
+    "activo": true,
+    "duracion": "13 dias / 12 noches",
+    "incluye": [
+      "Hotel 5 estrellas",
+      "3 partidos del Mundial",
+      "Pasajes aéreos incluidos",
+      "Duración: 12 noches"
+    ]
+  }
+]

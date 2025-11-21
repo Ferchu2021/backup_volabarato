@@ -1,0 +1,17 @@
+[
+  {
+    "nombre": "Machu Picchu - Perú",
+    "destino": "Machu Picchu, Perú",
+    "fecha": "2025-05-06",
+    "precio": 1989,
+    "moneda": "USD",
+    "descripcion": "Machu Picchu",
+    "categoria": "Perú",
+    "destacado": true,
+    "activo": true,
+    "fechaSalida": "2025-05-06",
+    "incluye": [
+      "Destino: Perú"
+    ]
+  }
+]

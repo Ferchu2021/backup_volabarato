@@ -1,0 +1,140 @@
+[
+  {
+    "nombre": "Miami - President Hotel South Beach",
+    "destino": "Miami",
+    "fecha": "2025-12-04",
+    "precio": 2020,
+    "moneda": "USD",
+    "descripcion": "Miami - 7 noches en President Hotel South Beach. Vuelo con Aerolíneas Argentinas desde Buenos Aires",
+    "categoria": "Estados Unidos",
+    "destacado": false,
+    "activo": true,
+    "duracion": "8 dias / 7 noches",
+    "fechaSalida": "2025-12-04",
+    "incluye": [
+      "Alojamiento: President Hotel South Beach",
+      "Vuelo con Aerolíneas Argentinas",
+      "Salida desde Buenos Aires",
+      "Duración: 7 noches"
+    ]
+  },
+  {
+    "nombre": "Punta Cana + Bayahibe - Combo 2 destinos",
+    "destino": "Punta Cana + Bayahibe",
+    "fecha": "2026-01-11",
+    "precio": 3140,
+    "moneda": "USD",
+    "descripcion": "Punta Cana + Bayahibe en Combo 2 destinos",
+    "categoria": "Caribe",
+    "destacado": false,
+    "activo": true,
+    "fechaSalida": "2026-01-11",
+    "incluye": [
+      "Alojamiento: Combo 2 destinos"
+    ]
+  },
+  {
+    "nombre": "Aruba - Coconut Inn con desayuno",
+    "destino": "Aruba",
+    "fecha": "2026-02-24",
+    "precio": 1440,
+    "moneda": "USD",
+    "descripcion": "Aruba - 7 noches en Coconut Inn con desayuno. Vuelo con Copa Airlines desde Rosario",
+    "categoria": "Caribe",
+    "destacado": false,
+    "activo": true,
+    "duracion": "8 dias / 7 noches",
+    "fechaSalida": "2026-02-24",
+    "incluye": [
+      "Alojamiento: Coconut Inn con desayuno",
+      "Vuelo con Copa Airlines",
+      "Salida desde Rosario",
+      "Duración: 7 noches"
+    ]
+  },
+  {
+    "nombre": "Bariloche - Lagos Libertad - Auto incluido, hotel + desayuno",
+    "destino": "Bariloche - Lagos Libertad",
+    "fecha": "2025-11-21",
+    "precio": 669900,
+    "moneda": "ARS",
+    "descripcion": "Bariloche - Lagos Libertad - 8 días / 7 noches en Auto incluido, hotel + desayuno",
+    "categoria": "Argentina",
+    "destacado": false,
+    "activo": true,
+    "duracion": "8 dias / 7 noches",
+    "incluye": [
+      "Alojamiento: Auto incluido, hotel + desayuno",
+      "Duración: 8 días / 7 noches"
+    ]
+  },
+  {
+    "nombre": "Tentaciones de Japón - Tren Bala Nozomi incluido",
+    "destino": "Tentaciones de Japón",
+    "fecha": "2025-11-21",
+    "precio": 2495,
+    "moneda": "USD",
+    "descripcion": "Tentaciones de Japón - 7 días / 6 noches en Tren Bala Nozomi incluido",
+    "categoria": "Asia",
+    "destacado": false,
+    "activo": true,
+    "duracion": "7 dias / 6 noches",
+    "incluye": [
+      "Alojamiento: Tren Bala Nozomi incluido",
+      "Duración: 7 días / 6 noches"
+    ]
+  },
+  {
+    "nombre": "Recife Brasil - Paquete completo",
+    "destino": "Recife Brasil",
+    "fecha": "2026-01-09",
+    "precio": 1300,
+    "moneda": "USD",
+    "descripcion": "Recife Brasil en Paquete completo",
+    "categoria": "Brasil",
+    "destacado": false,
+    "activo": true,
+    "fechaSalida": "2026-01-09",
+    "incluye": [
+      "Alojamiento: Paquete completo"
+    ]
+  },
+  {
+    "nombre": "Miami, Florida - Estados Unidos - President Hotel South Beach",
+    "destino": "Miami, Florida - Estados Unidos",
+    "fecha": "2025-12-04",
+    "precio": 2020,
+    "moneda": "USD",
+    "descripcion": "Miami, Florida - Estados Unidos - 7 noches de alojamiento en President Hotel South Beach. Vuelo con Aerolíneas Argentinas desde Buenos Aires",
+    "categoria": "Estados Unidos",
+    "destacado": false,
+    "activo": true,
+    "duracion": "8 dias / 7 noches",
+    "fechaSalida": "2025-12-04",
+    "incluye": [
+      "Alojamiento: President Hotel South Beach",
+      "Vuelo con Aerolíneas Argentinas",
+      "Salida desde Buenos Aires",
+      "Duración: 7 noches de alojamiento"
+    ]
+  },
+  {
+    "nombre": "Aruba - Coconut Inn con desayuno",
+    "destino": "Aruba",
+    "fecha": "2026-02-24",
+    "precio": 1440,
+    "moneda": "USD",
+    "descripcion": "Aruba - 7 noches de alojamiento en Coconut Inn con desayuno. Vuelo con Copa Airlines desde Rosario",
+    "categoria": "Caribe",
+    "destacado": false,
+    "activo": true,
+    "duracion": "8 dias / 7 noches",
+    "fechaSalida": "2026-02-24",
+    "incluye": [
+      "Alojamiento: Coconut Inn con desayuno",
+      "Vuelo con Copa Airlines",
+      "Salida desde Rosario",
+      "Duración: 7 noches de alojamiento"
+    ]
+  }
+]
