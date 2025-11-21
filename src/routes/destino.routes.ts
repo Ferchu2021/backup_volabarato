@@ -9,7 +9,6 @@ import {
   getDestinosByPais,
   getDestinosByClima
 } from '../controllers/destino.controllers';
-import { auth } from '../middlewares/auth';
 
 const router = Router();
 
@@ -28,13 +27,13 @@ router.get('/clima/:clima', getDestinosByClima);
 // GET /api/destino/:id - Obtener destino por ID
 router.get('/:id', getDestinoById);
 
-// POST /api/destino - Crear nuevo destino (requiere autenticación)
-router.post('/', auth, createDestino);
+// POST /api/destino - Crear nuevo destino
+router.post('/', createDestino);
 
-// PUT /api/destino/:id - Actualizar destino (requiere autenticación)
-router.put('/:id', auth, updateDestino);
+// PUT /api/destino/:id - Actualizar destino
+router.put('/:id', updateDestino);
 
-// DELETE /api/destino/:id - Eliminar destino (requiere autenticación)
-router.delete('/:id', auth, deleteDestino);
+// DELETE /api/destino/:id - Eliminar destino
+router.delete('/:id', deleteDestino);
 
 export default router;

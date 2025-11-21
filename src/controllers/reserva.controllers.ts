@@ -95,16 +95,14 @@ export const getReservaById = async (req: Request<{ id: string }>, res: Response
 // Controller para obtener reservas del usuario autenticado
 export const getMisReservas = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { estado, limit = 10, page = 1 } = req.query;
+    const { estado, usuarioId, limit = 10, page = 1 } = req.query;
     
-    // Obtener el ID del usuario desde el token JWT
-    const usuarioId = req.user?._id;
-    
+    // Obtener el ID del usuario desde query parameter
     if (!usuarioId) {
       const errorResponse: IErrorResponse = {
-        error: 'Usuario no autenticado'
+        error: 'ID de usuario requerido'
       };
-      res.status(401).json(errorResponse);
+      res.status(400).json(errorResponse);
       return;
     }
 
@@ -189,16 +187,16 @@ export const getReservasByUsuario = async (req: Request<{ usuarioId: string }>, 
 };
 
 // Controller para crear una nueva reserva
-export const createReserva = async (req: Request<{}, {}, ICreateReservaRequest>, res: Response): Promise<void> => {
+export const createReserva = async (req: Request<{}, {}, ICreateReservaRequest & { usuario?: string }>, res: Response): Promise<void> => {
   try {
-    // Obtener el usuario del token JWT
-    const usuarioId = req.user?._id;
+    // Obtener el usuario del body
+    const usuarioId = req.body.usuario;
     
     if (!usuarioId) {
       const errorResponse: IErrorResponse = {
-        error: 'Usuario no autenticado'
+        error: 'ID de usuario requerido en el body'
       };
-      res.status(401).json(errorResponse);
+      res.status(400).json(errorResponse);
       return;
     }
 

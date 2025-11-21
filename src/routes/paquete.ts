@@ -1,6 +1,5 @@
 import { Router, Request, Response } from 'express';
 import { Paquete, paqueteJoiSchema, paqueteUpdateJoiSchema, ICreatePaqueteRequest, IUpdatePaqueteRequest } from '../models/Paquete';
-import { auth } from '../middlewares/auth';
 
 const router = Router();
 
@@ -15,8 +14,8 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-// POST /api/paquete - Crear nuevo paquete (requiere autenticación)
-router.post('/', auth, async (req: Request<{}, {}, ICreatePaqueteRequest>, res: Response): Promise<void> => {
+// POST /api/paquete - Crear nuevo paquete
+router.post('/', async (req: Request<{}, {}, ICreatePaqueteRequest>, res: Response): Promise<void> => {
   try {
     const { error } = paqueteJoiSchema.validate(req.body, { abortEarly: false });
     if (error) {
@@ -52,8 +51,8 @@ router.post('/', auth, async (req: Request<{}, {}, ICreatePaqueteRequest>, res: 
   }
 });
 
-// PUT /api/paquete/:id - Actualizar paquete (requiere autenticación)
-router.put('/:id', auth, async (req: Request<{ id: string }, {}, IUpdatePaqueteRequest>, res: Response): Promise<void> => {
+// PUT /api/paquete/:id - Actualizar paquete
+router.put('/:id', async (req: Request<{ id: string }, {}, IUpdatePaqueteRequest>, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
     
@@ -119,8 +118,8 @@ router.put('/:id', auth, async (req: Request<{ id: string }, {}, IUpdatePaqueteR
   }
 });
 
-// DELETE /api/paquete/:id - Eliminar paquete (baja lógica, requiere autenticación)
-router.delete('/:id', auth, async (req: Request<{ id: string }>, res: Response): Promise<void> => {
+// DELETE /api/paquete/:id - Eliminar paquete (baja lógica)
+router.delete('/:id', async (req: Request<{ id: string }>, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
     

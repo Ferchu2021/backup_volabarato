@@ -127,15 +127,17 @@ export const loginUser = async (req: Request<{}, {}, ILoginRequest>, res: Respon
 // Controller para obtener información del usuario actual
 export const getCurrentUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    if (!req.user) {
+    const { id } = req.query;
+    
+    if (!id) {
       const errorResponse: IErrorResponse = {
-        error: 'Usuario no autenticado'
+        error: 'ID de usuario requerido'
       };
-      res.status(401).json(errorResponse);
+      res.status(400).json(errorResponse);
       return;
     }
 
-    const user = await User.findById(req.user._id).select('-password');
+    const user = await User.findById(id).select('-password');
     if (!user) {
       const errorResponse: IErrorResponse = {
         error: 'Usuario no encontrado'
@@ -160,11 +162,13 @@ export const getCurrentUser = async (req: Request, res: Response): Promise<void>
 // Controller para actualizar información del usuario
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    if (!req.user) {
+    const { id } = req.body;
+    
+    if (!id) {
       const errorResponse: IErrorResponse = {
-        error: 'Usuario no autenticado'
+        error: 'ID de usuario requerido en el body'
       };
-      res.status(401).json(errorResponse);
+      res.status(400).json(errorResponse);
       return;
     }
 
@@ -174,7 +178,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
     if (usuario) {
       const existingUser = await User.findOne({ 
         usuario, 
-        _id: { $ne: req.user._id } 
+        _id: { $ne: id } 
       });
       
       if (existingUser) {
@@ -187,7 +191,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
     }
 
     const user = await User.findByIdAndUpdate(
-      req.user._id,
+      id,
       req.body,
       { new: true, runValidators: true }
     ).select('-password');
@@ -219,19 +223,21 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
 // Controller para eliminar usuario (baja lógica)
 export const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    if (!req.user) {
+    const { id } = req.body;
+    
+    if (!id) {
       const errorResponse: IErrorResponse = {
-        error: 'Usuario no autenticado'
+        error: 'ID de usuario requerido en el body'
       };
-      res.status(401).json(errorResponse);
+      res.status(400).json(errorResponse);
       return;
     }
 
     // En lugar de eliminar físicamente, podrías marcar como inactivo
-    // await User.findByIdAndUpdate(req.user._id, { activo: false });
+    // await User.findByIdAndUpdate(id, { activo: false });
     
     // Por ahora, eliminamos físicamente
-    await User.findByIdAndDelete(req.user._id);
+    await User.findByIdAndDelete(id);
 
     res.json({
       message: 'Usuario eliminado exitosamente'
@@ -245,17 +251,9 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-// Controller para obtener todos los usuarios (solo admin)
+// Controller para obtener todos los usuarios
 export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
   try {
-    if (!req.user) {
-      const errorResponse: IErrorResponse = {
-        error: 'Usuario no autenticado'
-      };
-      res.status(401).json(errorResponse);
-      return;
-    }
-
     const users = await User.find({}).select('-password');
     
     res.json(users);
@@ -271,14 +269,6 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
 // Controller para obtener un usuario por ID
 export const getUserById = async (req: Request, res: Response): Promise<void> => {
   try {
-    if (!req.user) {
-      const errorResponse: IErrorResponse = {
-        error: 'Usuario no autenticado'
-      };
-      res.status(401).json(errorResponse);
-      return;
-    }
-
     const { id } = req.params;
     
     // Verificar que el usuario existe

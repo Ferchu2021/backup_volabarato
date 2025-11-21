@@ -7,7 +7,6 @@ import {
   deleteProducto, 
   searchProductos 
 } from '../controllers/producto.controllers';
-import { auth } from '../middlewares/auth';
 
 const router = Router();
 
@@ -20,13 +19,13 @@ router.get('/search', searchProductos);
 // GET /api/producto/:id - Obtener producto por ID
 router.get('/:id', getProductoById);
 
-// POST /api/producto - Crear nuevo producto (requiere autenticación)
-router.post('/', auth, createProducto);
+// POST /api/producto - Crear nuevo producto
+router.post('/', createProducto);
 
-// PUT /api/producto/:id - Actualizar producto (requiere autenticación)
-router.put('/:id', auth, updateProducto);
+// PUT /api/producto/:id - Actualizar producto
+router.put('/:id', updateProducto);
 
-// DELETE /api/producto/:id - Eliminar producto (requiere autenticación)
-router.delete('/:id', auth, deleteProducto);
+// DELETE /api/producto/:id - Eliminar producto
+router.delete('/:id', deleteProducto);
 
 export default router;

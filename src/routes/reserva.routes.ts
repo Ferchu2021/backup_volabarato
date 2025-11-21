@@ -11,7 +11,6 @@ import {
   deleteReserva,
   getReservasStats
 } from '../controllers/reserva.controllers';
-import { auth } from '../middlewares/auth';
 
 const router = Router();
 
@@ -22,7 +21,7 @@ router.get('/', getAllReservas);
 router.get('/stats', getReservasStats);
 
 // GET /api/reserva/mis-reservas - Obtener reservas del usuario autenticado
-router.get('/mis-reservas', auth, getMisReservas);
+router.get('/mis-reservas', getMisReservas);
 
 // GET /api/reserva/usuario/:usuarioId - Obtener reservas de un usuario específico
 router.get('/usuario/:usuarioId', getReservasByUsuario);
@@ -30,19 +29,19 @@ router.get('/usuario/:usuarioId', getReservasByUsuario);
 // GET /api/reserva/:id - Obtener reserva por ID
 router.get('/:id', getReservaById);
 
-// POST /api/reserva - Crear nueva reserva (requiere autenticación)
-router.post('/', auth, createReserva);
+// POST /api/reserva - Crear nueva reserva
+router.post('/', createReserva);
 
-// PUT /api/reserva/:id - Actualizar reserva (requiere autenticación)
-router.put('/:id', auth, updateReserva);
+// PUT /api/reserva/:id - Actualizar reserva
+router.put('/:id', updateReserva);
 
-// PUT /api/reserva/:id/cancelar - Cancelar reserva (requiere autenticación)
-router.put('/:id/cancelar', auth, cancelarReserva);
+// PUT /api/reserva/:id/cancelar - Cancelar reserva
+router.put('/:id/cancelar', cancelarReserva);
 
-// PUT /api/reserva/:id/confirmar - Confirmar reserva (requiere autenticación)
-router.put('/:id/confirmar', auth, confirmarReserva);
+// PUT /api/reserva/:id/confirmar - Confirmar reserva
+router.put('/:id/confirmar', confirmarReserva);
 
-// DELETE /api/reserva/:id - Eliminar reserva (requiere autenticación)
-router.delete('/:id', auth, deleteReserva);
+// DELETE /api/reserva/:id - Eliminar reserva
+router.delete('/:id', deleteReserva);
 
 export default router;
