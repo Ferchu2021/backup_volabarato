@@ -16,6 +16,8 @@ export interface IUser extends Document {
   telefono: string;
   telefonoContacto: string;
   email: string;
+  resetPasswordToken?: string;
+  resetPasswordExpires?: Date;
   _id: mongoose.Types.ObjectId;
 }
 
@@ -44,7 +46,9 @@ const userSchema = new Schema<IUser>({
   numeroPasaporte: { type: String, required: true, trim: true },
   telefono: { type: String, required: true, trim: true },
   telefonoContacto: { type: String, required: true, trim: true },
-  email: { type: String, required: true, unique: true, trim: true, lowercase: true }
+  email: { type: String, required: true, unique: true, trim: true, lowercase: true },
+  resetPasswordToken: { type: String, trim: true },
+  resetPasswordExpires: { type: Date }
 });
 
 // Índices

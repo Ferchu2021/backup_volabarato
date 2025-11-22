@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { registerUser, loginUser, getCurrentUser, updateUser, deleteUser, getAllUsers, getUserById, changePassword } from '../controllers/user.controllers';
+import { registerUser, loginUser, getCurrentUser, updateUser, deleteUser, getAllUsers, getUserById, changePassword, requestPasswordReset, resetPassword } from '../controllers/user.controllers';
 import { checkUserExists, validatePasswordFormat, validateUsernameFormat } from '../middlewares/user.middlewares';
 
 const router = Router();
@@ -26,6 +26,12 @@ router.put('/me', updateUser);
 
 // PUT /api/user/change-password - Cambiar contraseña
 router.put('/change-password', changePassword);
+
+// POST /api/user/forgot-password - Solicitar recuperación de contraseña
+router.post('/forgot-password', requestPasswordReset);
+
+// POST /api/user/reset-password - Resetear contraseña con token
+router.post('/reset-password', resetPassword);
 
 // DELETE /api/user/me - Eliminar usuario actual
 router.delete('/me', deleteUser);

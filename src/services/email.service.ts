@@ -265,8 +265,116 @@ export const enviarEmailReservaPendiente = async (reserva: any): Promise<void> =
   }
 };
 
+// Función para enviar email de recuperación de contraseña
+export const enviarEmailRecuperacionPassword = async (
+  email: string,
+  nombre: string,
+  resetToken: string
+): Promise<void> => {
+  try {
+    const transporter = createTransporter();
+    
+    // URL del frontend para resetear contraseña
+    const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/resetear-contraseña?token=${resetToken}`;
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }
+          .content { background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; }
+          .button { display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+          .warning { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 15px 0; }
+          .footer { text-align: center; margin-top: 20px; color: #666; font-size: 12px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>🔐 Recuperar Contraseña</h1>
+            <p>Volá Barato</p>
+          </div>
+          <div class="content">
+            <p>Hola <strong>${nombre}</strong>,</p>
+            
+            <p>Recibimos una solicitud para restablecer la contraseña de tu cuenta en Volá Barato.</p>
+            
+            <p>Hacé clic en el siguiente botón para crear una nueva contraseña:</p>
+            
+            <div style="text-align: center;">
+              <a href="${resetUrl}" class="button">Restablecer Contraseña</a>
+            </div>
+            
+            <p>O copiá y pegá este enlace en tu navegador:</p>
+            <p style="word-break: break-all; color: #667eea;">${resetUrl}</p>
+            
+            <div class="warning">
+              <strong>⚠️ Importante:</strong>
+              <ul>
+                <li>Este enlace expirará en 1 hora</li>
+                <li>Si no solicitaste este cambio, ignorá este email</li>
+                <li>Tu contraseña no cambiará hasta que hagas clic en el enlace</li>
+              </ul>
+            </div>
+            
+            <p>Si tenés problemas, contactanos.</p>
+            
+            <p>Saludos cordiales,<br><strong>Equipo Volá Barato</strong></p>
+          </div>
+          <div class="footer">
+            <p>Este es un email automático, por favor no responder.</p>
+            <p>Volá Barato - Tu agencia de viajes de confianza</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const textContent = `
+      RECUPERAR CONTRASEÑA - Volá Barato
+      
+      Hola ${nombre},
+      
+      Recibimos una solicitud para restablecer la contraseña de tu cuenta.
+      
+      Hacé clic en el siguiente enlace para crear una nueva contraseña:
+      ${resetUrl}
+      
+      Este enlace expirará en 1 hora.
+      
+      Si no solicitaste este cambio, ignorá este email.
+      
+      Saludos cordiales,
+      Equipo Volá Barato
+    `;
+
+    const mailOptions = {
+      from: process.env.SMTP_FROM || process.env.SMTP_USER || 'noreply@volabarato.com',
+      to: email,
+      subject: '🔐 Recuperar Contraseña - Volá Barato',
+      text: textContent,
+      html: htmlContent
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log('✅ Email de recuperación de contraseña enviado:', info.messageId);
+    
+    if (process.env.SMTP_USER === '' || !process.env.SMTP_USER) {
+      console.log('📧 Preview URL:', nodemailer.getTestMessageUrl(info));
+    }
+  } catch (error) {
+    console.error('❌ Error enviando email de recuperación:', error);
+    throw error;
+  }
+};
+
 export default {
   enviarEmailConfirmacion,
-  enviarEmailReservaPendiente
+  enviarEmailReservaPendiente,
+  enviarEmailRecuperacionPassword
 };
 

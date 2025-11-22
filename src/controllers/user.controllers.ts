@@ -2,7 +2,9 @@ import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
+import crypto from 'crypto';
 import { User, userJoiSchema, ILoginRequest, IRegisterRequest, ILoginResponse } from '../models/user.models';
+import { enviarEmailRecuperacionPassword } from '../services/email.service';
 
 // Interface para respuesta de registro
 export interface IRegisterResponse {
@@ -416,6 +418,127 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
+// Controller para solicitar recuperación de contraseña
+export const requestPasswordReset = async (req: Request<{}, {}, { email: string }>, res: Response): Promise<void> => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      const errorResponse: IErrorResponse = {
+        error: 'El email es requerido'
+      };
+      res.status(400).json(errorResponse);
+      return;
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    
+    // Por seguridad, siempre devolver éxito aunque el email no exista
+    if (!user) {
+      res.json({
+        message: 'Si el email existe, recibirás un enlace para restablecer tu contraseña'
+      });
+      return;
+    }
+
+    // Generar token de reset
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenHash = crypto.createHash('sha256').update(resetToken).digest('hex');
+    
+    // Guardar token hasheado y fecha de expiración (1 hora)
+    user.resetPasswordToken = resetTokenHash;
+    user.resetPasswordExpires = new Date(Date.now() + 3600000); // 1 hora
+    await user.save();
+
+    // Enviar email con el token sin hashear
+    try {
+      await enviarEmailRecuperacionPassword(
+        user.email,
+        user.nombreLegal || user.usuario,
+        resetToken
+      );
+    } catch (emailError) {
+      console.error('Error enviando email:', emailError);
+      // Limpiar el token si falla el email
+      user.resetPasswordToken = null as any;
+      user.resetPasswordExpires = null as any;
+      await user.save();
+      
+      const errorResponse: IErrorResponse = {
+        error: 'Error al enviar el email. Por favor intenta más tarde.'
+      };
+      res.status(500).json(errorResponse);
+      return;
+    }
+
+    res.json({
+      message: 'Si el email existe, recibirás un enlace para restablecer tu contraseña'
+    });
+  } catch (error: any) {
+    console.error('Error solicitando reset de contraseña:', error);
+    const errorResponse: IErrorResponse = {
+      error: 'Error interno del servidor'
+    };
+    res.status(500).json(errorResponse);
+  }
+};
+
+// Controller para resetear contraseña con token
+export const resetPassword = async (req: Request<{}, {}, { token: string; newPassword: string }>, res: Response): Promise<void> => {
+  try {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+      const errorResponse: IErrorResponse = {
+        error: 'El token y la nueva contraseña son requeridos'
+      };
+      res.status(400).json(errorResponse);
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      const errorResponse: IErrorResponse = {
+        error: 'La contraseña debe tener al menos 6 caracteres'
+      };
+      res.status(400).json(errorResponse);
+      return;
+    }
+
+    // Hashear el token para comparar
+    const resetTokenHash = crypto.createHash('sha256').update(token).digest('hex');
+
+    // Buscar usuario con token válido y no expirado
+    const user = await User.findOne({
+      resetPasswordToken: resetTokenHash,
+      resetPasswordExpires: { $gt: new Date() }
+    });
+
+    if (!user) {
+      const errorResponse: IErrorResponse = {
+        error: 'El token es inválido o ha expirado'
+      };
+      res.status(400).json(errorResponse);
+      return;
+    }
+
+    // Actualizar contraseña y limpiar token
+    user.password = newPassword;
+    user.resetPasswordToken = null as any;
+    user.resetPasswordExpires = null as any;
+    await user.save();
+
+    res.json({
+      message: 'Contraseña restablecida exitosamente'
+    });
+  } catch (error: any) {
+    console.error('Error reseteando contraseña:', error);
+    const errorResponse: IErrorResponse = {
+      error: 'Error interno del servidor'
+    };
+    res.status(500).json(errorResponse);
+  }
+};
+
 // Exportar todos los controllers
 export default {
   registerUser,
@@ -424,5 +547,7 @@ export default {
   updateUser,
   deleteUser,
   getAllUsers,
-  getUserById
+  getUserById,
+  requestPasswordReset,
+  resetPassword
 };
