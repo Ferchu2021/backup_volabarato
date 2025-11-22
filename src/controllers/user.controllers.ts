@@ -33,7 +33,15 @@ export const registerUser = async (req: Request<{}, {}, IRegisterRequest>, res: 
       return;
     }
 
-    const user = new User(req.body);
+    // Convertir fechaNacimiento a Date si viene como string
+    const userData = {
+      ...req.body,
+      fechaNacimiento: req.body.fechaNacimiento instanceof Date 
+        ? req.body.fechaNacimiento 
+        : new Date(req.body.fechaNacimiento)
+    };
+    
+    const user = new User(userData);
     await user.save();
     
     const response: IRegisterResponse = {
@@ -49,9 +57,15 @@ export const registerUser = async (req: Request<{}, {}, IRegisterRequest>, res: 
     console.error('Error en registro:', error);
     
     if (error.code === 11000) {
+      // Determinar qué campo duplicado causó el error
+      const duplicateField = error.keyPattern?.email ? 'email' : 'usuario';
       const errorResponse: IErrorResponse = {
-        error: 'El usuario ya existe',
-        message: 'Intenta con un nombre de usuario diferente'
+        error: duplicateField === 'email' 
+          ? 'El email ya está registrado' 
+          : 'El usuario ya existe',
+        message: duplicateField === 'email'
+          ? 'Intenta con un email diferente'
+          : 'Intenta con un nombre de usuario diferente'
       };
       res.status(400).json(errorResponse);
       return;
@@ -163,17 +177,18 @@ export const getCurrentUser = async (req: Request, res: Response): Promise<void>
 // Controller para actualizar información del usuario
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.body;
+    // Puede venir desde req.params (PUT /:id) o req.body (PUT /me)
+    const id = req.params.id || req.body.id;
     
     if (!id) {
       const errorResponse: IErrorResponse = {
-        error: 'ID de usuario requerido en el body'
+        error: 'ID de usuario requerido'
       };
       res.status(400).json(errorResponse);
       return;
     }
 
-    const { usuario } = req.body;
+    const { usuario, password, rol } = req.body;
     
     // Validar que el nuevo usuario no esté en uso por otro usuario
     if (usuario) {
@@ -191,9 +206,15 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
       }
     }
 
+    // Construir objeto de actualización
+    const updateData: any = {};
+    if (usuario) updateData.usuario = usuario;
+    if (password) updateData.password = password;
+    if (rol) updateData.rol = rol;
+
     const user = await User.findByIdAndUpdate(
       id,
-      req.body,
+      updateData,
       { new: true, runValidators: true }
     ).select('-password');
 
@@ -210,7 +231,9 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
       user: {
         _id: user._id,
         usuario: user.usuario,
-        rol: user.rol
+        rol: user.rol,
+        nombreLegal: user.nombreLegal,
+        email: user.email
       }
     });
   } catch (error) {
@@ -225,20 +248,28 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
 // Controller para eliminar usuario (baja lógica)
 export const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.body;
+    // Puede venir desde req.params (DELETE /:id) o req.body (DELETE /me)
+    const id = req.params.id || req.body.id;
     
     if (!id) {
       const errorResponse: IErrorResponse = {
-        error: 'ID de usuario requerido en el body'
+        error: 'ID de usuario requerido'
       };
       res.status(400).json(errorResponse);
       return;
     }
 
-    // En lugar de eliminar físicamente, podrías marcar como inactivo
-    // await User.findByIdAndUpdate(id, { activo: false });
-    
-    // Por ahora, eliminamos físicamente
+    // Verificar que el usuario existe
+    const user = await User.findById(id);
+    if (!user) {
+      const errorResponse: IErrorResponse = {
+        error: 'Usuario no encontrado'
+      };
+      res.status(404).json(errorResponse);
+      return;
+    }
+
+    // Eliminar físicamente
     await User.findByIdAndDelete(id);
 
     res.json({

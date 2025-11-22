@@ -30,4 +30,10 @@ router.delete('/me', deleteUser);
 // GET /api/user/:id - Obtener un usuario por ID
 router.get('/:id', getUserById);
 
+// PUT /api/user/:id - Actualizar un usuario por ID
+router.put('/:id', updateUser);
+
+// DELETE /api/user/:id - Eliminar un usuario por ID
+router.delete('/:id', deleteUser);
+
 export default router;
