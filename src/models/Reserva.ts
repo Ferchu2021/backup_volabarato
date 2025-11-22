@@ -114,7 +114,7 @@ reservaSchema.index({ estado: 1 });
 reservaSchema.index({ fechaViaje: 1 });
 reservaSchema.index({ fechaReserva: -1 });
 
-// Schema de validación Joi (sin usuario, se obtiene del token)
+// Schema de validación Joi
 export const reservaJoiSchema = Joi.object({
   paquete: Joi.string().hex().length(24).required(),
   fechaViaje: Joi.date().greater('now').required().messages({
@@ -126,6 +126,7 @@ export const reservaJoiSchema = Joi.object({
   estado: Joi.string().valid('pendiente', 'confirmada', 'cancelada', 'completada').optional(),
   metodoPago: Joi.string().valid('efectivo', 'tarjeta', 'transferencia').required(),
   observaciones: Joi.string().max(500).allow('', null).optional(),
+  usuario: Joi.string().hex().length(24).optional(), // Campo opcional para el ID del usuario
   datosContacto: Joi.object({
     nombre: Joi.string().min(2).max(100).required(),
     email: Joi.string().email().required(),

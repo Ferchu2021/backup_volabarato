@@ -8,6 +8,7 @@ import {
   IReservaPopulatedResponse 
 } from '../models/Reserva';
 import { Paquete } from '../models/Paquete';
+import { enviarEmailConfirmacion, enviarEmailReservaPendiente } from '../services/email.service';
 
 // Interface para respuesta de error
 export interface IErrorResponse {
@@ -114,15 +115,18 @@ export const getMisReservas = async (req: Request, res: Response): Promise<void>
     const skip = (Number(page) - 1) * Number(limit);
     
     const reservas = await Reserva.find(filters)
-      .populate('paquete', 'nombre destino precio')
+      .populate('paquete', 'nombre destino precio moneda')
       .sort({ fechaReserva: -1 })
       .skip(skip)
       .limit(Number(limit));
     
-    const total = await Reserva.countDocuments(filters);
+    // Filtrar reservas con paquetes eliminados o null
+    const reservasValidas = reservas.filter((reserva: any) => reserva.paquete !== null && reserva.paquete !== undefined);
+    
+    const total = reservasValidas.length;
     
     res.json({
-      data: reservas,
+      data: reservasValidas,
       pagination: {
         page: Number(page),
         limit: Number(limit),
@@ -189,17 +193,7 @@ export const getReservasByUsuario = async (req: Request<{ usuarioId: string }>, 
 // Controller para crear una nueva reserva
 export const createReserva = async (req: Request<{}, {}, ICreateReservaRequest & { usuario?: string }>, res: Response): Promise<void> => {
   try {
-    // Obtener el usuario del body
-    const usuarioId = req.body.usuario;
-    
-    if (!usuarioId) {
-      const errorResponse: IErrorResponse = {
-        error: 'ID de usuario requerido en el body'
-      };
-      res.status(400).json(errorResponse);
-      return;
-    }
-
+    // Validar los datos de la reserva (incluyendo usuario si está presente)
     const { error } = reservaJoiSchema.validate(req.body, { abortEarly: false });
     if (error) {
       const errorResponse: IErrorResponse = {
@@ -209,6 +203,17 @@ export const createReserva = async (req: Request<{}, {}, ICreateReservaRequest &
       };
       console.error('Error de validación Joi:', JSON.stringify(error.details, null, 2));
       console.error('Body recibido:', JSON.stringify(req.body, null, 2));
+      res.status(400).json(errorResponse);
+      return;
+    }
+
+    // Obtener el usuario del body (después de la validación)
+    const usuarioId = req.body.usuario;
+    
+    if (!usuarioId) {
+      const errorResponse: IErrorResponse = {
+        error: 'ID de usuario requerido en el body'
+      };
       res.status(400).json(errorResponse);
       return;
     }
@@ -252,7 +257,12 @@ export const createReserva = async (req: Request<{}, {}, ICreateReservaRequest &
     // Poblar datos para la respuesta
     const reservaPopulada = await Reserva.findById(reserva._id)
       .populate('usuario', 'nombre email')
-      .populate('paquete', 'nombre destino precio');
+      .populate('paquete', 'nombre destino precio moneda');
+    
+    // Enviar email de reserva pendiente (en segundo plano, no bloquear la respuesta)
+    enviarEmailReservaPendiente(reservaPopulada).catch(error => {
+      console.error('Error enviando email de reserva pendiente:', error);
+    });
     
     res.status(201).json({
       message: 'Reserva creada exitosamente',
@@ -404,7 +414,7 @@ export const confirmarReserva = async (req: Request<{ id: string }>, res: Respon
       { new: true }
     )
     .populate('usuario', 'nombre email')
-    .populate('paquete', 'nombre destino precio');
+    .populate('paquete', 'nombre destino precio moneda');
 
     if (!reserva) {
       const errorResponse: IErrorResponse = {
@@ -414,8 +424,13 @@ export const confirmarReserva = async (req: Request<{ id: string }>, res: Respon
       return;
     }
 
+    // Enviar email de confirmación (en segundo plano, no bloquear la respuesta)
+    enviarEmailConfirmacion(reserva).catch(error => {
+      console.error('Error enviando email de confirmación:', error);
+    });
+
     res.json({
-      message: 'Reserva confirmada exitosamente',
+      message: 'Reserva confirmada exitosamente. Se ha enviado un email de confirmación.',
       reserva
     });
   } catch (error) {

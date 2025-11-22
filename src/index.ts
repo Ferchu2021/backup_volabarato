@@ -11,7 +11,8 @@ import userRoutes from './routes/user.routes';
 import productoRoutes from './routes/producto.routes';
 import destinoRoutes from './routes/destino.routes';
 import reservaRoutes from './routes/reserva.routes';
-// import suscriptorRoutes from './routes/suscriptor.routes';
+import suscriptorRoutes from './routes/suscriptor.routes';
+import pagoRoutes from './routes/pago.routes';
 
 // Carga variables de entorno
 dotenv.config();
@@ -55,7 +56,8 @@ app.use('/api/user', userRoutes);
 app.use('/api/producto', productoRoutes);
 app.use('/api/destino', destinoRoutes);
 app.use('/api/reserva', reservaRoutes);
-// app.use('/api/suscriptor', suscriptorRoutes);
+app.use('/api/suscriptor', suscriptorRoutes);
+app.use('/api/pago', pagoRoutes);
 
 // Ruta de prueba
 app.get('/', (req: Request, res: Response) => {
@@ -79,7 +81,9 @@ app.get('/api', (req: Request, res: Response) => {
       user: '/api/user',
       producto: '/api/producto',
       destino: '/api/destino',
-      reserva: '/api/reserva'
+      reserva: '/api/reserva',
+      suscriptor: '/api/suscriptor',
+      pago: '/api/pago'
     }
   });
 });
@@ -95,7 +99,8 @@ app.use((req: Request, res: Response) => {
       producto: '/api/producto',
       destino: '/api/destino',
       reserva: '/api/reserva',
-      // suscriptor: '/api/suscriptor'
+      suscriptor: '/api/suscriptor',
+      pago: '/api/pago'
     }
   });
 });
