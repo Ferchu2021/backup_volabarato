@@ -6,6 +6,7 @@ import Joi from 'joi';
 export interface IUser extends Document {
   usuario: string;
   password: string;
+  rol: 'admin' | 'cliente';
   _id: mongoose.Types.ObjectId;
 }
 
@@ -13,12 +14,19 @@ export interface IUser extends Document {
 export interface IUserPayload {
   _id: string;
   usuario: string;
+  rol?: 'admin' | 'cliente';
 }
 
 // Schema de Mongoose
 const userSchema = new Schema<IUser>({
   usuario: { type: String, required: true, unique: true },
-  password: { type: String, required: true }
+  password: { type: String, required: true },
+  rol: { 
+    type: String, 
+    enum: ['admin', 'cliente'], 
+    default: 'cliente',
+    required: true
+  }
 });
 
 // Middleware pre-save para hashear password
@@ -31,7 +39,8 @@ userSchema.pre<IUser>('save', function(next) {
 // Schema de validación Joi
 export const userJoiSchema = Joi.object({
   usuario: Joi.string().min(4).max(30).required(),
-  password: Joi.string().min(6).required()
+  password: Joi.string().min(6).required(),
+  rol: Joi.string().valid('admin', 'cliente').optional()
 });
 
 // Interface para login

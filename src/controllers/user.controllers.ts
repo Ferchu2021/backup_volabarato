@@ -108,7 +108,7 @@ export const loginUser = async (req: Request<{}, {}, ILoginRequest>, res: Respon
     }
 
     const token = jwt.sign(
-      { _id: user._id, usuario: user.usuario }, 
+      { _id: user._id, usuario: user.usuario, rol: user.rol }, 
       process.env.JWT_SECRET,
       { expiresIn: '24h' }
     );
@@ -148,7 +148,8 @@ export const getCurrentUser = async (req: Request, res: Response): Promise<void>
 
     res.json({
       _id: user._id,
-      usuario: user.usuario
+      usuario: user.usuario,
+      rol: user.rol
     });
   } catch (error) {
     console.error('Error obteniendo usuario:', error);
@@ -208,7 +209,8 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
       message: 'Usuario actualizado exitosamente',
       user: {
         _id: user._id,
-        usuario: user.usuario
+        usuario: user.usuario,
+        rol: user.rol
       }
     });
   } catch (error) {
