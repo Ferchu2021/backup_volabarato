@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { registerUser, loginUser, getCurrentUser, updateUser, deleteUser, getAllUsers, getUserById } from '../controllers/user.controllers';
+import { registerUser, loginUser, getCurrentUser, updateUser, deleteUser, getAllUsers, getUserById, changePassword } from '../controllers/user.controllers';
 import { checkUserExists, validatePasswordFormat, validateUsernameFormat } from '../middlewares/user.middlewares';
 
 const router = Router();
@@ -23,6 +23,9 @@ router.get('/me', getCurrentUser);
 
 // PUT /api/user/me - Actualizar información del usuario actual
 router.put('/me', updateUser);
+
+// PUT /api/user/change-password - Cambiar contraseña
+router.put('/change-password', changePassword);
 
 // DELETE /api/user/me - Eliminar usuario actual
 router.delete('/me', deleteUser);

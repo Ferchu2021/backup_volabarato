@@ -58,16 +58,34 @@ export const registerUser = async (req: Request<{}, {}, IRegisterRequest>, res: 
     
     if (error.code === 11000) {
       // Determinar qué campo duplicado causó el error
-      const duplicateField = error.keyPattern?.email ? 'email' : 'usuario';
+      const keyPattern = error.keyPattern || {};
+      let duplicateField = 'usuario';
+      let errorMessage = 'El usuario ya existe';
+      let suggestion = 'Intenta con un nombre de usuario diferente';
+      
+      if (keyPattern.email) {
+        duplicateField = 'email';
+        errorMessage = 'El email ya está registrado';
+        suggestion = 'Intenta con un email diferente o inicia sesión si ya tienes una cuenta';
+      } else if (keyPattern.dni) {
+        duplicateField = 'dni';
+        errorMessage = 'El DNI ya está registrado';
+        suggestion = 'Este DNI ya está asociado a otra cuenta';
+      } else if (keyPattern.numeroPasaporte) {
+        duplicateField = 'numeroPasaporte';
+        errorMessage = 'El número de pasaporte ya está registrado';
+        suggestion = 'Este número de pasaporte ya está asociado a otra cuenta';
+      } else if (keyPattern.usuario) {
+        duplicateField = 'usuario';
+        errorMessage = 'El usuario ya existe';
+        suggestion = 'Intenta con un nombre de usuario diferente o inicia sesión si ya tienes una cuenta';
+      }
+      
       const errorResponse: IErrorResponse = {
-        error: duplicateField === 'email' 
-          ? 'El email ya está registrado' 
-          : 'El usuario ya existe',
-        message: duplicateField === 'email'
-          ? 'Intenta con un email diferente'
-          : 'Intenta con un nombre de usuario diferente'
+        error: errorMessage,
+        message: suggestion
       };
-      res.status(400).json(errorResponse);
+      res.status(409).json(errorResponse);
       return;
     }
     
@@ -238,6 +256,71 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
     });
   } catch (error) {
     console.error('Error actualizando usuario:', error);
+    const errorResponse: IErrorResponse = {
+      error: 'Error interno del servidor'
+    };
+    res.status(500).json(errorResponse);
+  }
+};
+
+// Controller para cambiar contraseña
+export const changePassword = async (req: Request<{}, {}, { id?: string; currentPassword: string; newPassword: string }>, res: Response): Promise<void> => {
+  try {
+    const { id, currentPassword, newPassword } = req.body;
+
+    if (!id) {
+      const errorResponse: IErrorResponse = {
+        error: 'ID de usuario requerido'
+      };
+      res.status(400).json(errorResponse);
+      return;
+    }
+
+    if (!currentPassword || !newPassword) {
+      const errorResponse: IErrorResponse = {
+        error: 'La contraseña actual y la nueva contraseña son requeridas'
+      };
+      res.status(400).json(errorResponse);
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      const errorResponse: IErrorResponse = {
+        error: 'La nueva contraseña debe tener al menos 6 caracteres'
+      };
+      res.status(400).json(errorResponse);
+      return;
+    }
+
+    // Buscar el usuario con la contraseña para poder verificarla
+    const user = await User.findById(id);
+    if (!user) {
+      const errorResponse: IErrorResponse = {
+        error: 'Usuario no encontrado'
+      };
+      res.status(404).json(errorResponse);
+      return;
+    }
+
+    // Verificar la contraseña actual
+    const validPassword = bcrypt.compareSync(currentPassword, user.password);
+    if (!validPassword) {
+      const errorResponse: IErrorResponse = {
+        error: 'La contraseña actual es incorrecta'
+      };
+      res.status(401).json(errorResponse);
+      return;
+    }
+
+    // Actualizar la contraseña (el middleware pre-save la hasheará)
+    user.password = newPassword;
+    await user.save();
+
+    res.json({
+      message: 'Contraseña actualizada exitosamente'
+    });
+  } catch (error: any) {
+    console.error('Error cambiando contraseña:', error);
     const errorResponse: IErrorResponse = {
       error: 'Error interno del servidor'
     };
