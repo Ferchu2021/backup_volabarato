@@ -11,7 +11,7 @@ export interface IReserva extends Document {
   cantidadPersonas: number;
   precioTotal: number;
   estado: 'pendiente' | 'confirmada' | 'cancelada' | 'completada';
-  metodoPago: 'efectivo' | 'tarjeta' | 'transferencia';
+  metodoPago: 'tarjeta' | 'transferencia' | 'deposito';
   observaciones?: string;
   datosContacto: {
     nombre: string;
@@ -68,7 +68,7 @@ const reservaSchema = new Schema<IReserva>({
   },
   metodoPago: { 
     type: String, 
-    enum: ['efectivo', 'tarjeta', 'transferencia'], 
+    enum: ['tarjeta', 'transferencia', 'deposito'], 
     required: true 
   },
   observaciones: { 
@@ -124,7 +124,7 @@ export const reservaJoiSchema = Joi.object({
   cantidadPersonas: Joi.number().integer().min(1).max(20).required(),
   precioTotal: Joi.number().positive().required(),
   estado: Joi.string().valid('pendiente', 'confirmada', 'cancelada', 'completada').optional(),
-  metodoPago: Joi.string().valid('efectivo', 'tarjeta', 'transferencia').required(),
+  metodoPago: Joi.string().valid('tarjeta', 'transferencia', 'deposito').required(),
   observaciones: Joi.string().max(500).allow('', null).optional(),
   usuario: Joi.string().hex().length(24).optional(), // Campo opcional para el ID del usuario
   datosContacto: Joi.object({
@@ -141,7 +141,7 @@ export interface ICreateReservaRequest {
   cantidadPersonas: number;
   precioTotal: number;
   estado?: 'pendiente' | 'confirmada' | 'cancelada' | 'completada';
-  metodoPago: 'efectivo' | 'tarjeta' | 'transferencia';
+  metodoPago: 'tarjeta' | 'transferencia' | 'deposito';
   observaciones?: string;
   datosContacto: {
     nombre: string;
@@ -176,7 +176,7 @@ export interface IReservaResponse {
   cantidadPersonas: number;
   precioTotal: number;
   estado: 'pendiente' | 'confirmada' | 'cancelada' | 'completada';
-  metodoPago: 'efectivo' | 'tarjeta' | 'transferencia';
+  metodoPago: 'tarjeta' | 'transferencia' | 'deposito';
   observaciones?: string;
   datosContacto: {
     nombre: string;
@@ -207,7 +207,7 @@ export interface IReservaPopulatedResponse {
   cantidadPersonas: number;
   precioTotal: number;
   estado: 'pendiente' | 'confirmada' | 'cancelada' | 'completada';
-  metodoPago: 'efectivo' | 'tarjeta' | 'transferencia';
+  metodoPago: 'tarjeta' | 'transferencia' | 'deposito';
   observaciones?: string;
   datosContacto: {
     nombre: string;
