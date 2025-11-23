@@ -25,13 +25,20 @@ app.use(helmet({
   contentSecurityPolicy: false, // Permite cargar recursos desde cualquier origen
   crossOriginEmbedderPolicy: false
 }));
-app.use(cors({
-  origin: '*', // Permite todas las solicitudes (cambiar en producciÃ³n)
+// Configuración de CORS
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN 
+    ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
+    : process.env.NODE_ENV === 'production' 
+      ? false // En producción, debe especificarse CORS_ORIGIN
+      : '*', // En desarrollo, permite todas las solicitudes
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
-  credentials: false
-}));
-app.use(morgan('dev'));
+  credentials: process.env.NODE_ENV === 'production'
+};
+app.use(cors(corsOptions));
+// Morgan solo en desarrollo, en producción usar formato combinado
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -113,8 +120,12 @@ const startServer = async (): Promise<void> => {
     const port: number = parseInt(process.env.PORT || '4000', 10);
     
     app.listen(port, () => {
-      console.log(`ðŸš€ Backend ready en puerto ${port}`);
-      console.log(`ðŸ“¡ API disponible en: http://localhost:${port}/api`);
+      console.log(`🚀 Backend ready en puerto ${port}`);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(`📡 API disponible en: http://localhost:${port}/api`);
+      } else {
+        console.log(`📡 API disponible en puerto ${port}`);
+      }
     });
   } catch (error) {
     console.error('âŒ Error al iniciar el servidor:', error);
