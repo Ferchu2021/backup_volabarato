@@ -79,7 +79,7 @@ export const userJoiSchema = Joi.object({
   telefono: Joi.string().min(8).max(20).required(),
   telefonoContacto: Joi.string().min(8).max(20).required(),
   email: Joi.string().email().required()
-});
+}).unknown(false); // Rechazar campos adicionales no definidos
 
 // Interface para login
 export interface ILoginRequest {

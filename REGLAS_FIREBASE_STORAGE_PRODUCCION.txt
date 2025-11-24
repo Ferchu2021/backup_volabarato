@@ -1,0 +1,67 @@
+===========================================
+REGLAS DE SEGURIDAD FIREBASE STORAGE
+===========================================
+
+Copia y pega este código en Firebase Console → Storage → Rules
+
+===========================================
+CÓDIGO DE REGLAS (Producción)
+===========================================
+
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Permitir lectura pública de todas las imágenes
+    match /{allPaths=**} {
+      allow read: if true;
+      
+      // Solo usuarios autenticados pueden escribir
+      allow write: if request.auth != null;
+    }
+  }
+}
+
+===========================================
+INSTRUCCIONES PASO A PASO
+===========================================
+
+1. Ve a: https://console.firebase.google.com/
+2. Selecciona el proyecto: volabarato-c8c5a
+3. En el menú lateral, haz clic en "Storage"
+4. Ve a la pestaña "Rules" o "Reglas"
+5. Reemplaza el código actual con el código de arriba
+6. Haz clic en "Publish" o "Publicar"
+7. Espera la confirmación
+
+===========================================
+NOTAS IMPORTANTES
+===========================================
+
+⚠️ Estas reglas requieren autenticación para escribir
+⚠️ Si no tienes autenticación implementada, usa las reglas de test temporalmente
+⚠️ Las reglas de test permiten escritura sin autenticación (solo para desarrollo)
+
+===========================================
+REGLAS DE TEST (Temporal - Solo Desarrollo)
+===========================================
+
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if true;
+    }
+  }
+}
+
+===========================================
+VERIFICACIÓN
+===========================================
+
+Después de publicar:
+1. Intenta leer una imagen → Debe funcionar
+2. Intenta subir sin autenticación → Debe fallar (con reglas de producción)
+3. Intenta subir con autenticación → Debe funcionar
+
+===========================================
+

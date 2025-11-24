@@ -16,6 +16,7 @@
     "convert:excel": "npm run convert:excel:clean && npm run convert:excel:compile && npm run convert:excel:fix && node scripts/convertExcelToJson.js",
     "load:paquetes": "ts-node scripts/loadPaquetesFromFile.ts",
     "update:categories": "ts-node scripts/updatePackageCategories.ts",
+    "eliminar-indice-duplicado": "ts-node scripts/eliminarIndiceDuplicado.ts",
     "remove:test": "node scripts/removeTestPaquetes.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
