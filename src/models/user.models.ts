@@ -69,12 +69,16 @@ export const userJoiSchema = Joi.object({
   password: Joi.string().min(6).required(),
   rol: Joi.string().valid('admin', 'cliente').optional(),
   nombreLegal: Joi.string().min(2).max(100).required(),
-  fechaNacimiento: Joi.date().max('now').required().messages({
-    'date.max': 'La fecha de nacimiento debe ser anterior a la fecha actual'
+  fechaNacimiento: Joi.alternatives().try(
+    Joi.date(),
+    Joi.string().isoDate()
+  ).max('now').required().messages({
+    'date.max': 'La fecha de nacimiento debe ser anterior a la fecha actual',
+    'alternatives.match': 'La fecha de nacimiento debe ser una fecha válida'
   }),
   nacionalidad: Joi.string().min(2).max(50).required(),
   dni: Joi.string().min(7).max(10).required(),
-  cuilCuit: Joi.string().min(10).max(13).optional().allow(''),
+  cuilCuit: Joi.string().min(10).max(13).optional().allow('', null),
   numeroPasaporte: Joi.string().min(5).max(20).required(),
   telefono: Joi.string().min(8).max(20).required(),
   telefonoContacto: Joi.string().min(8).max(20).required(),

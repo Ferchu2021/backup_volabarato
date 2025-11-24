@@ -25,17 +25,22 @@ export interface IErrorResponse {
 // Controller para registrar un nuevo usuario
 export const registerUser = async (req: Request<{}, {}, IRegisterRequest>, res: Response): Promise<void> => {
   try {
+    // Log del body recibido para debugging
+    console.log('Body recibido en registerUser:', JSON.stringify(req.body, null, 2));
+    
     // Validar con opciones que permitan ver todos los errores
     const { error, value } = userJoiSchema.validate(req.body, {
       abortEarly: false, // Mostrar todos los errores, no solo el primero
-      stripUnknown: false // No eliminar campos desconocidos, para ver qué está causando el error
+      stripUnknown: false, // No eliminar campos desconocidos, para ver qué está causando el error
+      allowUnknown: false // Rechazar campos desconocidos explícitamente
     });
     
     if (error) {
-      console.error('Error de validación Joi:', error.details);
+      console.error('Error de validación Joi completo:', JSON.stringify(error, null, 2));
+      console.error('Detalles del error:', error.details);
       const errorResponse: IErrorResponse = {
         error: 'Datos de validación incorrectos',
-        details: error.details.map(d => d.message).join('; ') || 'Error de validación'
+        details: error.details.map(d => `${d.path.join('.')}: ${d.message}`).join('; ') || 'Error de validación'
       };
       res.status(400).json(errorResponse);
       return;
