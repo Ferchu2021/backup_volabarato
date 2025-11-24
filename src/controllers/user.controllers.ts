@@ -26,7 +26,11 @@ export interface IErrorResponse {
 export const registerUser = async (req: Request<{}, {}, IRegisterRequest>, res: Response): Promise<void> => {
   try {
     // Log del body recibido para debugging
+    console.log('=== REGISTER USER DEBUG ===');
     console.log('Body recibido en registerUser:', JSON.stringify(req.body, null, 2));
+    console.log('Tipo de req.body:', typeof req.body);
+    console.log('Keys de req.body:', Object.keys(req.body || {}));
+    console.log('Schema keys esperados:', Object.keys(userJoiSchema.describe().keys || {}));
     
     // Validar con opciones que permitan ver todos los errores
     const { error, value } = userJoiSchema.validate(req.body, {
@@ -36,8 +40,10 @@ export const registerUser = async (req: Request<{}, {}, IRegisterRequest>, res: 
     });
     
     if (error) {
-      console.error('Error de validación Joi completo:', JSON.stringify(error, null, 2));
+      console.error('=== ERROR DE VALIDACIÓN ===');
+      console.error('Error completo:', JSON.stringify(error, null, 2));
       console.error('Detalles del error:', error.details);
+      console.error('Value después de validación:', value);
       const errorResponse: IErrorResponse = {
         error: 'Datos de validación incorrectos',
         details: error.details.map(d => `${d.path.join('.')}: ${d.message}`).join('; ') || 'Error de validación'
