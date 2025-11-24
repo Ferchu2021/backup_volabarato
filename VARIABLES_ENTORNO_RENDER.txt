@@ -1,0 +1,63 @@
+===========================================
+VARIABLES DE ENTORNO PARA RENDER
+===========================================
+
+Copia y pega estas variables en Render cuando configures el servicio.
+
+IMPORTANTE: Reemplaza los valores marcados con [REEMPLAZAR] con tus valores reales.
+
+===========================================
+VARIABLES REQUERIDAS
+===========================================
+
+1. NODE_ENV
+   production
+
+2. MONGO_URI
+   [REEMPLAZAR] - Tu connection string de MongoDB Atlas
+   Ejemplo: mongodb+srv://usuario:password@cluster.mongodb.net/volabarato?retryWrites=true&w=majority
+
+3. JWT_SECRET
+   7e8d2a1c307c6b52dc6869ecf193952ae23063544180516f0f414e76f4d8f12cb1370e18c53235e8
+
+4. CORS_ORIGIN
+   [TEMPORAL] - Actualizar después con la URL del frontend
+   Por ahora puedes usar: https://volabarato.vercel.app
+   O temporalmente: * (menos seguro, solo para pruebas)
+
+===========================================
+VARIABLES OPCIONALES (para emails)
+===========================================
+
+5. SMTP_HOST
+   smtp.gmail.com
+
+6. SMTP_PORT
+   587
+
+7. SMTP_SECURE
+   false
+
+8. SMTP_USER
+   [REEMPLAZAR] - Tu email de Gmail
+
+9. SMTP_PASS
+   [REEMPLAZAR] - Tu contraseña de aplicación de Gmail
+   NOTA: No es tu contraseña normal, es una "Contraseña de aplicación"
+   Cómo obtenerla: https://support.google.com/accounts/answer/185833
+
+10. SMTP_FROM
+    noreply@volabarato.com
+
+===========================================
+NOTAS IMPORTANTES
+===========================================
+
+- NO configures PORT - Render lo asigna automáticamente
+- Guarda el JWT_SECRET de forma segura
+- Actualiza CORS_ORIGIN después de tener la URL del frontend
+- Para MongoDB Atlas, asegúrate de agregar la IP de Render a la whitelist
+  (o usa 0.0.0.0/0 temporalmente para permitir todas las IPs)
+
+===========================================
+

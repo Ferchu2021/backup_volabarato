@@ -1,0 +1,88 @@
+===========================================
+CHECKLIST: VARIABLES DE ENTORNO EN RENDER
+===========================================
+
+Sigue estos pasos y marca cada ítem cuando lo completes:
+
+===========================================
+PASO 1: ACCEDER A ENVIRONMENT
+===========================================
+
+[ ] 1. Abrí https://render.com
+[ ] 2. Inicié sesión
+[ ] 3. Hice clic en mi servicio: backup_volabarato-1
+[ ] 4. Hice clic en "Environment" en el menú lateral izquierdo
+
+===========================================
+PASO 2: VERIFICAR VARIABLES REQUERIDAS
+===========================================
+
+[ ] 5. Verifiqué que existe NODE_ENV
+     Si NO existe: [ ] La agregué con valor "production"
+     Si existe: [ ] Verifiqué que el valor sea "production"
+
+[ ] 6. Verifiqué que existe MONGO_URI
+     Si NO existe: [ ] La agregué con mi connection string
+     Si existe: [ ] Verifiqué que tenga el formato correcto
+     [ ] Tiene: mongodb+srv://...
+     [ ] Tiene mi usuario y contraseña
+     [ ] Apunta a la base de datos "volabarato"
+
+[ ] 7. Verifiqué que existe JWT_SECRET
+     Si NO existe: [ ] La agregué con el valor:
+         7e8d2a1c307c6b52dc6869ecf193952ae23063544180516f0f414e76f4d8f12cb1370e18c53235e8
+     Si existe: [ ] Verifiqué que tenga el valor correcto
+
+[ ] 8. Verifiqué CORS_ORIGIN
+     [ ] Existe (está bien)
+     [ ] No existe (también está bien, la agregaremos después)
+     [ ] Tiene valor "*" (está bien temporalmente)
+
+===========================================
+PASO 3: VERIFICAR VARIABLES OPCIONALES
+===========================================
+
+[ ] 9. (Opcional) Configuré SMTP_HOST = smtp.gmail.com
+[ ] 10. (Opcional) Configuré SMTP_PORT = 587
+[ ] 11. (Opcional) Configuré SMTP_SECURE = false
+[ ] 12. (Opcional) Configuré SMTP_USER = mi_email@gmail.com
+[ ] 13. (Opcional) Configuré SMTP_PASS = mi_contraseña_de_aplicación
+[ ] 14. (Opcional) Configuré SMTP_FROM = noreply@volabarato.com
+
+===========================================
+PASO 4: VERIFICAR QUE NO EXISTA PORT
+===========================================
+
+[ ] 15. Verifiqué que NO existe una variable llamada PORT
+     Si existe: [ ] La eliminé (no es necesaria, Render asigna el puerto automáticamente)
+
+===========================================
+PASO 5: GUARDAR Y VERIFICAR
+===========================================
+
+[ ] 16. Guardé todos los cambios
+[ ] 17. Esperé a que Render reinicie el servicio (1-2 minutos)
+[ ] 18. Fui a la pestaña "Logs"
+[ ] 19. Verifiqué que no haya errores
+[ ] 20. Verifiqué que aparezca: "✅ Conectado a MongoDB Atlas" (si MongoDB está configurado)
+[ ] 21. Verifiqué que aparezca: "Servidor corriendo en puerto XXXX"
+
+===========================================
+PASO 6: PROBAR EL SERVICIO
+===========================================
+
+[ ] 22. Abrí en mi navegador: https://backup-volabarato-1.onrender.com/
+[ ] 23. Vi el mensaje: "Backend VolaBarato API funcionando correctamente"
+[ ] 24. Abrí: https://backup-volabarato-1.onrender.com/api
+[ ] 25. Vi información de la API
+
+===========================================
+✅ TODO COMPLETADO
+===========================================
+
+Si marcaste todos los ítems relevantes, ¡estás listo para continuar!
+
+Próximo paso: Deployment del frontend en Vercel
+
+===========================================
+

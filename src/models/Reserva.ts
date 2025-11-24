@@ -107,7 +107,7 @@ reservaSchema.pre<IReserva>('save', async function(next) {
 export const Reserva = mongoose.model<IReserva>('Reserva', reservaSchema);
 
 // Índices para mejorar consultas
-reservaSchema.index({ numeroReserva: 1 });
+// Nota: numeroReserva ya tiene índice único por "unique: true" en la definición del campo
 reservaSchema.index({ usuario: 1 });
 reservaSchema.index({ paquete: 1 });
 reservaSchema.index({ estado: 1 });
