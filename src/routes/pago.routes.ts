@@ -7,7 +7,7 @@ import {
   updatePago,
   completarPago,
   deletePago
-} from '../controllers/pago.controllers';
+} from '../controllers/pago.controllers.js';
 
 const router = Router();
 

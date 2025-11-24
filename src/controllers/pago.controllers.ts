@@ -4,8 +4,8 @@ import {
   pagoJoiSchema, 
   ICreatePagoRequest, 
   IUpdatePagoRequest 
-} from '../models/Pago';
-import { Reserva } from '../models/Reserva';
+} from '../models/Pago.js';
+import { Reserva } from '../models/Reserva.js';
 
 // Interface para respuesta de error
 export interface IErrorResponse {

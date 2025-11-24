@@ -6,9 +6,9 @@ import {
   IUpdateReservaRequest, 
   IReservaResponse,
   IReservaPopulatedResponse 
-} from '../models/Reserva';
-import { Paquete } from '../models/Paquete';
-import { enviarEmailConfirmacion, enviarEmailReservaPendiente } from '../services/email.service';
+} from '../models/Reserva.js';
+import { Paquete } from '../models/Paquete.js';
+import { enviarEmailConfirmacion, enviarEmailReservaPendiente } from '../services/email.service.js';
 
 // Interface para respuesta de error
 export interface IErrorResponse {

@@ -6,13 +6,13 @@ import morgan from 'morgan';
 import mongoose from 'mongoose';
 
 // Importa rutas
-import paqueteRoutes from './routes/paquete';
-import userRoutes from './routes/user.routes';
-import productoRoutes from './routes/producto.routes';
-import destinoRoutes from './routes/destino.routes';
-import reservaRoutes from './routes/reserva.routes';
-import suscriptorRoutes from './routes/suscriptor.routes';
-import pagoRoutes from './routes/pago.routes';
+import paqueteRoutes from './routes/paquete.js';
+import userRoutes from './routes/user.routes.js';
+import productoRoutes from './routes/producto.routes.js';
+import destinoRoutes from './routes/destino.routes.js';
+import reservaRoutes from './routes/reserva.routes.js';
+import suscriptorRoutes from './routes/suscriptor.routes.js';
+import pagoRoutes from './routes/pago.routes.js';
 
 // Carga variables de entorno
 dotenv.config();

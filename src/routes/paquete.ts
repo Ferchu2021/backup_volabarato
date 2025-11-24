@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { Paquete, paqueteJoiSchema, paqueteUpdateJoiSchema, ICreatePaqueteRequest, IUpdatePaqueteRequest } from '../models/Paquete';
+import { Paquete, paqueteJoiSchema, paqueteUpdateJoiSchema, ICreatePaqueteRequest, IUpdatePaqueteRequest } from '../models/Paquete.js';
 
 const router = Router();
 

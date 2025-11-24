@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Destino, destinoJoiSchema, destinoUpdateJoiSchema, ICreateDestinoRequest, IUpdateDestinoRequest, IDestinoResponse } from '../models/Destino';
+import { Destino, destinoJoiSchema, destinoUpdateJoiSchema, ICreateDestinoRequest, IUpdateDestinoRequest, IDestinoResponse } from '../models/Destino.js';
 
 // Interface para respuesta de error
 export interface IErrorResponse {

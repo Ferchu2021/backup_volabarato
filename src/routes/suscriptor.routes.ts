@@ -7,7 +7,7 @@ import {
   desuscribirSuscriptor,
   deleteSuscriptor,
   getSuscriptoresStats
-} from '../controllers/suscriptor.controllers';
+} from '../controllers/suscriptor.controllers.js';
 
 const router = Router();
 

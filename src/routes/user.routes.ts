@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { registerUser, loginUser, getCurrentUser, updateUser, deleteUser, getAllUsers, getUserById, changePassword, requestPasswordReset, resetPassword } from '../controllers/user.controllers';
-import { checkUserExists, validatePasswordFormat, validateUsernameFormat } from '../middlewares/user.middlewares';
+import { registerUser, loginUser, getCurrentUser, updateUser, deleteUser, getAllUsers, getUserById, changePassword, requestPasswordReset, resetPassword } from '../controllers/user.controllers.js';
+import { checkUserExists, validatePasswordFormat, validateUsernameFormat } from '../middlewares/user.middlewares.js';
 
 const router = Router();
 

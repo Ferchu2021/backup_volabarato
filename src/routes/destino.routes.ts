@@ -8,7 +8,7 @@ import {
   searchDestinos,
   getDestinosByPais,
   getDestinosByClima
-} from '../controllers/destino.controllers';
+} from '../controllers/destino.controllers.js';
 
 const router = Router();
 

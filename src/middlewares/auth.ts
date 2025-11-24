@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { IUserPayload } from '../models/user.models';
+import { IUserPayload } from '../models/user.models.js';
 
 // Extender la interfaz Request para incluir user
 declare global {

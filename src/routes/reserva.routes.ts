@@ -10,7 +10,7 @@ import {
   confirmarReserva,
   deleteReserva,
   getReservasStats
-} from '../controllers/reserva.controllers';
+} from '../controllers/reserva.controllers.js';
 
 const router = Router();
 

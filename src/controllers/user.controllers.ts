@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 import crypto from 'crypto';
-import { User, userJoiSchema, ILoginRequest, IRegisterRequest, ILoginResponse } from '../models/user.models';
-import { enviarEmailRecuperacionPassword } from '../services/email.service';
+import { User, userJoiSchema, ILoginRequest, IRegisterRequest, ILoginResponse } from '../models/user.models.js';
+import { enviarEmailRecuperacionPassword } from '../services/email.service.js';
 
 // Interface para respuesta de registro
 export interface IRegisterResponse {

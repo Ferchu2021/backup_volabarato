@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { IReserva } from '../models/Reserva';
+import { IReserva } from '../models/Reserva.js';
 
 // Configuración del transporter de nodemailer
 const createTransporter = () => {

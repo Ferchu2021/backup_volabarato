@@ -4,7 +4,7 @@ import {
   suscriptorJoiSchema, 
   ICreateSuscriptorRequest, 
   IUpdateSuscriptorRequest 
-} from '../models/Suscriptor';
+} from '../models/Suscriptor.js';
 
 // Interface para respuesta de error
 export interface IErrorResponse {

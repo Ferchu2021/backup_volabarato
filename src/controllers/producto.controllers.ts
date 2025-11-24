@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Producto, productoJoiSchema, productoUpdateJoiSchema, ICreateProductoRequest, IUpdateProductoRequest, IProductoResponse } from '../models/Producto';
+import { Producto, productoJoiSchema, productoUpdateJoiSchema, ICreateProductoRequest, IUpdateProductoRequest, IProductoResponse } from '../models/Producto.js';
 
 // Interface para respuesta de error
 export interface IErrorResponse {
