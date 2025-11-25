@@ -41,7 +41,7 @@ const pagoSchema = new Schema<IPago>({
     type: Schema.Types.ObjectId, 
     ref: 'Reserva', 
     required: true,
-    unique: true // Un pago por reserva
+    unique: true // Un pago por reserva - unique: true crea el índice automáticamente
   },
   metodoPago: { 
     type: String, 
@@ -106,7 +106,7 @@ pagoSchema.pre<IPago>('save', function(next) {
 });
 
 // Índices
-pagoSchema.index({ reserva: 1 });
+// pagoSchema.index({ reserva: 1 }); // Removido: unique: true ya crea el índice
 pagoSchema.index({ estado: 1 });
 pagoSchema.index({ metodoPago: 1 });
 pagoSchema.index({ fechaCreacion: -1 });

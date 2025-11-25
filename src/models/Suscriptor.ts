@@ -27,7 +27,7 @@ const suscriptorSchema = new Schema<ISuscriptor>({
 });
 
 // Índices
-suscriptorSchema.index({ email: 1 });
+// suscriptorSchema.index({ email: 1 }); // Removido: unique: true ya crea el índice
 suscriptorSchema.index({ activo: 1 });
 suscriptorSchema.index({ pais: 1 });
 
