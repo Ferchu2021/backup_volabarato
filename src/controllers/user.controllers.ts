@@ -30,7 +30,12 @@ export const registerUser = async (req: Request<{}, {}, IRegisterRequest>, res: 
     console.log('Body recibido en registerUser:', JSON.stringify(req.body, null, 2));
     console.log('Tipo de req.body:', typeof req.body);
     console.log('Keys de req.body:', Object.keys(req.body || {}));
-    console.log('Schema keys esperados:', Object.keys(userJoiSchema.describe().keys || {}));
+    
+    // Obtener el schema y sus keys
+    const schemaDescription = userJoiSchema.describe();
+    const schemaKeys = schemaDescription.keys ? Object.keys(schemaDescription.keys) : [];
+    console.log('Schema keys esperados:', schemaKeys);
+    console.log('Schema completo:', JSON.stringify(schemaDescription, null, 2));
     
     // Validar con opciones que permitan ver todos los errores
     const { error, value } = userJoiSchema.validate(req.body, {
@@ -44,6 +49,12 @@ export const registerUser = async (req: Request<{}, {}, IRegisterRequest>, res: 
       console.error('Error completo:', JSON.stringify(error, null, 2));
       console.error('Detalles del error:', error.details);
       console.error('Value después de validación:', value);
+      console.error('Error details map:', error.details.map(d => ({
+        path: d.path,
+        message: d.message,
+        type: d.type,
+        context: d.context
+      })));
       const errorResponse: IErrorResponse = {
         error: 'Datos de validación incorrectos',
         details: error.details.map(d => `${d.path.join('.')}: ${d.message}`).join('; ') || 'Error de validación'
