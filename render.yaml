@@ -1,18 +1,9 @@
 services:
   - type: web
-    name: volabarato-backend
+    name: backup-volabarato
     env: node
-    plan: free
     buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 10000
-      - key: MONGO_URI
-        sync: false
-      - key: JWT_SECRET
-        sync: false
-    healthCheckPath: /
-

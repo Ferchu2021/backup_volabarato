@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ICreateReservaRequest, IUpdateReservaRequest } from '../models/Reserva';
+import { ICreateReservaRequest, IUpdateReservaRequest } from '../models/Reserva.js';
 export interface IErrorResponse {
     error: string;
     details?: string;
