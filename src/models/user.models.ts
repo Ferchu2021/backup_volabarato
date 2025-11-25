@@ -70,9 +70,9 @@ export const userJoiSchema = Joi.object({
   rol: Joi.string().valid('admin', 'cliente').optional(),
   nombreLegal: Joi.string().min(2).max(100).required(),
   fechaNacimiento: Joi.alternatives().try(
-    Joi.date(),
+    Joi.date().max('now'),
     Joi.string().isoDate()
-  ).max('now').required().messages({
+  ).required().messages({
     'date.max': 'La fecha de nacimiento debe ser anterior a la fecha actual',
     'alternatives.match': 'La fecha de nacimiento debe ser una fecha válida'
   }),

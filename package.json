@@ -5,8 +5,10 @@
   "main": "dist/index.js",
   "scripts": {
     "clean": "node -e \"const fs = require('fs'); const path = require('path'); const distPath = path.join(__dirname, 'dist'); if (fs.existsSync(distPath)) { fs.rmSync(distPath, { recursive: true, force: true }); }\"",
-    "build": "npm run clean && tsc",
+    "prebuild": "npm run clean",
+    "build": "tsc",
     "start": "node dist/index.js",
+    "postinstall": "npm run build || true",
     "dev": "nodemon",
     "dev:ts": "ts-node src/index.ts",
     "seed:user": "ts-node scripts/seedUser.ts",
