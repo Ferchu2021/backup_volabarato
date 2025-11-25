@@ -4,7 +4,7 @@
   "description": "Backend API para VolaBarato",
   "main": "dist/index.js",
   "scripts": {
-    "clean": "rm -rf dist || true",
+    "clean": "node -e \"const fs = require('fs'); const path = require('path'); const distPath = path.join(__dirname, 'dist'); if (fs.existsSync(distPath)) { fs.rmSync(distPath, { recursive: true, force: true }); }\"",
     "build": "npm run clean && tsc",
     "start": "node dist/index.js",
     "dev": "nodemon",
