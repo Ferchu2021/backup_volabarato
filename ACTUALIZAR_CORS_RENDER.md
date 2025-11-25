@@ -1,80 +1,32 @@
-# 🔄 Actualizar CORS en Render - Después del Deploy
+# 🔧 Actualizar CORS en Render
 
-## ⚡ Inicio Rápido (2 minutos)
+## Problema
+El frontend en Vercel (https://frontend-volabarato.vercel.app) no puede acceder al backend debido a CORS.
 
-### Paso 1: Obtener URL de Vercel
-1. Ve a tu proyecto en Vercel
-2. Copia la URL de producción (ej: `https://volabarato-xxxxx.vercel.app`)
+## Solución
 
-### Paso 2: Ir a Render
-1. Abre: https://render.com
-2. Inicia sesión
-3. Selecciona el servicio: **`backup-volabarato-1`**
+### Opción 1: Configurar Variable de Entorno en Render (Recomendado)
 
-### Paso 3: Actualizar CORS_ORIGIN
-1. Ve a la pestaña **"Environment"**
-2. Busca la variable: **`CORS_ORIGIN`**
-3. Haz clic en el valor actual para editarlo
-4. Reemplaza con la URL de Vercel:
+1. Ve a **Render Dashboard** → tu servicio "backup-volabarato-1"
+2. Ve a **Settings** → **Environment**
+3. Busca o crea la variable de entorno:
+   - **Key**: `CORS_ORIGIN`
+   - **Value**: `https://frontend-volabarato.vercel.app,https://volabarato.vercel.app`
+4. Guarda los cambios
+5. Render hará un redeploy automático
 
-```
-https://volabarato-xxxxx.vercel.app,https://www.volabarato-xxxxx.vercel.app
-```
+### Opción 2: Usar los valores por defecto
 
-**⚠️ IMPORTANTE**:
-- Reemplaza `volabarato-xxxxx` con tu URL real de Vercel
-- No incluyas espacios
-- Separa múltiples URLs con comas
-- Si tienes un dominio personalizado, agrégalo también
+El código ahora incluye URLs por defecto para producción:
+- `https://frontend-volabarato.vercel.app`
+- `https://volabarato.vercel.app`
 
-### Paso 4: Guardar
-1. Haz clic en **"Save Changes"**
-2. Render reiniciará automáticamente el servicio
-3. Espera 1-2 minutos
+Si no configuras `CORS_ORIGIN`, se usarán estas URLs automáticamente.
 
-### Paso 5: Verificar
-1. Abre el frontend en Vercel
-2. Abre la consola del navegador (F12)
-3. Verifica que no haya errores de CORS
-4. Las peticiones al backend deben funcionar
+## Verificar
+
+Después del redeploy, el frontend debería poder acceder al backend sin errores de CORS.
 
 ---
 
-## ✅ Checklist
-
-- [ ] URL de Vercel obtenida
-- [ ] Render abierto
-- [ ] Servicio `backup-volabarato-1` seleccionado
-- [ ] Variable `CORS_ORIGIN` actualizada
-- [ ] Cambios guardados
-- [ ] Servicio reiniciado
-- [ ] Verificación realizada
-
----
-
-## 🔧 Solución de Problemas
-
-### Error: "CORS policy blocked"
-- **Causa**: URL no incluida en `CORS_ORIGIN`
-- **Solución**: Verifica que la URL exacta esté en `CORS_ORIGIN`
-
-### Error: "Multiple origins"
-- **Causa**: Formato incorrecto
-- **Solución**: Separa con comas, sin espacios: `url1,url2`
-
-### El servicio no se reinicia
-- **Causa**: Render puede tardar
-- **Solución**: Espera 2-3 minutos o haz un "Manual Deploy"
-
----
-
-## 📝 Notas
-
-- Render reinicia automáticamente después de cambiar variables
-- Puede tardar 1-2 minutos en aplicar los cambios
-- Verifica siempre en la consola del navegador
-
----
-
-**¡Listo! Actualiza CORS en 2 minutos.** 🔄
-
+**Nota**: Si tienes otras URLs de frontend (preview, staging, etc.), agrégalas separadas por comas en `CORS_ORIGIN`.

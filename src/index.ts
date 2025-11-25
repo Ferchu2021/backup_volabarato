@@ -30,11 +30,12 @@ const corsOptions = {
   origin: process.env.CORS_ORIGIN 
     ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
     : process.env.NODE_ENV === 'production' 
-      ? false // En producción, debe especificarse CORS_ORIGIN
+      ? ['https://frontend-volabarato.vercel.app', 'https://volabarato.vercel.app'] // URLs de producción por defecto
       : '*', // En desarrollo, permite todas las solicitudes
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
-  credentials: process.env.NODE_ENV === 'production'
+  credentials: true,
+  optionsSuccessStatus: 200 // Para navegadores legacy
 };
 app.use(cors(corsOptions));
 // Morgan solo en desarrollo, en producción usar formato combinado
