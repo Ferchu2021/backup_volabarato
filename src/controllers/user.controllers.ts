@@ -27,6 +27,9 @@ export const registerUser = async (req: Request<{}, {}, IRegisterRequest>, res: 
   try {
     // Log del body recibido para debugging
     console.log('=== REGISTER USER DEBUG ===');
+    console.log('Ruta:', req.method, req.path);
+    console.log('URL completa:', req.url);
+    console.log('Headers Authorization:', req.header('Authorization') ? 'Presente' : 'Ausente');
     console.log('Body recibido en registerUser:', JSON.stringify(req.body, null, 2));
     console.log('Tipo de req.body:', typeof req.body);
     console.log('Keys de req.body:', Object.keys(req.body || {}));

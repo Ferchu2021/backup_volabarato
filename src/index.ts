@@ -42,6 +42,14 @@ app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Middleware de logging para todas las peticiones (solo en desarrollo o para debugging)
+if (process.env.NODE_ENV !== 'production' || process.env.DEBUG === 'true') {
+  app.use((req: Request, res: Response, next: Function) => {
+    console.log(`[REQUEST] ${req.method} ${req.path} - Headers Auth: ${req.header('Authorization') ? 'Presente' : 'Ausente'}`);
+    next();
+  });
+}
+
 // ConexiÃ³n a MongoDB Atlas
 const connectDB = async (): Promise<void> => {
   try {

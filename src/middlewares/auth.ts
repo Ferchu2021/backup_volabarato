@@ -18,10 +18,16 @@ export interface IAuthMiddleware {
 
 // Middleware de autenticación
 export const auth: IAuthMiddleware = (req: Request, res: Response, next: NextFunction): void | Response => {
+  // Log para debugging - identificar qué ruta está pidiendo token
+  console.log(`[AUTH] Ruta: ${req.method} ${req.path}`);
+  console.log(`[AUTH] URL completa: ${req.url}`);
+  console.log(`[AUTH] Headers Authorization: ${req.header('Authorization') ? 'Presente' : 'Ausente'}`);
+  
   const authHeader = req.header('Authorization');
   const token = authHeader?.replace('Bearer ', '');
   
   if (!token) {
+    console.error(`[AUTH ERROR] Token requerido para: ${req.method} ${req.path}`);
     return res.status(401).json({ error: 'Acceso denegado. Token requerido.' });
   }
   
