@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ICreateReservaRequest, IUpdateReservaRequest } from '../models/Reserva';
+import { ICreateReservaRequest, IUpdateReservaRequest } from '../models/Reserva.js';
 export interface IErrorResponse {
     error: string;
     details?: string;
@@ -13,7 +13,9 @@ export declare const getMisReservas: (req: Request, res: Response) => Promise<vo
 export declare const getReservasByUsuario: (req: Request<{
     usuarioId: string;
 }>, res: Response) => Promise<void>;
-export declare const createReserva: (req: Request<{}, {}, ICreateReservaRequest>, res: Response) => Promise<void>;
+export declare const createReserva: (req: Request<{}, {}, ICreateReservaRequest & {
+    usuario?: string;
+}>, res: Response) => Promise<void>;
 export declare const updateReserva: (req: Request<{
     id: string;
 }, {}, IUpdateReservaRequest>, res: Response) => Promise<void>;
@@ -36,7 +38,9 @@ declare const _default: {
         usuarioId: string;
     }>, res: Response) => Promise<void>;
     getMisReservas: (req: Request, res: Response) => Promise<void>;
-    createReserva: (req: Request<{}, {}, ICreateReservaRequest>, res: Response) => Promise<void>;
+    createReserva: (req: Request<{}, {}, ICreateReservaRequest & {
+        usuario?: string;
+    }>, res: Response) => Promise<void>;
     updateReserva: (req: Request<{
         id: string;
     }, {}, IUpdateReservaRequest>, res: Response) => Promise<void>;

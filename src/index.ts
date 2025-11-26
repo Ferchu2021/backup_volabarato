@@ -13,6 +13,10 @@ import destinoRoutes from './routes/destino.routes.js';
 import reservaRoutes from './routes/reserva.routes.js';
 import suscriptorRoutes from './routes/suscriptor.routes.js';
 import pagoRoutes from './routes/pago.routes.js';
+import firebaseRoutes from './routes/firebase.routes.js';
+
+// Inicializar Firebase Admin (se ejecuta al importar)
+import './config/firebase.js';
 
 // Carga variables de entorno
 dotenv.config();
@@ -74,6 +78,7 @@ app.use('/api/destino', destinoRoutes);
 app.use('/api/reserva', reservaRoutes);
 app.use('/api/suscriptor', suscriptorRoutes);
 app.use('/api/pago', pagoRoutes);
+app.use('/api/firebase', firebaseRoutes);
 
 // Ruta de prueba
 app.get('/', (req: Request, res: Response) => {
@@ -99,7 +104,8 @@ app.get('/api', (req: Request, res: Response) => {
       destino: '/api/destino',
       reserva: '/api/reserva',
       suscriptor: '/api/suscriptor',
-      pago: '/api/pago'
+      pago: '/api/pago',
+      firebase: '/api/firebase'
     }
   });
 });
@@ -116,7 +122,8 @@ app.use((req: Request, res: Response) => {
       destino: '/api/destino',
       reserva: '/api/reserva',
       suscriptor: '/api/suscriptor',
-      pago: '/api/pago'
+      pago: '/api/pago',
+      firebase: '/api/firebase'
     }
   });
 });

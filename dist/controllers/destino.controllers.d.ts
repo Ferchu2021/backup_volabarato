@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ICreateDestinoRequest, IUpdateDestinoRequest } from '../models/Destino';
+import { ICreateDestinoRequest, IUpdateDestinoRequest } from '../models/Destino.js';
 export interface IErrorResponse {
     error: string;
     details?: string;

@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getReservasStats = exports.deleteReserva = exports.confirmarReserva = exports.cancelarReserva = exports.updateReserva = exports.createReserva = exports.getReservasByUsuario = exports.getMisReservas = exports.getReservaById = exports.getAllReservas = void 0;
-const Reserva_1 = require("../models/Reserva");
-const Paquete_1 = require("../models/Paquete");
+const Reserva_js_1 = require("../models/Reserva.js");
+const Paquete_js_1 = require("../models/Paquete.js");
+const email_service_js_1 = require("../services/email.service.js");
 const getAllReservas = async (req, res) => {
     try {
         const { estado, usuario, paquete, limit = 10, page = 1 } = req.query;
@@ -14,13 +15,13 @@ const getAllReservas = async (req, res) => {
         if (paquete)
             filters.paquete = paquete;
         const skip = (Number(page) - 1) * Number(limit);
-        const reservas = await Reserva_1.Reserva.find(filters)
+        const reservas = await Reserva_js_1.Reserva.find(filters)
             .populate('usuario', 'nombre email')
             .populate('paquete', 'nombre destino precio')
             .sort({ fechaReserva: -1 })
             .skip(skip)
             .limit(Number(limit));
-        const total = await Reserva_1.Reserva.countDocuments(filters);
+        const total = await Reserva_js_1.Reserva.countDocuments(filters);
         res.json({
             data: reservas,
             pagination: {
@@ -50,7 +51,7 @@ const getReservaById = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        const reserva = await Reserva_1.Reserva.findById(id)
+        const reserva = await Reserva_js_1.Reserva.findById(id)
             .populate('usuario', 'nombre email')
             .populate('paquete', 'nombre destino precio');
         if (!reserva) {
@@ -73,27 +74,27 @@ const getReservaById = async (req, res) => {
 exports.getReservaById = getReservaById;
 const getMisReservas = async (req, res) => {
     try {
-        const { estado, limit = 10, page = 1 } = req.query;
-        const usuarioId = req.user?._id;
+        const { estado, usuarioId, limit = 10, page = 1 } = req.query;
         if (!usuarioId) {
             const errorResponse = {
-                error: 'Usuario no autenticado'
+                error: 'ID de usuario requerido'
             };
-            res.status(401).json(errorResponse);
+            res.status(400).json(errorResponse);
             return;
         }
         const filters = { usuario: usuarioId };
         if (estado)
             filters.estado = estado;
         const skip = (Number(page) - 1) * Number(limit);
-        const reservas = await Reserva_1.Reserva.find(filters)
-            .populate('paquete', 'nombre destino precio')
+        const reservas = await Reserva_js_1.Reserva.find(filters)
+            .populate('paquete', 'nombre destino precio moneda')
             .sort({ fechaReserva: -1 })
             .skip(skip)
             .limit(Number(limit));
-        const total = await Reserva_1.Reserva.countDocuments(filters);
+        const reservasValidas = reservas.filter((reserva) => reserva.paquete !== null && reserva.paquete !== undefined);
+        const total = reservasValidas.length;
         res.json({
-            data: reservas,
+            data: reservasValidas,
             pagination: {
                 page: Number(page),
                 limit: Number(limit),
@@ -126,12 +127,12 @@ const getReservasByUsuario = async (req, res) => {
         if (estado)
             filters.estado = estado;
         const skip = (Number(page) - 1) * Number(limit);
-        const reservas = await Reserva_1.Reserva.find(filters)
+        const reservas = await Reserva_js_1.Reserva.find(filters)
             .populate('paquete', 'nombre destino precio')
             .sort({ fechaReserva: -1 })
             .skip(skip)
             .limit(Number(limit));
-        const total = await Reserva_1.Reserva.countDocuments(filters);
+        const total = await Reserva_js_1.Reserva.countDocuments(filters);
         res.json({
             data: reservas,
             pagination: {
@@ -153,15 +154,7 @@ const getReservasByUsuario = async (req, res) => {
 exports.getReservasByUsuario = getReservasByUsuario;
 const createReserva = async (req, res) => {
     try {
-        const usuarioId = req.user?._id;
-        if (!usuarioId) {
-            const errorResponse = {
-                error: 'Usuario no autenticado'
-            };
-            res.status(401).json(errorResponse);
-            return;
-        }
-        const { error } = Reserva_1.reservaJoiSchema.validate(req.body, { abortEarly: false });
+        const { error } = Reserva_js_1.reservaJoiSchema.validate(req.body, { abortEarly: false });
         if (error) {
             const errorResponse = {
                 error: 'Datos de validación incorrectos',
@@ -173,7 +166,15 @@ const createReserva = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        const paquete = await Paquete_1.Paquete.findById(req.body.paquete);
+        const usuarioId = req.body.usuario;
+        if (!usuarioId) {
+            const errorResponse = {
+                error: 'ID de usuario requerido en el body'
+            };
+            res.status(400).json(errorResponse);
+            return;
+        }
+        const paquete = await Paquete_js_1.Paquete.findById(req.body.paquete);
         if (!paquete) {
             const errorResponse = {
                 error: 'Paquete no encontrado'
@@ -196,14 +197,17 @@ const createReserva = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        const reserva = new Reserva_1.Reserva({
+        const reserva = new Reserva_js_1.Reserva({
             ...req.body,
             usuario: usuarioId
         });
         await reserva.save();
-        const reservaPopulada = await Reserva_1.Reserva.findById(reserva._id)
+        const reservaPopulada = await Reserva_js_1.Reserva.findById(reserva._id)
             .populate('usuario', 'nombre email')
-            .populate('paquete', 'nombre destino precio');
+            .populate('paquete', 'nombre destino precio moneda');
+        (0, email_service_js_1.enviarEmailReservaPendiente)(reservaPopulada).catch(error => {
+            console.error('Error enviando email de reserva pendiente:', error);
+        });
         res.status(201).json({
             message: 'Reserva creada exitosamente',
             reserva: reservaPopulada
@@ -236,7 +240,7 @@ const updateReserva = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        const updateSchema = Reserva_1.reservaJoiSchema.fork(Object.keys(Reserva_1.reservaJoiSchema.describe().keys), (schema) => schema.optional());
+        const updateSchema = Reserva_js_1.reservaJoiSchema.fork(Object.keys(Reserva_js_1.reservaJoiSchema.describe().keys), (schema) => schema.optional());
         const { error } = updateSchema.validate(req.body);
         if (error) {
             const errorResponse = {
@@ -256,7 +260,7 @@ const updateReserva = async (req, res) => {
                 return;
             }
         }
-        const reserva = await Reserva_1.Reserva.findByIdAndUpdate(id, req.body, { new: true, runValidators: true })
+        const reserva = await Reserva_js_1.Reserva.findByIdAndUpdate(id, req.body, { new: true, runValidators: true })
             .populate('usuario', 'nombre email')
             .populate('paquete', 'nombre destino precio');
         if (!reserva) {
@@ -290,7 +294,7 @@ const cancelarReserva = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        const reserva = await Reserva_1.Reserva.findByIdAndUpdate(id, { estado: 'cancelada' }, { new: true })
+        const reserva = await Reserva_js_1.Reserva.findByIdAndUpdate(id, { estado: 'cancelada' }, { new: true })
             .populate('usuario', 'nombre email')
             .populate('paquete', 'nombre destino precio');
         if (!reserva) {
@@ -324,9 +328,9 @@ const confirmarReserva = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        const reserva = await Reserva_1.Reserva.findByIdAndUpdate(id, { estado: 'confirmada' }, { new: true })
+        const reserva = await Reserva_js_1.Reserva.findByIdAndUpdate(id, { estado: 'confirmada' }, { new: true })
             .populate('usuario', 'nombre email')
-            .populate('paquete', 'nombre destino precio');
+            .populate('paquete', 'nombre destino precio moneda');
         if (!reserva) {
             const errorResponse = {
                 error: 'Reserva no encontrada'
@@ -334,8 +338,11 @@ const confirmarReserva = async (req, res) => {
             res.status(404).json(errorResponse);
             return;
         }
+        (0, email_service_js_1.enviarEmailConfirmacion)(reserva).catch(error => {
+            console.error('Error enviando email de confirmación:', error);
+        });
         res.json({
-            message: 'Reserva confirmada exitosamente',
+            message: 'Reserva confirmada exitosamente. Se ha enviado un email de confirmación.',
             reserva
         });
     }
@@ -358,7 +365,7 @@ const deleteReserva = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        const reserva = await Reserva_1.Reserva.findByIdAndDelete(id);
+        const reserva = await Reserva_js_1.Reserva.findByIdAndDelete(id);
         if (!reserva) {
             const errorResponse = {
                 error: 'Reserva no encontrada'
@@ -390,7 +397,7 @@ const getReservasStats = async (req, res) => {
                 $lte: new Date(fechaFin)
             };
         }
-        const stats = await Reserva_1.Reserva.aggregate([
+        const stats = await Reserva_js_1.Reserva.aggregate([
             { $match: filters },
             {
                 $group: {
@@ -400,8 +407,8 @@ const getReservasStats = async (req, res) => {
                 }
             }
         ]);
-        const totalReservas = await Reserva_1.Reserva.countDocuments(filters);
-        const totalIngresos = await Reserva_1.Reserva.aggregate([
+        const totalReservas = await Reserva_js_1.Reserva.countDocuments(filters);
+        const totalIngresos = await Reserva_js_1.Reserva.aggregate([
             { $match: filters },
             { $group: { _id: null, total: { $sum: '$precioTotal' } } }
         ]);

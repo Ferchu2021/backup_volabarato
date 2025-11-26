@@ -71,3 +71,4 @@ Write-Host "Los servidores se han abierto en ventanas separadas." -ForegroundCol
 Write-Host "Presiona Ctrl+C en cada ventana para detener los servidores." -ForegroundColor Gray
 Write-Host ""
 
+

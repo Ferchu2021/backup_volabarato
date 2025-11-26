@@ -45,23 +45,46 @@ const paqueteSchema = new mongoose_1.Schema({
     fecha: { type: Date, required: true },
     precio: { type: Number, required: true, min: 0 },
     descripcion: { type: String },
-    activo: { type: Boolean, default: true }
+    activo: { type: Boolean, default: true },
+    moneda: {
+        type: String,
+        trim: true,
+        enum: ['USD', 'ARS', 'BRL', 'MXN', 'EUR', 'COP', 'CLP', 'PEN'],
+        default: 'USD'
+    },
+    destacado: { type: Boolean, default: false },
+    categoria: { type: String, trim: true },
+    duracion: { type: String, trim: true },
+    incluye: { type: [String], default: [] },
+    imagenes: { type: [String], default: [] }
 });
 exports.paqueteJoiSchema = joi_1.default.object({
-    nombre: joi_1.default.string().required(),
-    destino: joi_1.default.string().required(),
+    nombre: joi_1.default.string().trim().required(),
+    destino: joi_1.default.string().trim().required(),
     fecha: joi_1.default.date().required(),
     precio: joi_1.default.number().positive().required(),
-    descripcion: joi_1.default.string().optional(),
-    activo: joi_1.default.boolean()
-});
+    descripcion: joi_1.default.string().allow('', null).optional(),
+    activo: joi_1.default.boolean().optional(),
+    moneda: joi_1.default.string().valid('USD', 'ARS', 'BRL', 'MXN', 'EUR', 'COP', 'CLP', 'PEN').optional(),
+    destacado: joi_1.default.boolean().optional(),
+    categoria: joi_1.default.string().allow('', null).optional(),
+    duracion: joi_1.default.string().allow('', null).optional(),
+    incluye: joi_1.default.array().items(joi_1.default.string()).optional(),
+    imagenes: joi_1.default.array().items(joi_1.default.string()).optional()
+}).unknown(true);
 exports.paqueteUpdateJoiSchema = joi_1.default.object({
     nombre: joi_1.default.string().optional(),
     destino: joi_1.default.string().optional(),
     fecha: joi_1.default.date().optional(),
     precio: joi_1.default.number().positive().optional(),
     descripcion: joi_1.default.string().allow(null, '').optional(),
-    activo: joi_1.default.boolean().optional()
+    activo: joi_1.default.boolean().optional(),
+    moneda: joi_1.default.string().valid('USD', 'ARS', 'BRL', 'MXN', 'EUR', 'COP', 'CLP', 'PEN').optional(),
+    destacado: joi_1.default.boolean().optional(),
+    categoria: joi_1.default.string().optional(),
+    duracion: joi_1.default.string().optional(),
+    incluye: joi_1.default.array().items(joi_1.default.string()).optional(),
+    imagenes: joi_1.default.array().items(joi_1.default.string()).optional()
 }).min(1).unknown(false);
 exports.Paquete = mongoose_1.default.model('Paquete', paqueteSchema);
 //# sourceMappingURL=Paquete.js.map

@@ -3,23 +3,56 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserById = exports.getAllUsers = exports.deleteUser = exports.updateUser = exports.getCurrentUser = exports.loginUser = exports.registerUser = void 0;
+exports.resetPassword = exports.requestPasswordReset = exports.getUserById = exports.getAllUsers = exports.deleteUser = exports.changePassword = exports.updateUser = exports.getCurrentUser = exports.loginUser = exports.registerUser = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const mongoose_1 = __importDefault(require("mongoose"));
-const user_models_1 = require("../models/user.models");
+const crypto_1 = __importDefault(require("crypto"));
+const user_models_js_1 = require("../models/user.models.js");
+const email_service_js_1 = require("../services/email.service.js");
 const registerUser = async (req, res) => {
     try {
-        const { error } = user_models_1.userJoiSchema.validate(req.body);
+        console.log('=== REGISTER USER DEBUG ===');
+        console.log('Ruta:', req.method, req.path);
+        console.log('URL completa:', req.url);
+        console.log('Headers Authorization:', req.header('Authorization') ? 'Presente' : 'Ausente');
+        console.log('Body recibido en registerUser:', JSON.stringify(req.body, null, 2));
+        console.log('Tipo de req.body:', typeof req.body);
+        console.log('Keys de req.body:', Object.keys(req.body || {}));
+        const schemaDescription = user_models_js_1.userJoiSchema.describe();
+        const schemaKeys = schemaDescription.keys ? Object.keys(schemaDescription.keys) : [];
+        console.log('Schema keys esperados:', schemaKeys);
+        console.log('Schema completo:', JSON.stringify(schemaDescription, null, 2));
+        const { error, value } = user_models_js_1.userJoiSchema.validate(req.body, {
+            abortEarly: false,
+            stripUnknown: false,
+            allowUnknown: false
+        });
         if (error) {
+            console.error('=== ERROR DE VALIDACIÓN ===');
+            console.error('Error completo:', JSON.stringify(error, null, 2));
+            console.error('Detalles del error:', error.details);
+            console.error('Value después de validación:', value);
+            console.error('Error details map:', error.details.map(d => ({
+                path: d.path,
+                message: d.message,
+                type: d.type,
+                context: d.context
+            })));
             const errorResponse = {
                 error: 'Datos de validación incorrectos',
-                details: error.details[0]?.message || 'Error de validación'
+                details: error.details.map(d => `${d.path.join('.')}: ${d.message}`).join('; ') || 'Error de validación'
             };
             res.status(400).json(errorResponse);
             return;
         }
-        const user = new user_models_1.User(req.body);
+        const userData = {
+            ...req.body,
+            fechaNacimiento: req.body.fechaNacimiento instanceof Date
+                ? req.body.fechaNacimiento
+                : new Date(req.body.fechaNacimiento)
+        };
+        const user = new user_models_js_1.User(userData);
         await user.save();
         const response = {
             message: 'Usuario creado exitosamente',
@@ -33,11 +66,35 @@ const registerUser = async (req, res) => {
     catch (error) {
         console.error('Error en registro:', error);
         if (error.code === 11000) {
+            const keyPattern = error.keyPattern || {};
+            let duplicateField = 'usuario';
+            let errorMessage = 'El usuario ya existe';
+            let suggestion = 'Intenta con un nombre de usuario diferente';
+            if (keyPattern.email) {
+                duplicateField = 'email';
+                errorMessage = 'El email ya está registrado';
+                suggestion = 'Intenta con un email diferente o inicia sesión si ya tienes una cuenta';
+            }
+            else if (keyPattern.dni) {
+                duplicateField = 'dni';
+                errorMessage = 'El DNI ya está registrado';
+                suggestion = 'Este DNI ya está asociado a otra cuenta';
+            }
+            else if (keyPattern.numeroPasaporte) {
+                duplicateField = 'numeroPasaporte';
+                errorMessage = 'El número de pasaporte ya está registrado';
+                suggestion = 'Este número de pasaporte ya está asociado a otra cuenta';
+            }
+            else if (keyPattern.usuario) {
+                duplicateField = 'usuario';
+                errorMessage = 'El usuario ya existe';
+                suggestion = 'Intenta con un nombre de usuario diferente o inicia sesión si ya tienes una cuenta';
+            }
             const errorResponse = {
-                error: 'El usuario ya existe',
-                message: 'Intenta con un nombre de usuario diferente'
+                error: errorMessage,
+                message: suggestion
             };
-            res.status(400).json(errorResponse);
+            res.status(409).json(errorResponse);
             return;
         }
         const errorResponse = {
@@ -58,7 +115,7 @@ const loginUser = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        const user = await user_models_1.User.findOne({ usuario });
+        const user = await user_models_js_1.User.findOne({ usuario });
         if (!user) {
             const errorResponse = {
                 error: 'Credenciales inválidas',
@@ -83,7 +140,7 @@ const loginUser = async (req, res) => {
             res.status(500).json(errorResponse);
             return;
         }
-        const token = jsonwebtoken_1.default.sign({ _id: user._id, usuario: user.usuario }, process.env.JWT_SECRET, { expiresIn: '24h' });
+        const token = jsonwebtoken_1.default.sign({ _id: user._id, usuario: user.usuario, rol: user.rol }, process.env.JWT_SECRET, { expiresIn: '24h' });
         const response = { token };
         res.json(response);
     }
@@ -98,14 +155,15 @@ const loginUser = async (req, res) => {
 exports.loginUser = loginUser;
 const getCurrentUser = async (req, res) => {
     try {
-        if (!req.user) {
+        const { id } = req.query;
+        if (!id) {
             const errorResponse = {
-                error: 'Usuario no autenticado'
+                error: 'ID de usuario requerido'
             };
-            res.status(401).json(errorResponse);
+            res.status(400).json(errorResponse);
             return;
         }
-        const user = await user_models_1.User.findById(req.user._id).select('-password');
+        const user = await user_models_js_1.User.findById(id).select('-password');
         if (!user) {
             const errorResponse = {
                 error: 'Usuario no encontrado'
@@ -115,7 +173,8 @@ const getCurrentUser = async (req, res) => {
         }
         res.json({
             _id: user._id,
-            usuario: user.usuario
+            usuario: user.usuario,
+            rol: user.rol
         });
     }
     catch (error) {
@@ -129,18 +188,19 @@ const getCurrentUser = async (req, res) => {
 exports.getCurrentUser = getCurrentUser;
 const updateUser = async (req, res) => {
     try {
-        if (!req.user) {
+        const id = req.params.id || req.body.id;
+        if (!id) {
             const errorResponse = {
-                error: 'Usuario no autenticado'
+                error: 'ID de usuario requerido'
             };
-            res.status(401).json(errorResponse);
+            res.status(400).json(errorResponse);
             return;
         }
-        const { usuario } = req.body;
+        const { usuario, password, rol } = req.body;
         if (usuario) {
-            const existingUser = await user_models_1.User.findOne({
+            const existingUser = await user_models_js_1.User.findOne({
                 usuario,
-                _id: { $ne: req.user._id }
+                _id: { $ne: id }
             });
             if (existingUser) {
                 const errorResponse = {
@@ -150,7 +210,14 @@ const updateUser = async (req, res) => {
                 return;
             }
         }
-        const user = await user_models_1.User.findByIdAndUpdate(req.user._id, req.body, { new: true, runValidators: true }).select('-password');
+        const updateData = {};
+        if (usuario)
+            updateData.usuario = usuario;
+        if (password)
+            updateData.password = password;
+        if (rol)
+            updateData.rol = rol;
+        const user = await user_models_js_1.User.findByIdAndUpdate(id, updateData, { new: true, runValidators: true }).select('-password');
         if (!user) {
             const errorResponse = {
                 error: 'Usuario no encontrado'
@@ -162,7 +229,10 @@ const updateUser = async (req, res) => {
             message: 'Usuario actualizado exitosamente',
             user: {
                 _id: user._id,
-                usuario: user.usuario
+                usuario: user.usuario,
+                rol: user.rol,
+                nombreLegal: user.nombreLegal,
+                email: user.email
             }
         });
     }
@@ -175,16 +245,80 @@ const updateUser = async (req, res) => {
     }
 };
 exports.updateUser = updateUser;
-const deleteUser = async (req, res) => {
+const changePassword = async (req, res) => {
     try {
-        if (!req.user) {
+        const { id, currentPassword, newPassword } = req.body;
+        if (!id) {
             const errorResponse = {
-                error: 'Usuario no autenticado'
+                error: 'ID de usuario requerido'
+            };
+            res.status(400).json(errorResponse);
+            return;
+        }
+        if (!currentPassword || !newPassword) {
+            const errorResponse = {
+                error: 'La contraseña actual y la nueva contraseña son requeridas'
+            };
+            res.status(400).json(errorResponse);
+            return;
+        }
+        if (newPassword.length < 6) {
+            const errorResponse = {
+                error: 'La nueva contraseña debe tener al menos 6 caracteres'
+            };
+            res.status(400).json(errorResponse);
+            return;
+        }
+        const user = await user_models_js_1.User.findById(id);
+        if (!user) {
+            const errorResponse = {
+                error: 'Usuario no encontrado'
+            };
+            res.status(404).json(errorResponse);
+            return;
+        }
+        const validPassword = bcrypt_1.default.compareSync(currentPassword, user.password);
+        if (!validPassword) {
+            const errorResponse = {
+                error: 'La contraseña actual es incorrecta'
             };
             res.status(401).json(errorResponse);
             return;
         }
-        await user_models_1.User.findByIdAndDelete(req.user._id);
+        user.password = newPassword;
+        await user.save();
+        res.json({
+            message: 'Contraseña actualizada exitosamente'
+        });
+    }
+    catch (error) {
+        console.error('Error cambiando contraseña:', error);
+        const errorResponse = {
+            error: 'Error interno del servidor'
+        };
+        res.status(500).json(errorResponse);
+    }
+};
+exports.changePassword = changePassword;
+const deleteUser = async (req, res) => {
+    try {
+        const id = req.params.id || req.body.id;
+        if (!id) {
+            const errorResponse = {
+                error: 'ID de usuario requerido'
+            };
+            res.status(400).json(errorResponse);
+            return;
+        }
+        const user = await user_models_js_1.User.findById(id);
+        if (!user) {
+            const errorResponse = {
+                error: 'Usuario no encontrado'
+            };
+            res.status(404).json(errorResponse);
+            return;
+        }
+        await user_models_js_1.User.findByIdAndDelete(id);
         res.json({
             message: 'Usuario eliminado exitosamente'
         });
@@ -200,14 +334,7 @@ const deleteUser = async (req, res) => {
 exports.deleteUser = deleteUser;
 const getAllUsers = async (req, res) => {
     try {
-        if (!req.user) {
-            const errorResponse = {
-                error: 'Usuario no autenticado'
-            };
-            res.status(401).json(errorResponse);
-            return;
-        }
-        const users = await user_models_1.User.find({}).select('-password');
+        const users = await user_models_js_1.User.find({}).select('-password');
         res.json(users);
     }
     catch (error) {
@@ -221,13 +348,6 @@ const getAllUsers = async (req, res) => {
 exports.getAllUsers = getAllUsers;
 const getUserById = async (req, res) => {
     try {
-        if (!req.user) {
-            const errorResponse = {
-                error: 'Usuario no autenticado'
-            };
-            res.status(401).json(errorResponse);
-            return;
-        }
         const { id } = req.params;
         if (!id || !mongoose_1.default.Types.ObjectId.isValid(id)) {
             const errorResponse = {
@@ -236,7 +356,7 @@ const getUserById = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        const user = await user_models_1.User.findById(id).select('-password');
+        const user = await user_models_js_1.User.findById(id).select('-password');
         if (!user) {
             const errorResponse = {
                 error: 'Usuario no encontrado'
@@ -255,6 +375,101 @@ const getUserById = async (req, res) => {
     }
 };
 exports.getUserById = getUserById;
+const requestPasswordReset = async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) {
+            const errorResponse = {
+                error: 'El email es requerido'
+            };
+            res.status(400).json(errorResponse);
+            return;
+        }
+        const user = await user_models_js_1.User.findOne({ email: email.toLowerCase().trim() });
+        if (!user) {
+            res.json({
+                message: 'Si el email existe, recibirás un enlace para restablecer tu contraseña'
+            });
+            return;
+        }
+        const resetToken = crypto_1.default.randomBytes(32).toString('hex');
+        const resetTokenHash = crypto_1.default.createHash('sha256').update(resetToken).digest('hex');
+        user.resetPasswordToken = resetTokenHash;
+        user.resetPasswordExpires = new Date(Date.now() + 3600000);
+        await user.save();
+        try {
+            await (0, email_service_js_1.enviarEmailRecuperacionPassword)(user.email, user.nombreLegal || user.usuario, resetToken);
+        }
+        catch (emailError) {
+            console.error('Error enviando email:', emailError);
+            user.resetPasswordToken = null;
+            user.resetPasswordExpires = null;
+            await user.save();
+            const errorResponse = {
+                error: 'Error al enviar el email. Por favor intenta más tarde.'
+            };
+            res.status(500).json(errorResponse);
+            return;
+        }
+        res.json({
+            message: 'Si el email existe, recibirás un enlace para restablecer tu contraseña'
+        });
+    }
+    catch (error) {
+        console.error('Error solicitando reset de contraseña:', error);
+        const errorResponse = {
+            error: 'Error interno del servidor'
+        };
+        res.status(500).json(errorResponse);
+    }
+};
+exports.requestPasswordReset = requestPasswordReset;
+const resetPassword = async (req, res) => {
+    try {
+        const { token, newPassword } = req.body;
+        if (!token || !newPassword) {
+            const errorResponse = {
+                error: 'El token y la nueva contraseña son requeridos'
+            };
+            res.status(400).json(errorResponse);
+            return;
+        }
+        if (newPassword.length < 6) {
+            const errorResponse = {
+                error: 'La contraseña debe tener al menos 6 caracteres'
+            };
+            res.status(400).json(errorResponse);
+            return;
+        }
+        const resetTokenHash = crypto_1.default.createHash('sha256').update(token).digest('hex');
+        const user = await user_models_js_1.User.findOne({
+            resetPasswordToken: resetTokenHash,
+            resetPasswordExpires: { $gt: new Date() }
+        });
+        if (!user) {
+            const errorResponse = {
+                error: 'El token es inválido o ha expirado'
+            };
+            res.status(400).json(errorResponse);
+            return;
+        }
+        user.password = newPassword;
+        user.resetPasswordToken = null;
+        user.resetPasswordExpires = null;
+        await user.save();
+        res.json({
+            message: 'Contraseña restablecida exitosamente'
+        });
+    }
+    catch (error) {
+        console.error('Error reseteando contraseña:', error);
+        const errorResponse = {
+            error: 'Error interno del servidor'
+        };
+        res.status(500).json(errorResponse);
+    }
+};
+exports.resetPassword = resetPassword;
 exports.default = {
     registerUser: exports.registerUser,
     loginUser: exports.loginUser,
@@ -262,6 +477,8 @@ exports.default = {
     updateUser: exports.updateUser,
     deleteUser: exports.deleteUser,
     getAllUsers: exports.getAllUsers,
-    getUserById: exports.getUserById
+    getUserById: exports.getUserById,
+    requestPasswordReset: exports.requestPasswordReset,
+    resetPassword: exports.resetPassword
 };
 //# sourceMappingURL=user.controllers.js.map

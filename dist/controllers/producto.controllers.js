@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.searchProductos = exports.deleteProducto = exports.updateProducto = exports.createProducto = exports.getProductoById = exports.getAllProductos = void 0;
-const Producto_1 = require("../models/Producto");
+const Producto_js_1 = require("../models/Producto.js");
 const getAllProductos = async (req, res) => {
     try {
         const { categoria, activo, limit = 10, page = 1 } = req.query;
@@ -11,11 +11,11 @@ const getAllProductos = async (req, res) => {
         if (activo !== undefined)
             filters.activo = activo === 'true';
         const skip = (Number(page) - 1) * Number(limit);
-        const productos = await Producto_1.Producto.find(filters)
+        const productos = await Producto_js_1.Producto.find(filters)
             .sort({ fechaCreacion: -1 })
             .skip(skip)
             .limit(Number(limit));
-        const total = await Producto_1.Producto.countDocuments(filters);
+        const total = await Producto_js_1.Producto.countDocuments(filters);
         res.json({
             productos,
             pagination: {
@@ -45,7 +45,7 @@ const getProductoById = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        const producto = await Producto_1.Producto.findById(id);
+        const producto = await Producto_js_1.Producto.findById(id);
         if (!producto) {
             const errorResponse = {
                 error: 'Producto no encontrado'
@@ -66,7 +66,7 @@ const getProductoById = async (req, res) => {
 exports.getProductoById = getProductoById;
 const createProducto = async (req, res) => {
     try {
-        const { error } = Producto_1.productoJoiSchema.validate(req.body, { abortEarly: false });
+        const { error } = Producto_js_1.productoJoiSchema.validate(req.body, { abortEarly: false });
         if (error) {
             const errorDetails = error.details.map(detail => ({
                 campo: detail.path.join('.'),
@@ -86,7 +86,7 @@ const createProducto = async (req, res) => {
             });
             return;
         }
-        const producto = new Producto_1.Producto(req.body);
+        const producto = new Producto_js_1.Producto(req.body);
         await producto.save();
         res.status(201).json({
             message: 'Producto creado exitosamente',
@@ -130,7 +130,7 @@ const updateProducto = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        const { error } = Producto_1.productoUpdateJoiSchema.validate(req.body, { abortEarly: false });
+        const { error } = Producto_js_1.productoUpdateJoiSchema.validate(req.body, { abortEarly: false });
         if (error) {
             const errorDetails = error.details.map(detail => ({
                 campo: detail.path.join('.'),
@@ -149,7 +149,7 @@ const updateProducto = async (req, res) => {
             });
             return;
         }
-        const producto = await Producto_1.Producto.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
+        const producto = await Producto_js_1.Producto.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
         if (!producto) {
             const errorResponse = {
                 error: 'Producto no encontrado',
@@ -183,7 +183,7 @@ const deleteProducto = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        const producto = await Producto_1.Producto.findByIdAndUpdate(id, { activo: false }, { new: true });
+        const producto = await Producto_js_1.Producto.findByIdAndUpdate(id, { activo: false }, { new: true });
         if (!producto) {
             const errorResponse = {
                 error: 'Producto no encontrado'
@@ -232,7 +232,7 @@ const searchProductos = async (req, res) => {
             if (precioMax)
                 filters.precio.$lte = Number(precioMax);
         }
-        const productos = await Producto_1.Producto.find(filters).sort({ fechaCreacion: -1 });
+        const productos = await Producto_js_1.Producto.find(filters).sort({ fechaCreacion: -1 });
         res.json({
             productos,
             total: productos.length,

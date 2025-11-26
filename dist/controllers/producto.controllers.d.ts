@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ICreateProductoRequest, IUpdateProductoRequest } from '../models/Producto';
+import { ICreateProductoRequest, IUpdateProductoRequest } from '../models/Producto.js';
 export interface IErrorResponse {
     error: string;
     details?: string;

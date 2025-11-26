@@ -1,12 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const Paquete_1 = require("../models/Paquete");
-const auth_1 = require("../middlewares/auth");
+const Paquete_js_1 = require("../models/Paquete.js");
 const router = (0, express_1.Router)();
 router.get('/', async (req, res) => {
     try {
-        const paquetes = await Paquete_1.Paquete.find({ activo: true }).sort({ fecha: 1 });
+        const paquetes = await Paquete_js_1.Paquete.find({ activo: true }).sort({ fecha: 1 });
         res.json(paquetes);
     }
     catch (error) {
@@ -14,9 +13,9 @@ router.get('/', async (req, res) => {
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
-router.post('/', auth_1.auth, async (req, res) => {
+router.post('/', async (req, res) => {
     try {
-        const { error } = Paquete_1.paqueteJoiSchema.validate(req.body, { abortEarly: false });
+        const { error } = Paquete_js_1.paqueteJoiSchema.validate(req.body, { abortEarly: false });
         if (error) {
             const errorDetails = error.details.map(detail => ({
                 campo: detail.path.join('.'),
@@ -32,7 +31,7 @@ router.post('/', auth_1.auth, async (req, res) => {
             });
             return;
         }
-        const paquete = new Paquete_1.Paquete(req.body);
+        const paquete = new Paquete_js_1.Paquete(req.body);
         await paquete.save();
         res.status(201).json({
             message: 'Paquete creado exitosamente',
@@ -47,7 +46,7 @@ router.post('/', auth_1.auth, async (req, res) => {
         });
     }
 });
-router.put('/:id', auth_1.auth, async (req, res) => {
+router.put('/:id', async (req, res) => {
     try {
         const { id } = req.params;
         if (!id) {
@@ -65,7 +64,7 @@ router.put('/:id', auth_1.auth, async (req, res) => {
             });
             return;
         }
-        const { error } = Paquete_1.paqueteUpdateJoiSchema.validate(req.body, { abortEarly: false });
+        const { error } = Paquete_js_1.paqueteUpdateJoiSchema.validate(req.body, { abortEarly: false });
         if (error) {
             const errorDetails = error.details.map(detail => ({
                 campo: detail.path.join('.'),
@@ -80,7 +79,7 @@ router.put('/:id', auth_1.auth, async (req, res) => {
             });
             return;
         }
-        const paquete = await Paquete_1.Paquete.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
+        const paquete = await Paquete_js_1.Paquete.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
         if (!paquete) {
             res.status(404).json({
                 error: 'Paquete no encontrado',
@@ -101,14 +100,14 @@ router.put('/:id', auth_1.auth, async (req, res) => {
         });
     }
 });
-router.delete('/:id', auth_1.auth, async (req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
         const { id } = req.params;
         if (!id) {
             res.status(400).json({ error: 'ID del paquete es requerido' });
             return;
         }
-        const paquete = await Paquete_1.Paquete.findByIdAndUpdate(id, { activo: false }, { new: true });
+        const paquete = await Paquete_js_1.Paquete.findByIdAndUpdate(id, { activo: false }, { new: true });
         if (!paquete) {
             res.status(404).json({ error: 'Paquete no encontrado' });
             return;
@@ -130,7 +129,7 @@ router.get('/:id', async (req, res) => {
             res.status(400).json({ error: 'ID del paquete es requerido' });
             return;
         }
-        const paquete = await Paquete_1.Paquete.findById(id);
+        const paquete = await Paquete_js_1.Paquete.findById(id);
         if (!paquete) {
             res.status(404).json({ error: 'Paquete no encontrado' });
             return;

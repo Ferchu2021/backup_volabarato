@@ -6,9 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.auth = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const auth = (req, res, next) => {
+    console.log(`[AUTH] Ruta: ${req.method} ${req.path}`);
+    console.log(`[AUTH] URL completa: ${req.url}`);
+    console.log(`[AUTH] Headers Authorization: ${req.header('Authorization') ? 'Presente' : 'Ausente'}`);
     const authHeader = req.header('Authorization');
     const token = authHeader?.replace('Bearer ', '');
     if (!token) {
+        console.error(`[AUTH ERROR] Token requerido para: ${req.method} ${req.path}`);
         return res.status(401).json({ error: 'Acceso denegado. Token requerido.' });
     }
     try {

@@ -1,0 +1,47 @@
+===========================================
+VALORES PARA CONFIGURAR EN RENDER
+===========================================
+
+VARIABLE 1: FIREBASE_PROJECT_ID
+-------------------------------------------
+volabarato-c8c5a
+
+-------------------------------------------
+
+VARIABLE 2: FIREBASE_CLIENT_EMAIL
+-------------------------------------------
+firebase-adminsdk-fbsvc@volabarato-c8c5a.iam.gserviceaccount.com
+
+-------------------------------------------
+
+VARIABLE 3: FIREBASE_PRIVATE_KEY
+-------------------------------------------
+-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCGN2W5xL483Ig/\nVUwR/lNj3gyFPvGn0/RCQgM6fhAwW8v5+d6DKdfTM/yKN7kv0nqfBh4Q1IlKPhhu\nzQcFvfaFXOpcxc4pGJ1JpIC73FgeAGuroAoSmFyh3bhX+4ASV7xe9rtGGNb3GX0J\nPQ284aMGzugml1N9Bc7QL6wp+jJkqKAoULbO5suiyJ89hesSSBIj9qgelooLogNK\nRvnbdMPZElBdDrSRBuSi7Hrzz60hMoFtmvkoxeTatmaVNMqwfzAYi7+xG1bJVKaf\n5mAgOk/c5XO+LBpZ0M0fVOUPYIgK1Jl2IB/fDJKvUijRmP7JKL83S1cx+WSgpOcb\nlD033MtTAgMBAAECggEAEiv6R2pxBq97I6Ffq8ip2gnMhdaNrxczk9b5Ne2vMRpJ\n+zM5TRFDaefjfNk/kaR8j/8ANMTPPnCQK/bxc6Bnz2BS+4hCj0OIZC9Jc2X0E5fN\n/CODyZxnCk6z20xaEjcJHOMTXFHCT8axLFOKV8pFoYcuXQSRvAnRxFPNX7TtfBLl\nw+Iw/5+p9OmwcFtSfgVn0Nh+k4FO2vFnSRFKEPtSFZvrlxieMV9v9wy2eOD+tiMf\n8Mt5s4J9ZLrNsZ/gYXMiiLY381Ii8uUnusSI3FvH7ChoDOgGqFKiqWtKvRzJ6Q23\nHBpDGoruIOApzc4buxBQE0GvnGVmk6hkpDslCiXcGQKBgQC6CoqzCHnFu83C9w6g\nb7G2KppxZ9nQ4AmtWnQbVYBuicaLcQxSgabaZEhK9V1lJaJbC5QwLJsjAE8lxAVa\neRYNubl8pdEKgVbjAO0NyW/spCpDfkmKnnQdf+0K+o9c5JSzflUkmW85Cv76fjN9\nwE7eEKpsBa9Kz8h+LtB0hDl6ywKBgQC4r+LPvOykrUiEbCvq80vWQvNCv+BvcGW1\nwH3OxvbAAL1CNQBP1goizVaWUjJ0jb8Rr0Nc3cClXHj3EjfjAVpfY9MTHJ4Y/idW\n9esiAcvRNVOwYx6ZPh7zOBT0GRw6iU+QhDWyDvcLB0fFHxPjZHOs7u8Km9ASRkG2\nLLqXiTI4mQKBgHnNCw+53dfaZBVgIMBjQCsu61ySDGYXN966GMgIi4RTSZzjj5i4\n75+OBlKlH9dn80q+Yu/DVHJu8mKcWpDoM8sarFjyStEg6tzGL21WU6PPuyfjF4zc\nvtLNfUkx0AiWUtDNRjsnBU2IaHVhiJ6s+DWlHZ6JfkFxliceyTVvmB5PAoGAdlsJ\nQFXzVWlTMsHbtzrpm8rV+C3c162xELPmK/Bnyw3uO5KZu5AQeNMcrULJ4NXB38Rw\np//YaGCFiNidBhYk40KmzvWk/6FIdrssT2PVSSIimsQ6pLwhu35yNygsZfr/CT8g\n5hYfDWtB/Dp5VV1XoDiS6jqGMl/h1qx9e4VJsOkCgYB+dVDS2RFj0ibcK5Q2fGDC\n/tUWstPT2PF94ftClsXzSAXK2BCZdh+BFB8B1R/C/oJqUHgvj0ZFGsKaRLMUJ76A\nQDDIVd8X1VbIQARbSai1BgxCDDCK6zF/I8GyGvJnFGC//nX9RAByJn7BO3rvEWLD\n2JtXHbSEI27JoMu4RyN6ag==\n-----END PRIVATE KEY-----\n
+
+===========================================
+INSTRUCCIONES PARA RENDER
+===========================================
+
+1. Ve a: https://dashboard.render.com/
+2. Selecciona tu servicio: backup_volabarato-1
+3. Menú lateral → "Environment"
+4. Haz clic en "Add Environment Variable"
+5. Agrega las 3 variables una por una:
+
+   Variable 1:
+   Key: FIREBASE_PROJECT_ID
+   Value: volabarato-c8c5a
+
+   Variable 2:
+   Key: FIREBASE_CLIENT_EMAIL
+   Value: firebase-adminsdk-fbsvc@volabarato-c8c5a.iam.gserviceaccount.com
+
+   Variable 3:
+   Key: FIREBASE_PRIVATE_KEY
+   Value: (copia TODO el valor de arriba, desde -----BEGIN hasta -----END)
+
+6. Guarda cada variable
+7. Render se reiniciará automáticamente
+
+===========================================
+

@@ -42,8 +42,27 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const joi_1 = __importDefault(require("joi"));
 const userSchema = new mongoose_1.Schema({
     usuario: { type: String, required: true, unique: true },
-    password: { type: String, required: true }
+    password: { type: String, required: true },
+    rol: {
+        type: String,
+        enum: ['admin', 'cliente'],
+        default: 'cliente',
+        required: true
+    },
+    nombreLegal: { type: String, required: true, trim: true },
+    fechaNacimiento: { type: Date, required: true },
+    nacionalidad: { type: String, required: true, trim: true },
+    dni: { type: String, required: true, trim: true },
+    cuilCuit: { type: String, trim: true },
+    numeroPasaporte: { type: String, required: true, trim: true },
+    telefono: { type: String, required: true, trim: true },
+    telefonoContacto: { type: String, required: true, trim: true },
+    email: { type: String, required: true, unique: true, trim: true, lowercase: true },
+    resetPasswordToken: { type: String, trim: true },
+    resetPasswordExpires: { type: Date }
 });
+userSchema.index({ dni: 1 });
+userSchema.index({ numeroPasaporte: 1 });
 userSchema.pre('save', function (next) {
     if (!this.isModified('password'))
         return next();
@@ -52,7 +71,20 @@ userSchema.pre('save', function (next) {
 });
 exports.userJoiSchema = joi_1.default.object({
     usuario: joi_1.default.string().min(4).max(30).required(),
-    password: joi_1.default.string().min(6).required()
-});
+    password: joi_1.default.string().min(6).required(),
+    rol: joi_1.default.string().valid('admin', 'cliente').optional(),
+    nombreLegal: joi_1.default.string().min(2).max(100).required(),
+    fechaNacimiento: joi_1.default.alternatives().try(joi_1.default.date().max('now'), joi_1.default.string().isoDate()).required().messages({
+        'date.max': 'La fecha de nacimiento debe ser anterior a la fecha actual',
+        'alternatives.match': 'La fecha de nacimiento debe ser una fecha válida'
+    }),
+    nacionalidad: joi_1.default.string().min(2).max(50).required(),
+    dni: joi_1.default.string().min(7).max(10).required(),
+    cuilCuit: joi_1.default.string().min(10).max(13).optional().allow('', null),
+    numeroPasaporte: joi_1.default.string().min(5).max(20).required(),
+    telefono: joi_1.default.string().min(8).max(20).required(),
+    telefonoContacto: joi_1.default.string().min(8).max(20).required(),
+    email: joi_1.default.string().email().required()
+}).unknown(false);
 exports.User = mongoose_1.default.model('User', userSchema);
 //# sourceMappingURL=user.models.js.map

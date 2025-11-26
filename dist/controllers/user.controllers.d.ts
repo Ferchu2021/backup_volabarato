@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ILoginRequest, IRegisterRequest } from '../models/user.models';
+import { ILoginRequest, IRegisterRequest } from '../models/user.models.js';
 export interface IRegisterResponse {
     message: string;
     user: {
@@ -16,9 +16,21 @@ export declare const registerUser: (req: Request<{}, {}, IRegisterRequest>, res:
 export declare const loginUser: (req: Request<{}, {}, ILoginRequest>, res: Response) => Promise<void>;
 export declare const getCurrentUser: (req: Request, res: Response) => Promise<void>;
 export declare const updateUser: (req: Request, res: Response) => Promise<void>;
+export declare const changePassword: (req: Request<{}, {}, {
+    id?: string;
+    currentPassword: string;
+    newPassword: string;
+}>, res: Response) => Promise<void>;
 export declare const deleteUser: (req: Request, res: Response) => Promise<void>;
 export declare const getAllUsers: (req: Request, res: Response) => Promise<void>;
 export declare const getUserById: (req: Request, res: Response) => Promise<void>;
+export declare const requestPasswordReset: (req: Request<{}, {}, {
+    email: string;
+}>, res: Response) => Promise<void>;
+export declare const resetPassword: (req: Request<{}, {}, {
+    token: string;
+    newPassword: string;
+}>, res: Response) => Promise<void>;
 declare const _default: {
     registerUser: (req: Request<{}, {}, IRegisterRequest>, res: Response) => Promise<void>;
     loginUser: (req: Request<{}, {}, ILoginRequest>, res: Response) => Promise<void>;
@@ -27,6 +39,13 @@ declare const _default: {
     deleteUser: (req: Request, res: Response) => Promise<void>;
     getAllUsers: (req: Request, res: Response) => Promise<void>;
     getUserById: (req: Request, res: Response) => Promise<void>;
+    requestPasswordReset: (req: Request<{}, {}, {
+        email: string;
+    }>, res: Response) => Promise<void>;
+    resetPassword: (req: Request<{}, {}, {
+        token: string;
+        newPassword: string;
+    }>, res: Response) => Promise<void>;
 };
 export default _default;
 //# sourceMappingURL=user.controllers.d.ts.map

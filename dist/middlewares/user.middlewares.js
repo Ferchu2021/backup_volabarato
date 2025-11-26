@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.basicRateLimit = exports.checkUserActive = exports.validateUsernameFormat = exports.validatePasswordFormat = exports.checkUserNotExists = exports.checkUserExists = void 0;
-const user_models_1 = require("../models/user.models");
+const user_models_js_1 = require("../models/user.models.js");
 const checkUserExists = async (req, res, next) => {
     try {
         const { usuario } = req.body;
         if (!usuario) {
             return res.status(400).json({ error: 'Usuario es requerido' });
         }
-        const existingUser = await user_models_1.User.findOne({ usuario });
+        const existingUser = await user_models_js_1.User.findOne({ usuario });
         if (existingUser) {
             return res.status(409).json({
                 error: 'El usuario ya existe',
@@ -29,7 +29,7 @@ const checkUserNotExists = async (req, res, next) => {
         if (!usuario) {
             return res.status(400).json({ error: 'Usuario es requerido' });
         }
-        const existingUser = await user_models_1.User.findOne({ usuario });
+        const existingUser = await user_models_js_1.User.findOne({ usuario });
         if (!existingUser) {
             return res.status(404).json({
                 error: 'Usuario no encontrado',
@@ -105,7 +105,7 @@ const checkUserActive = async (req, res, next) => {
         if (!usuario) {
             return res.status(400).json({ error: 'Usuario es requerido' });
         }
-        const user = await user_models_1.User.findOne({ usuario });
+        const user = await user_models_js_1.User.findOne({ usuario });
         if (!user) {
             return res.status(404).json({
                 error: 'Usuario no encontrado'

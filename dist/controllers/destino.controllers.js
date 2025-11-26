@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getDestinosByClima = exports.getDestinosByPais = exports.searchDestinos = exports.deleteDestino = exports.updateDestino = exports.createDestino = exports.getDestinoById = exports.getAllDestinos = void 0;
-const Destino_1 = require("../models/Destino");
+const Destino_js_1 = require("../models/Destino.js");
 const getAllDestinos = async (req, res) => {
     try {
         const { pais, activo, limit = 10, page = 1 } = req.query;
@@ -11,11 +11,11 @@ const getAllDestinos = async (req, res) => {
         if (activo !== undefined)
             filters.activo = activo === 'true';
         const skip = (Number(page) - 1) * Number(limit);
-        const destinos = await Destino_1.Destino.find(filters)
+        const destinos = await Destino_js_1.Destino.find(filters)
             .sort({ fechaCreacion: -1 })
             .skip(skip)
             .limit(Number(limit));
-        const total = await Destino_1.Destino.countDocuments(filters);
+        const total = await Destino_js_1.Destino.countDocuments(filters);
         res.json({
             destinos,
             pagination: {
@@ -45,7 +45,7 @@ const getDestinoById = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        const destino = await Destino_1.Destino.findById(id);
+        const destino = await Destino_js_1.Destino.findById(id);
         if (!destino) {
             const errorResponse = {
                 error: 'Destino no encontrado'
@@ -66,7 +66,7 @@ const getDestinoById = async (req, res) => {
 exports.getDestinoById = getDestinoById;
 const createDestino = async (req, res) => {
     try {
-        const { error } = Destino_1.destinoJoiSchema.validate(req.body, { abortEarly: false });
+        const { error } = Destino_js_1.destinoJoiSchema.validate(req.body, { abortEarly: false });
         if (error) {
             const errorDetails = error.details.map(detail => ({
                 campo: detail.path.join('.'),
@@ -86,7 +86,7 @@ const createDestino = async (req, res) => {
             });
             return;
         }
-        const destino = new Destino_1.Destino(req.body);
+        const destino = new Destino_js_1.Destino(req.body);
         await destino.save();
         res.status(201).json({
             message: 'Destino creado exitosamente',
@@ -130,7 +130,7 @@ const updateDestino = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        const { error } = Destino_1.destinoUpdateJoiSchema.validate(req.body, { abortEarly: false });
+        const { error } = Destino_js_1.destinoUpdateJoiSchema.validate(req.body, { abortEarly: false });
         if (error) {
             const errorDetails = error.details.map(detail => ({
                 campo: detail.path.join('.'),
@@ -149,7 +149,7 @@ const updateDestino = async (req, res) => {
             });
             return;
         }
-        const destino = await Destino_1.Destino.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
+        const destino = await Destino_js_1.Destino.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
         if (!destino) {
             const errorResponse = {
                 error: 'Destino no encontrado',
@@ -183,7 +183,7 @@ const deleteDestino = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        const destino = await Destino_1.Destino.findByIdAndUpdate(id, { activo: false }, { new: true });
+        const destino = await Destino_js_1.Destino.findByIdAndUpdate(id, { activo: false }, { new: true });
         if (!destino) {
             const errorResponse = {
                 error: 'Destino no encontrado'
@@ -229,7 +229,7 @@ const searchDestinos = async (req, res) => {
             filters.pais = pais;
         if (clima)
             filters.clima = clima;
-        const destinos = await Destino_1.Destino.find(filters).sort({ fechaCreacion: -1 });
+        const destinos = await Destino_js_1.Destino.find(filters).sort({ fechaCreacion: -1 });
         res.json({
             destinos,
             total: destinos.length,
@@ -255,7 +255,7 @@ const getDestinosByPais = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        const destinos = await Destino_1.Destino.find({
+        const destinos = await Destino_js_1.Destino.find({
             pais: { $regex: pais, $options: 'i' },
             activo: true
         }).sort({ ciudad: 1 });
@@ -284,7 +284,7 @@ const getDestinosByClima = async (req, res) => {
             res.status(400).json(errorResponse);
             return;
         }
-        const destinos = await Destino_1.Destino.find({
+        const destinos = await Destino_js_1.Destino.find({
             clima: { $regex: clima, $options: 'i' },
             activo: true
         }).sort({ nombre: 1 });
