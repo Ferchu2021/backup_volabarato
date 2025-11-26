@@ -41,14 +41,19 @@ const paqueteSchema = new Schema<IPaquete>({
 
 // Schema de validación Joi para crear
 export const paqueteJoiSchema = Joi.object({
-  nombre: Joi.string().required(),
-  destino: Joi.string().required(),
-  fecha: Joi.date().required(),
+  nombre: Joi.string().trim().required(),
+  destino: Joi.string().trim().required(),
+  fecha: Joi.date().required(), // Joi.date() acepta strings ISO automáticamente
   precio: Joi.number().positive().required(),
-  descripcion: Joi.string().optional(),
+  descripcion: Joi.string().allow('', null).optional(),
   activo: Joi.boolean().optional(),
-  moneda: Joi.string().valid('USD', 'ARS', 'BRL', 'MXN', 'EUR', 'COP', 'CLP', 'PEN').optional()
-});
+  moneda: Joi.string().valid('USD', 'ARS', 'BRL', 'MXN', 'EUR', 'COP', 'CLP', 'PEN').optional(),
+  destacado: Joi.boolean().optional(),
+  categoria: Joi.string().allow('', null).optional(),
+  duracion: Joi.string().allow('', null).optional(),
+  incluye: Joi.array().items(Joi.string()).optional(),
+  imagenes: Joi.array().items(Joi.string()).optional()
+}).unknown(true); // Permitir campos adicionales para compatibilidad
 
 // Schema de validación Joi para actualizar (permite campos opcionales)
 export const paqueteUpdateJoiSchema = Joi.object({
@@ -75,6 +80,11 @@ export interface ICreatePaqueteRequest {
   descripcion?: string;
   activo?: boolean;
   moneda?: string;
+  destacado?: boolean;
+  categoria?: string;
+  duracion?: string;
+  incluye?: string[];
+  imagenes?: string[];
 }
 
 // Interface para actualizar paquete
