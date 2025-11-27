@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { adminAuth } from '../middlewares/adminAuth.js';
 import { 
   getAllProductos, 
   getProductoById, 
@@ -19,13 +20,13 @@ router.get('/search', searchProductos);
 // GET /api/producto/:id - Obtener producto por ID
 router.get('/:id', getProductoById);
 
-// POST /api/producto - Crear nuevo producto
-router.post('/', createProducto);
+// POST /api/producto - Crear nuevo producto (requiere admin)
+router.post('/', adminAuth, createProducto);
 
-// PUT /api/producto/:id - Actualizar producto
-router.put('/:id', updateProducto);
+// PUT /api/producto/:id - Actualizar producto (requiere admin)
+router.put('/:id', adminAuth, updateProducto);
 
-// DELETE /api/producto/:id - Eliminar producto
-router.delete('/:id', deleteProducto);
+// DELETE /api/producto/:id - Eliminar producto (requiere admin)
+router.delete('/:id', adminAuth, deleteProducto);
 
 export default router;

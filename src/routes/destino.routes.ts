@@ -9,6 +9,7 @@ import {
   getDestinosByPais,
   getDestinosByClima
 } from '../controllers/destino.controllers.js';
+import { adminAuth } from '../middlewares/adminAuth.js';
 
 const router = Router();
 
@@ -27,13 +28,13 @@ router.get('/clima/:clima', getDestinosByClima);
 // GET /api/destino/:id - Obtener destino por ID
 router.get('/:id', getDestinoById);
 
-// POST /api/destino - Crear nuevo destino
-router.post('/', createDestino);
+// POST /api/destino - Crear nuevo destino (requiere admin)
+router.post('/', adminAuth, createDestino);
 
-// PUT /api/destino/:id - Actualizar destino
-router.put('/:id', updateDestino);
+// PUT /api/destino/:id - Actualizar destino (requiere admin)
+router.put('/:id', adminAuth, updateDestino);
 
-// DELETE /api/destino/:id - Eliminar destino
-router.delete('/:id', deleteDestino);
+// DELETE /api/destino/:id - Eliminar destino (requiere admin)
+router.delete('/:id', adminAuth, deleteDestino);
 
 export default router;
