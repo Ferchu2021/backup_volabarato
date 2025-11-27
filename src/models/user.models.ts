@@ -16,6 +16,7 @@ export interface IUser extends Document {
   telefono: string;
   telefonoContacto: string;
   email: string;
+  firebaseUid?: string; // UID de Firebase para vincular con autenticación Firebase
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
   _id: mongoose.Types.ObjectId;
@@ -47,6 +48,7 @@ const userSchema = new Schema<IUser>({
   telefono: { type: String, required: true, trim: true },
   telefonoContacto: { type: String, required: true, trim: true },
   email: { type: String, required: true, unique: true, trim: true, lowercase: true }, // unique: true crea el índice automáticamente
+  firebaseUid: { type: String, unique: true, sparse: true, trim: true }, // UID de Firebase, único pero opcional
   resetPasswordToken: { type: String, trim: true },
   resetPasswordExpires: { type: Date }
 });
@@ -55,6 +57,7 @@ const userSchema = new Schema<IUser>({
 // userSchema.index({ email: 1 }); // Removido: unique: true ya crea el índice
 userSchema.index({ dni: 1 });
 userSchema.index({ numeroPasaporte: 1 });
+userSchema.index({ firebaseUid: 1 }); // Índice para búsquedas rápidas por Firebase UID
 
 // Middleware pre-save para hashear password
 userSchema.pre<IUser>('save', function(next) {
