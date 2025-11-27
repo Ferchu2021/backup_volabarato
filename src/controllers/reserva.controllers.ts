@@ -195,9 +195,22 @@ export const getReservasByUsuario = async (req: Request<{ usuarioId: string }>, 
 };
 
 // Controller para crear una nueva reserva
-export const createReserva = async (req: Request<{}, {}, ICreateReservaRequest & { usuario?: string }>, res: Response): Promise<void> => {
+export const createReserva = async (req: Request<{}, {}, ICreateReservaRequest>, res: Response): Promise<void> => {
   try {
-    // Validar los datos de la reserva (incluyendo usuario si está presente)
+    // Obtener usuario desde autenticación (JWT o Firebase)
+    const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
+    const user = await getUserFromRequest(req);
+    
+    if (!user) {
+      const errorResponse: IErrorResponse = {
+        error: 'Usuario no encontrado',
+        message: 'No se pudo identificar al usuario. Verifica tu autenticación.'
+      };
+      res.status(401).json(errorResponse);
+      return;
+    }
+
+    // Validar los datos de la reserva (sin usuario, se obtiene de la autenticación)
     const { error } = reservaJoiSchema.validate(req.body, { abortEarly: false });
     if (error) {
       const errorResponse: IErrorResponse = {
@@ -211,16 +224,7 @@ export const createReserva = async (req: Request<{}, {}, ICreateReservaRequest &
       return;
     }
 
-    // Obtener el usuario del body (después de la validación)
-    const usuarioId = req.body.usuario;
-    
-    if (!usuarioId) {
-      const errorResponse: IErrorResponse = {
-        error: 'ID de usuario requerido en el body'
-      };
-      res.status(400).json(errorResponse);
-      return;
-    }
+    const usuarioId = user._id.toString();
 
     // Verificar que el paquete existe
     const paquete = await Paquete.findById(req.body.paquete);
@@ -304,6 +308,43 @@ export const updateReserva = async (req: Request<{ id: string }, {}, IUpdateRese
       return;
     }
 
+    // Obtener usuario desde autenticación (JWT o Firebase)
+    const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
+    const user = await getUserFromRequest(req);
+    
+    if (!user) {
+      const errorResponse: IErrorResponse = {
+        error: 'Usuario no encontrado',
+        message: 'No se pudo identificar al usuario. Verifica tu autenticación.'
+      };
+      res.status(401).json(errorResponse);
+      return;
+    }
+
+    // Buscar la reserva primero para verificar permisos
+    const reservaExistente = await Reserva.findById(id);
+    
+    if (!reservaExistente) {
+      const errorResponse: IErrorResponse = {
+        error: 'Reserva no encontrada'
+      };
+      res.status(404).json(errorResponse);
+      return;
+    }
+
+    // Verificar permisos: solo el dueño de la reserva o un admin puede actualizarla
+    const esAdmin = user.rol === 'admin';
+    const esDueño = reservaExistente.usuario.toString() === user._id.toString();
+    
+    if (!esAdmin && !esDueño) {
+      const errorResponse: IErrorResponse = {
+        error: 'Acceso denegado',
+        message: 'Solo puedes actualizar tus propias reservas'
+      };
+      res.status(403).json(errorResponse);
+      return;
+    }
+
     // Validar datos de actualización
     const updateSchema = reservaJoiSchema.fork(Object.keys(reservaJoiSchema.describe().keys), (schema) => schema.optional());
     const { error } = updateSchema.validate(req.body);
@@ -328,21 +369,17 @@ export const updateReserva = async (req: Request<{ id: string }, {}, IUpdateRese
       }
     }
 
+    // No permitir cambiar el usuario de la reserva
+    const updateData = { ...req.body };
+    delete updateData.usuario;
+
     const reserva = await Reserva.findByIdAndUpdate(
       id,
-      req.body,
+      updateData,
       { new: true, runValidators: true }
     )
     .populate('usuario', 'nombre email')
     .populate('paquete', 'nombre destino precio');
-
-    if (!reserva) {
-      const errorResponse: IErrorResponse = {
-        error: 'Reserva no encontrada'
-      };
-      res.status(404).json(errorResponse);
-      return;
-    }
 
     res.json({
       message: 'Reserva actualizada exitosamente',
@@ -370,6 +407,53 @@ export const cancelarReserva = async (req: Request<{ id: string }>, res: Respons
       return;
     }
 
+    // Obtener usuario desde autenticación (JWT o Firebase)
+    const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
+    const user = await getUserFromRequest(req);
+    
+    if (!user) {
+      const errorResponse: IErrorResponse = {
+        error: 'Usuario no encontrado',
+        message: 'No se pudo identificar al usuario. Verifica tu autenticación.'
+      };
+      res.status(401).json(errorResponse);
+      return;
+    }
+
+    // Buscar la reserva primero para verificar permisos
+    const reservaExistente = await Reserva.findById(id);
+    
+    if (!reservaExistente) {
+      const errorResponse: IErrorResponse = {
+        error: 'Reserva no encontrada'
+      };
+      res.status(404).json(errorResponse);
+      return;
+    }
+
+    // Verificar permisos: solo el dueño de la reserva o un admin puede cancelarla
+    const esAdmin = user.rol === 'admin';
+    const esDueño = reservaExistente.usuario.toString() === user._id.toString();
+    
+    if (!esAdmin && !esDueño) {
+      const errorResponse: IErrorResponse = {
+        error: 'Acceso denegado',
+        message: 'Solo puedes cancelar tus propias reservas'
+      };
+      res.status(403).json(errorResponse);
+      return;
+    }
+
+    // Verificar que la reserva no esté ya cancelada
+    if (reservaExistente.estado === 'cancelada') {
+      const errorResponse: IErrorResponse = {
+        error: 'Reserva ya cancelada',
+        message: 'Esta reserva ya fue cancelada anteriormente'
+      };
+      res.status(400).json(errorResponse);
+      return;
+    }
+
     const reserva = await Reserva.findByIdAndUpdate(
       id,
       { estado: 'cancelada' },
@@ -377,14 +461,6 @@ export const cancelarReserva = async (req: Request<{ id: string }>, res: Respons
     )
     .populate('usuario', 'nombre email')
     .populate('paquete', 'nombre destino precio');
-
-    if (!reserva) {
-      const errorResponse: IErrorResponse = {
-        error: 'Reserva no encontrada'
-      };
-      res.status(404).json(errorResponse);
-      return;
-    }
 
     res.json({
       message: 'Reserva cancelada exitosamente',
@@ -412,6 +488,50 @@ export const confirmarReserva = async (req: Request<{ id: string }>, res: Respon
       return;
     }
 
+    // Obtener usuario desde autenticación (JWT o Firebase)
+    const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
+    const user = await getUserFromRequest(req);
+    
+    if (!user) {
+      const errorResponse: IErrorResponse = {
+        error: 'Usuario no encontrado',
+        message: 'No se pudo identificar al usuario. Verifica tu autenticación.'
+      };
+      res.status(401).json(errorResponse);
+      return;
+    }
+
+    // Solo los administradores pueden confirmar reservas
+    if (user.rol !== 'admin') {
+      const errorResponse: IErrorResponse = {
+        error: 'Acceso denegado',
+        message: 'Solo los administradores pueden confirmar reservas'
+      };
+      res.status(403).json(errorResponse);
+      return;
+    }
+
+    // Buscar la reserva primero
+    const reservaExistente = await Reserva.findById(id);
+    
+    if (!reservaExistente) {
+      const errorResponse: IErrorResponse = {
+        error: 'Reserva no encontrada'
+      };
+      res.status(404).json(errorResponse);
+      return;
+    }
+
+    // Verificar que la reserva no esté ya confirmada
+    if (reservaExistente.estado === 'confirmada') {
+      const errorResponse: IErrorResponse = {
+        error: 'Reserva ya confirmada',
+        message: 'Esta reserva ya fue confirmada anteriormente'
+      };
+      res.status(400).json(errorResponse);
+      return;
+    }
+
     const reserva = await Reserva.findByIdAndUpdate(
       id,
       { estado: 'confirmada' },
@@ -419,14 +539,6 @@ export const confirmarReserva = async (req: Request<{ id: string }>, res: Respon
     )
     .populate('usuario', 'nombre email')
     .populate('paquete', 'nombre destino precio moneda');
-
-    if (!reserva) {
-      const errorResponse: IErrorResponse = {
-        error: 'Reserva no encontrada'
-      };
-      res.status(404).json(errorResponse);
-      return;
-    }
 
     // Enviar email de confirmación (en segundo plano, no bloquear la respuesta)
     enviarEmailConfirmacion(reserva).catch(error => {
@@ -456,6 +568,43 @@ export const deleteReserva = async (req: Request<{ id: string }>, res: Response)
         error: 'ID de la reserva es requerido'
       };
       res.status(400).json(errorResponse);
+      return;
+    }
+
+    // Obtener usuario desde autenticación (JWT o Firebase)
+    const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
+    const user = await getUserFromRequest(req);
+    
+    if (!user) {
+      const errorResponse: IErrorResponse = {
+        error: 'Usuario no encontrado',
+        message: 'No se pudo identificar al usuario. Verifica tu autenticación.'
+      };
+      res.status(401).json(errorResponse);
+      return;
+    }
+
+    // Buscar la reserva primero para verificar permisos
+    const reservaExistente = await Reserva.findById(id);
+    
+    if (!reservaExistente) {
+      const errorResponse: IErrorResponse = {
+        error: 'Reserva no encontrada'
+      };
+      res.status(404).json(errorResponse);
+      return;
+    }
+
+    // Verificar permisos: solo el dueño de la reserva o un admin puede eliminarla
+    const esAdmin = user.rol === 'admin';
+    const esDueño = reservaExistente.usuario.toString() === user._id.toString();
+    
+    if (!esAdmin && !esDueño) {
+      const errorResponse: IErrorResponse = {
+        error: 'Acceso denegado',
+        message: 'Solo puedes eliminar tus propias reservas'
+      };
+      res.status(403).json(errorResponse);
       return;
     }
 

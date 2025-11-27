@@ -17,6 +17,19 @@ export interface IErrorResponse {
 // Controller para obtener todos los pagos
 export const getAllPagos = async (req: Request, res: Response): Promise<void> => {
   try {
+    // Obtener usuario desde autenticación (JWT o Firebase)
+    const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
+    const user = await getUserFromRequest(req);
+    
+    if (!user) {
+      const errorResponse: IErrorResponse = {
+        error: 'Usuario no encontrado',
+        message: 'No se pudo identificar al usuario. Verifica tu autenticación.'
+      };
+      res.status(401).json(errorResponse);
+      return;
+    }
+
     const { estado, metodoPago, reserva, limit = 10, page = 1 } = req.query;
     
     // Construir filtros
@@ -24,6 +37,17 @@ export const getAllPagos = async (req: Request, res: Response): Promise<void> =>
     if (estado) filters.estado = estado;
     if (metodoPago) filters.metodoPago = metodoPago;
     if (reserva) filters.reserva = reserva;
+    
+    // Si no es admin, solo mostrar pagos de sus propias reservas
+    if (user.rol !== 'admin') {
+      // Obtener todas las reservas del usuario
+      const { Reserva } = await import('../models/Reserva.js');
+      const reservasUsuario = await Reserva.find({ usuario: user._id }).select('_id');
+      const reservasIds = reservasUsuario.map(r => r._id);
+      
+      // Filtrar pagos solo de las reservas del usuario
+      filters.reserva = { $in: reservasIds };
+    }
     
     // Paginación
     const skip = (Number(page) - 1) * Number(limit);
@@ -101,6 +125,44 @@ export const getPagoByReserva = async (req: Request<{ reservaId: string }>, res:
       return;
     }
 
+    // Obtener usuario desde autenticación (JWT o Firebase)
+    const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
+    const user = await getUserFromRequest(req);
+    
+    if (!user) {
+      const errorResponse: IErrorResponse = {
+        error: 'Usuario no encontrado',
+        message: 'No se pudo identificar al usuario. Verifica tu autenticación.'
+      };
+      res.status(401).json(errorResponse);
+      return;
+    }
+
+    // Verificar que la reserva existe y pertenece al usuario (si no es admin)
+    const { Reserva } = await import('../models/Reserva.js');
+    const reserva = await Reserva.findById(reservaId);
+    
+    if (!reserva) {
+      const errorResponse: IErrorResponse = {
+        error: 'Reserva no encontrada'
+      };
+      res.status(404).json(errorResponse);
+      return;
+    }
+
+    // Verificar permisos: solo el dueño de la reserva o un admin puede ver el pago
+    const esAdmin = user.rol === 'admin';
+    const esDueño = reserva.usuario.toString() === user._id.toString();
+    
+    if (!esAdmin && !esDueño) {
+      const errorResponse: IErrorResponse = {
+        error: 'Acceso denegado',
+        message: 'Solo puedes ver pagos de tus propias reservas'
+      };
+      res.status(403).json(errorResponse);
+      return;
+    }
+
     const pago = await Pago.findOne({ reserva: reservaId })
       .populate('reserva', 'numeroReserva precioTotal datosContacto paquete');
 
@@ -125,6 +187,19 @@ export const getPagoByReserva = async (req: Request<{ reservaId: string }>, res:
 // Controller para crear un nuevo pago
 export const createPago = async (req: Request<{}, {}, ICreatePagoRequest>, res: Response): Promise<void> => {
   try {
+    // Obtener usuario desde autenticación (JWT o Firebase)
+    const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
+    const user = await getUserFromRequest(req);
+    
+    if (!user) {
+      const errorResponse: IErrorResponse = {
+        error: 'Usuario no encontrado',
+        message: 'No se pudo identificar al usuario. Verifica tu autenticación.'
+      };
+      res.status(401).json(errorResponse);
+      return;
+    }
+
     const { error } = pagoJoiSchema.validate(req.body, { abortEarly: false });
     if (error) {
       const errorResponse: IErrorResponse = {
@@ -142,6 +217,19 @@ export const createPago = async (req: Request<{}, {}, ICreatePagoRequest>, res: 
         error: 'Reserva no encontrada'
       };
       res.status(404).json(errorResponse);
+      return;
+    }
+
+    // Verificar permisos: solo el dueño de la reserva o un admin puede crear pagos
+    const esAdmin = user.rol === 'admin';
+    const esDueño = reserva.usuario.toString() === user._id.toString();
+    
+    if (!esAdmin && !esDueño) {
+      const errorResponse: IErrorResponse = {
+        error: 'Acceso denegado',
+        message: 'Solo puedes crear pagos para tus propias reservas'
+      };
+      res.status(403).json(errorResponse);
       return;
     }
 
@@ -213,6 +301,44 @@ export const updatePago = async (req: Request<{ id: string }, {}, IUpdatePagoReq
       return;
     }
 
+    // Obtener usuario desde autenticación (JWT o Firebase)
+    const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
+    const user = await getUserFromRequest(req);
+    
+    if (!user) {
+      const errorResponse: IErrorResponse = {
+        error: 'Usuario no encontrado',
+        message: 'No se pudo identificar al usuario. Verifica tu autenticación.'
+      };
+      res.status(401).json(errorResponse);
+      return;
+    }
+
+    // Buscar el pago primero para verificar permisos
+    const pagoExistente = await Pago.findById(id).populate('reserva');
+    
+    if (!pagoExistente) {
+      const errorResponse: IErrorResponse = {
+        error: 'Pago no encontrado'
+      };
+      res.status(404).json(errorResponse);
+      return;
+    }
+
+    // Verificar permisos: solo el dueño de la reserva asociada o un admin puede actualizar
+    const esAdmin = user.rol === 'admin';
+    const reserva = pagoExistente.reserva as any;
+    const esDueño = reserva && reserva.usuario && reserva.usuario.toString() === user._id.toString();
+    
+    if (!esAdmin && !esDueño) {
+      const errorResponse: IErrorResponse = {
+        error: 'Acceso denegado',
+        message: 'Solo puedes actualizar pagos de tus propias reservas'
+      };
+      res.status(403).json(errorResponse);
+      return;
+    }
+
     const pago = await Pago.findByIdAndUpdate(
       id,
       req.body,
@@ -261,6 +387,44 @@ export const completarPago = async (req: Request<{ id: string }>, res: Response)
       return;
     }
 
+    // Obtener usuario desde autenticación (JWT o Firebase)
+    const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
+    const user = await getUserFromRequest(req);
+    
+    if (!user) {
+      const errorResponse: IErrorResponse = {
+        error: 'Usuario no encontrado',
+        message: 'No se pudo identificar al usuario. Verifica tu autenticación.'
+      };
+      res.status(401).json(errorResponse);
+      return;
+    }
+
+    // Buscar el pago primero para verificar permisos
+    const pagoExistente = await Pago.findById(id).populate('reserva');
+    
+    if (!pagoExistente) {
+      const errorResponse: IErrorResponse = {
+        error: 'Pago no encontrado'
+      };
+      res.status(404).json(errorResponse);
+      return;
+    }
+
+    // Verificar permisos: solo el dueño de la reserva asociada o un admin puede completar
+    const esAdmin = user.rol === 'admin';
+    const reserva = pagoExistente.reserva as any;
+    const esDueño = reserva && reserva.usuario && reserva.usuario.toString() === user._id.toString();
+    
+    if (!esAdmin && !esDueño) {
+      const errorResponse: IErrorResponse = {
+        error: 'Acceso denegado',
+        message: 'Solo puedes completar pagos de tus propias reservas'
+      };
+      res.status(403).json(errorResponse);
+      return;
+    }
+
     const pago = await Pago.findByIdAndUpdate(
       id,
       { 
@@ -269,7 +433,7 @@ export const completarPago = async (req: Request<{ id: string }>, res: Response)
         referencia,
         datosPago
       },
-      { new: true }
+      { new: true, runValidators: true }
     )
     .populate('reserva', 'numeroReserva precioTotal datosContacto paquete');
 
@@ -304,6 +468,44 @@ export const deletePago = async (req: Request<{ id: string }>, res: Response): P
         error: 'ID del pago es requerido'
       };
       res.status(400).json(errorResponse);
+      return;
+    }
+
+    // Obtener usuario desde autenticación (JWT o Firebase)
+    const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
+    const user = await getUserFromRequest(req);
+    
+    if (!user) {
+      const errorResponse: IErrorResponse = {
+        error: 'Usuario no encontrado',
+        message: 'No se pudo identificar al usuario. Verifica tu autenticación.'
+      };
+      res.status(401).json(errorResponse);
+      return;
+    }
+
+    // Buscar el pago primero para verificar permisos
+    const pagoExistente = await Pago.findById(id).populate('reserva');
+    
+    if (!pagoExistente) {
+      const errorResponse: IErrorResponse = {
+        error: 'Pago no encontrado'
+      };
+      res.status(404).json(errorResponse);
+      return;
+    }
+
+    // Verificar permisos: solo el dueño de la reserva asociada o un admin puede eliminar
+    const esAdmin = user.rol === 'admin';
+    const reserva = pagoExistente.reserva as any;
+    const esDueño = reserva && reserva.usuario && reserva.usuario.toString() === user._id.toString();
+    
+    if (!esAdmin && !esDueño) {
+      const errorResponse: IErrorResponse = {
+        error: 'Acceso denegado',
+        message: 'Solo puedes eliminar pagos de tus propias reservas'
+      };
+      res.status(403).json(errorResponse);
       return;
     }
 
