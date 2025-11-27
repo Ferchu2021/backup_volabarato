@@ -167,8 +167,22 @@
   - Eliminación de imágenes
   - Configuración de reglas de seguridad
 
+- [x] **Firebase Authentication** integrado ✅
+  - Firebase Admin SDK configurado en backend
+  - Middleware de autenticación Firebase funcionando
+  - Endpoint `/api/firebase/status` - Verificar estado
+  - Endpoint `/api/firebase/profile` - Obtener perfil del usuario autenticado
+  - Verificación de tokens de Firebase funcionando correctamente
+  - Variables de entorno configuradas en Render
+  - Identity Toolkit API habilitada en Google Cloud
+  - **Estado:** ✅ COMPLETADO Y FUNCIONANDO (27 Nov 2025)
+
 #### Seguridad
 - [x] **Autenticación JWT** implementada
+- [x] **Autenticación Firebase** implementada ✅
+  - Verificación de tokens de Firebase
+  - Middleware `firebaseAuth` para rutas protegidas
+  - Integración completa funcionando
 - [x] **Middleware de autenticación** para rutas protegidas
 - [x] **Validación de datos** con Joi en backend
 - [x] **CORS** configurado para producción
@@ -225,6 +239,12 @@
 - [ ] Verificar que CORS funciona correctamente
 - [ ] Verificar que las imágenes se suben a Firebase Storage
 - [ ] Verificar que los tokens de autenticación se manejan correctamente
+
+### 7. Firebase Authentication ✅
+- [x] Verificar estado de Firebase Admin (`GET /api/firebase/status`)
+- [x] Obtener token de Firebase desde Postman
+- [x] Autenticarse en backend con token de Firebase (`GET /api/firebase/profile`)
+- [x] Verificar que el backend devuelve información del usuario correctamente
 
 ---
 
