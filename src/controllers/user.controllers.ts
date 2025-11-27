@@ -192,29 +192,27 @@ export const loginUser = async (req: Request<{}, {}, ILoginRequest>, res: Respon
 // Controller para obtener información del usuario actual
 export const getCurrentUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.query;
+    const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
     
-    if (!id) {
-      const errorResponse: IErrorResponse = {
-        error: 'ID de usuario requerido'
-      };
-      res.status(400).json(errorResponse);
-      return;
-    }
-
-    const user = await User.findById(id).select('-password');
+    // Obtener usuario desde request (JWT o Firebase)
+    const user = await getUserFromRequest(req);
+    
     if (!user) {
       const errorResponse: IErrorResponse = {
-        error: 'Usuario no encontrado'
+        error: 'Usuario no encontrado',
+        message: 'No se pudo identificar al usuario. Verifica tu autenticación.'
       };
-      res.status(404).json(errorResponse);
+      res.status(401).json(errorResponse);
       return;
     }
 
     res.json({
       _id: user._id,
       usuario: user.usuario,
-      rol: user.rol
+      rol: user.rol,
+      email: user.email,
+      nombreLegal: user.nombreLegal,
+      firebaseUid: user.firebaseUid
     });
   } catch (error) {
     console.error('Error obteniendo usuario:', error);

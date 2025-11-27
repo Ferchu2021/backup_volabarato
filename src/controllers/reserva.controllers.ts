@@ -96,19 +96,23 @@ export const getReservaById = async (req: Request<{ id: string }>, res: Response
 // Controller para obtener reservas del usuario autenticado
 export const getMisReservas = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { estado, usuarioId, limit = 10, page = 1 } = req.query;
+    const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
+    const { estado, limit = 10, page = 1 } = req.query;
     
-    // Obtener el ID del usuario desde query parameter
-    if (!usuarioId) {
+    // Obtener usuario desde request (JWT o Firebase)
+    const user = await getUserFromRequest(req);
+    
+    if (!user) {
       const errorResponse: IErrorResponse = {
-        error: 'ID de usuario requerido'
+        error: 'Usuario no encontrado',
+        message: 'No se pudo identificar al usuario. Verifica tu autenticación.'
       };
-      res.status(400).json(errorResponse);
+      res.status(401).json(errorResponse);
       return;
     }
 
     // Construir filtros
-    const filters: any = { usuario: usuarioId };
+    const filters: any = { usuario: user._id };
     if (estado) filters.estado = estado;
     
     // Paginación
