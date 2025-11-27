@@ -12,6 +12,7 @@
     "dev:ts": "ts-node src/index.ts",
     "seed:user": "ts-node scripts/seedUser.ts",
     "change:admin:password": "ts-node scripts/changeAdminPassword.ts",
+    "verificar:usuario": "ts-node scripts/verificar-usuario.ts",
     "convert:excel:clean": "node -e \"const fs = require('fs'); const files = ['scripts/convertExcelToJson.js', 'scripts/convertExcelToJson.d.ts']; files.forEach(f => { try { fs.unlinkSync(f); } catch(e) {} });\"",
     "convert:excel:compile": "tsc scripts/convertExcelToJson.ts --outDir scripts --module commonjs --target es2020 --esModuleInterop --skipLibCheck --resolveJsonModule --moduleResolution node",
     "convert:excel:fix": "node scripts/fixConvertExcel.js",
