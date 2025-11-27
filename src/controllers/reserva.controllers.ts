@@ -370,7 +370,7 @@ export const updateReserva = async (req: Request<{ id: string }, {}, IUpdateRese
     }
 
     // No permitir cambiar el usuario de la reserva
-    const updateData = { ...req.body };
+    const updateData: any = { ...req.body };
     delete updateData.usuario;
 
     const reserva = await Reserva.findByIdAndUpdate(
