@@ -8,29 +8,33 @@ import {
   deleteSuscriptor,
   getSuscriptoresStats
 } from '../controllers/suscriptor.controllers.js';
+import { dualAuth } from '../middlewares/dualAuth.js';
+import { adminAuth } from '../middlewares/adminAuth.js';
 
 const router = Router();
 
-// GET /api/suscriptor - Obtener todos los suscriptores (con filtros y paginación)
-router.get('/', getAllSuscriptores);
-
-// GET /api/suscriptor/stats - Obtener estadísticas de suscriptores
-router.get('/stats', getSuscriptoresStats);
-
-// GET /api/suscriptor/:id - Obtener suscriptor por ID
-router.get('/:id', getSuscriptorById);
-
-// POST /api/suscriptor - Crear nuevo suscriptor
+// Rutas públicas
+// POST /api/suscriptor - Crear nuevo suscriptor (público, para suscripciones)
 router.post('/', createSuscriptor);
 
-// PUT /api/suscriptor/:id - Actualizar suscriptor
-router.put('/:id', updateSuscriptor);
+// Rutas protegidas (requieren autenticación)
+// GET /api/suscriptor - Obtener todos los suscriptores (requiere admin)
+router.get('/', adminAuth, getAllSuscriptores);
 
-// PUT /api/suscriptor/:id/desuscribir - Desuscribir suscriptor
-router.put('/:id/desuscribir', desuscribirSuscriptor);
+// GET /api/suscriptor/stats - Obtener estadísticas de suscriptores (requiere admin)
+router.get('/stats', adminAuth, getSuscriptoresStats);
 
-// DELETE /api/suscriptor/:id - Eliminar suscriptor
-router.delete('/:id', deleteSuscriptor);
+// GET /api/suscriptor/:id - Obtener suscriptor por ID (requiere admin)
+router.get('/:id', adminAuth, getSuscriptorById);
+
+// PUT /api/suscriptor/:id - Actualizar suscriptor (requiere admin)
+router.put('/:id', adminAuth, updateSuscriptor);
+
+// PUT /api/suscriptor/:id/desuscribir - Desuscribir suscriptor (requiere admin)
+router.put('/:id/desuscribir', adminAuth, desuscribirSuscriptor);
+
+// DELETE /api/suscriptor/:id - Eliminar suscriptor (requiere admin)
+router.delete('/:id', adminAuth, deleteSuscriptor);
 
 export default router;
 
