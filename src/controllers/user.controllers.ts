@@ -226,15 +226,48 @@ export const getCurrentUser = async (req: Request, res: Response): Promise<void>
 // Controller para actualizar información del usuario
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    // Puede venir desde req.params (PUT /:id) o req.body (PUT /me)
-    const id = req.params.id || req.body.id;
+    // Si viene de /:id (admin), usar el ID del parámetro
+    // Si viene de /me, obtener el usuario desde autenticación
+    let id = req.params.id;
     
     if (!id) {
-      const errorResponse: IErrorResponse = {
-        error: 'ID de usuario requerido'
-      };
-      res.status(400).json(errorResponse);
-      return;
+      // Es /me, obtener usuario desde autenticación
+      const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
+      const user = await getUserFromRequest(req);
+      
+      if (!user) {
+        const errorResponse: IErrorResponse = {
+          error: 'Usuario no encontrado',
+          message: 'No se pudo identificar al usuario. Verifica tu autenticación.'
+        };
+        res.status(401).json(errorResponse);
+        return;
+      }
+      
+      id = user._id.toString();
+    } else {
+      // Es /:id, verificar que sea admin o el mismo usuario
+      const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
+      const currentUser = await getUserFromRequest(req);
+      
+      if (!currentUser) {
+        const errorResponse: IErrorResponse = {
+          error: 'Usuario no encontrado',
+          message: 'No se pudo identificar al usuario. Verifica tu autenticación.'
+        };
+        res.status(401).json(errorResponse);
+        return;
+      }
+      
+      // Solo admin puede actualizar otros usuarios
+      if (currentUser.rol !== 'admin' && currentUser._id.toString() !== id) {
+        const errorResponse: IErrorResponse = {
+          error: 'Acceso denegado',
+          message: 'Solo puedes actualizar tu propia información o ser administrador'
+        };
+        res.status(403).json(errorResponse);
+        return;
+      }
     }
 
     const { usuario, password, rol } = req.body;
@@ -295,17 +328,23 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
 };
 
 // Controller para cambiar contraseña
-export const changePassword = async (req: Request<{}, {}, { id?: string; currentPassword: string; newPassword: string }>, res: Response): Promise<void> => {
+export const changePassword = async (req: Request<{}, {}, { currentPassword: string; newPassword: string }>, res: Response): Promise<void> => {
   try {
-    const { id, currentPassword, newPassword } = req.body;
-
-    if (!id) {
+    // Obtener usuario desde autenticación (JWT o Firebase)
+    const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
+    const currentUser = await getUserFromRequest(req);
+    
+    if (!currentUser) {
       const errorResponse: IErrorResponse = {
-        error: 'ID de usuario requerido'
+        error: 'Usuario no encontrado',
+        message: 'No se pudo identificar al usuario. Verifica tu autenticación.'
       };
-      res.status(400).json(errorResponse);
+      res.status(401).json(errorResponse);
       return;
     }
+
+    const { currentPassword, newPassword } = req.body;
+    const id = currentUser._id.toString();
 
     if (!currentPassword || !newPassword) {
       const errorResponse: IErrorResponse = {
@@ -362,15 +401,48 @@ export const changePassword = async (req: Request<{}, {}, { id?: string; current
 // Controller para eliminar usuario (baja lógica)
 export const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    // Puede venir desde req.params (DELETE /:id) o req.body (DELETE /me)
-    const id = req.params.id || req.body.id;
+    // Si viene de /:id (admin), usar el ID del parámetro
+    // Si viene de /me, obtener el usuario desde autenticación
+    let id = req.params.id;
     
     if (!id) {
-      const errorResponse: IErrorResponse = {
-        error: 'ID de usuario requerido'
-      };
-      res.status(400).json(errorResponse);
-      return;
+      // Es /me, obtener usuario desde autenticación
+      const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
+      const user = await getUserFromRequest(req);
+      
+      if (!user) {
+        const errorResponse: IErrorResponse = {
+          error: 'Usuario no encontrado',
+          message: 'No se pudo identificar al usuario. Verifica tu autenticación.'
+        };
+        res.status(401).json(errorResponse);
+        return;
+      }
+      
+      id = user._id.toString();
+    } else {
+      // Es /:id, verificar que sea admin
+      const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
+      const currentUser = await getUserFromRequest(req);
+      
+      if (!currentUser) {
+        const errorResponse: IErrorResponse = {
+          error: 'Usuario no encontrado',
+          message: 'No se pudo identificar al usuario. Verifica tu autenticación.'
+        };
+        res.status(401).json(errorResponse);
+        return;
+      }
+      
+      // Solo admin puede eliminar otros usuarios
+      if (currentUser.rol !== 'admin') {
+        const errorResponse: IErrorResponse = {
+          error: 'Acceso denegado',
+          message: 'Solo los administradores pueden eliminar otros usuarios'
+        };
+        res.status(403).json(errorResponse);
+        return;
+      }
     }
 
     // Verificar que el usuario existe
