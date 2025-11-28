@@ -9,6 +9,7 @@ import {
 } from '../models/Reserva.js';
 import { Paquete } from '../models/Paquete.js';
 import { enviarEmailConfirmacion, enviarEmailReservaPendiente } from '../services/email.service.js';
+import { getUserFromRequest } from '../helpers/firebaseUserHelper.js';
 
 // Interface para respuesta de error
 export interface IErrorResponse {
@@ -198,7 +199,6 @@ export const getReservasByUsuario = async (req: Request<{ usuarioId: string }>, 
 export const createReserva = async (req: Request<{}, {}, ICreateReservaRequest>, res: Response): Promise<void> => {
   try {
     // Obtener usuario desde autenticación (JWT o Firebase)
-    const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
     const user = await getUserFromRequest(req);
     
     if (!user) {
@@ -309,7 +309,6 @@ export const updateReserva = async (req: Request<{ id: string }, {}, IUpdateRese
     }
 
     // Obtener usuario desde autenticación (JWT o Firebase)
-    const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
     const user = await getUserFromRequest(req);
     
     if (!user) {
@@ -408,7 +407,6 @@ export const cancelarReserva = async (req: Request<{ id: string }>, res: Respons
     }
 
     // Obtener usuario desde autenticación (JWT o Firebase)
-    const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
     const user = await getUserFromRequest(req);
     
     if (!user) {
@@ -489,7 +487,6 @@ export const confirmarReserva = async (req: Request<{ id: string }>, res: Respon
     }
 
     // Obtener usuario desde autenticación (JWT o Firebase)
-    const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
     const user = await getUserFromRequest(req);
     
     if (!user) {
@@ -572,7 +569,6 @@ export const deleteReserva = async (req: Request<{ id: string }>, res: Response)
     }
 
     // Obtener usuario desde autenticación (JWT o Firebase)
-    const { getUserFromRequest } = await import('../helpers/firebaseUserHelper.js');
     const user = await getUserFromRequest(req);
     
     if (!user) {
